@@ -4,7 +4,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on"], function(lang, decl
 	// summary:
 	//		Bind events on dojox/app application's dojo/Evented instance or document.
 
-	return declare("dojox.app.Controller", null, {
+	return declare(null, {
 		constructor: function(app, events){
 			// summary:
 			//		bind events on application dojo/Evented instance.

@@ -124,18 +124,6 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			}
 		},
 
-		trigger: function(event, params){
-			// summary:
-			//		trigger an event. Deprecated, use emit instead.
-			//
-			// event: String
-			//		event name. The event is binded by controller.bind() method.
-			// params: Object
-			//		event params.
-			kernel.deprecated("dojox.app.Application.trigger", "Use dojox.app.Application.emit instead", "2.0");
-			this.emit(event, params);
-		},
-
 		// setup default view and Controllers and startup the default view
 		start: function(){
 			//

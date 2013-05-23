@@ -8,7 +8,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/topic", "dojo/on", "../Co
 	//		Bind "/dojo/hashchange" event on window object.
 	//		Maintain history by history hash.
 
-	return declare("dojox.app.controllers.HistoryHash", Controller, {
+	return declare(Controller, {
 
 		constructor: function(app){
 			// summary:

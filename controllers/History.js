@@ -8,7 +8,7 @@ function(lang, declare, on, Controller, hash, topic){
 	//		Bind "popstate" event on window object.
 	//		Maintain history by HTML5 "pushState" method and "popstate" event.
 
-	return declare("dojox.app.controllers.History", Controller, {
+	return declare(Controller, {
 		// _currentPosition:     Integer
 		//              Persistent variable which indicates the current position/index in the history
 		//              (so as to be able to figure out whether the popState event was triggerd by

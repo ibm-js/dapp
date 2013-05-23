@@ -6,7 +6,7 @@ function(lang, declare, has, win, config, domAttr, topic, domStyle, constraints,
 	// summary:
 	//		Bind "app-initLayout", "app-layoutView" and "app-resize" events on application instance.
 
-	return declare("dojox.app.controllers.LayoutBase", Controller, {
+	return declare(Controller, {
 
 		constructor: function(app, events){
 			// summary:

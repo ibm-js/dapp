@@ -2,7 +2,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/_base/declare", "dojo/_base/lan
 		"dijit/Destroyable", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "./ViewBase", "./utils/nls"],
 	function(require, when, on, declare, lang, Deferred, Destroyable, _TemplatedMixin, _WidgetsInTemplateMixin, ViewBase, nls){
 
-	return declare("dojox.app.View", [_TemplatedMixin, _WidgetsInTemplateMixin, Destroyable, ViewBase], {
+	return declare([_TemplatedMixin, _WidgetsInTemplateMixin, Destroyable, ViewBase], {
 		// summary:
 		//		View class inheriting from ViewBase adding templating & globalization capabilities.
 		constructor: function(params){

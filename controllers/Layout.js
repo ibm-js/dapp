@@ -7,7 +7,7 @@ function(declare, lang, array, win, query, domGeom, domAttr, domStyle, registry,
 	// summary:
 	//		Extends LayoutBase which binds "app-initLayout", "app-layoutView" and "app-resize" events on application instance.
 
-	return declare("dojox.app.controllers.Layout", LayoutBase, {
+	return declare(LayoutBase, {
 
 		constructor: function(app, events){
 			// summary:

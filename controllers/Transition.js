@@ -8,7 +8,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 	//		dojox/app/controllers/transition
 	//		Bind "app-transition" event on dojox/app application instance.
 	//		Do transition from one view to another view.
-	return declare("dojox.app.controllers.Transition", Controller, {
+	return declare(Controller, {
 
 		proceeding: false,
 

@@ -8,7 +8,7 @@ function(declare, domAttr, domStyle, LayoutBase, BorderContainer, StackContainer
 	//		Each view to be shown in a region of the BorderContainer will be wrapped in a StackContainer and a ContentPane.
 	//		
 
-	return declare("dojox.app.controllers.BorderLayout", LayoutBase, {
+	return declare(LayoutBase, {
 
 		initLayout: function(event){
 			// summary:

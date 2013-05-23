@@ -1,7 +1,7 @@
 define(["dojo/_base/declare", "dojo/_base/lang", "dijit/registry", "dojo/dom-attr", "dojo/dom-geometry",
 	"dojo/dom-style", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained", "dojo/_base/array", "dojo/query", "../utils/layout", "./_ScrollableMixin"],
 function(declare, lang, registry, domAttr, domGeom, domStyle, WidgetBase, Container, Contained, array, query, layoutUtils, ScrollableMixin){
-	return declare("dojox.app.widgets.Container", [WidgetBase, Container, Contained, ScrollableMixin], {
+	return declare([WidgetBase, Container, Contained, ScrollableMixin], {
 		scrollable: false,
 		fixedFooter:"",
 		fixedHeader:"",

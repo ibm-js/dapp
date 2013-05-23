@@ -1,7 +1,7 @@
 define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/_base/declare", "dojo/_base/lang",
 	"dojo/Deferred", "./utils/model", "./utils/constraints"],
 	function(require, when, on, domAttr, declare, lang, Deferred, model, constraints){
-	return declare("dojox.app.ViewBase", null, {
+	return declare(null, {
 		// summary:
 		//		View base class with model & controller capabilities. Subclass must implement rendering capabilities.
 		constructor: function(params){

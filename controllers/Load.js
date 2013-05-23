@@ -6,7 +6,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 	//		Bind "app-load" event on dojox/app application instance.
 	//		Load child view and sub children at one time.
 
-	return declare("dojox.app.controllers.Load", Controller, {
+	return declare(Controller, {
 
 
 		_waitingQueue:[],
