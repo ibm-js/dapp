@@ -1,9 +1,9 @@
 define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
 	"dojo/_base/window", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/ready",
-	"dojo/dom-construct", "dojo/dom-attr", "./utils/model", "./utils/nls", "./module/lifecycle",
+	"dojo/dom-construct", "dojo/dom-attr", "./utils/nls", "./module/lifecycle",
 	"./utils/hash", "./utils/constraints", "./utils/config"],
 	function(require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, ready, domConstruct, domAttr,
-		 model, nls, lifecycle, hash, constraints, configUtils){
+		nls, lifecycle, hash, constraints, configUtils){
 
 	has.add("app-log-api", (config["app"] || {}).debugApp);
 
@@ -129,31 +129,14 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			//
 			//create application level data store
 			this.createDataStore(this.params);
-
-			// create application level data model
-			var loadModelLoaderDeferred = new Deferred();
-			var createPromise;
-			try{
-				createPromise = model(this.params.models, this, this);
-			}catch(e){
-				loadModelLoaderDeferred.reject(e);
-				return loadModelLoaderDeferred.promise;
-			}
-			when(createPromise, lang.hitch(this, function(models){
-				// if models is an array it comes from dojo/promise/all. Each array slot contains the same result object
-				// so pick slot 0.
-				this.loadedModels = lang.isArray(models)?models[0]:models;
-				this.setupControllers();
-				// if available load root NLS
-				when(nls(this.params), lang.hitch(this, function(nls){
-					if(nls){
-						lang.mixin(this.nls = {}, nls);
-					}
-					this.startup();
-				}));
-			}), function(){
-				loadModelLoaderDeferred.reject("load model error.")
-			});
+			this.setupControllers();
+			// if available load root NLS
+			when(nls(this.params), lang.hitch(this, function(nls){
+				if(nls){
+					lang.mixin(this.nls = {}, nls);
+				}
+				this.startup();
+			}));
 		},
 
 		setDomNode: function(domNode){

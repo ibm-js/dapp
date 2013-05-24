@@ -1,9 +1,9 @@
 define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/_base/declare", "dojo/_base/lang",
-	"dojo/Deferred", "./utils/model", "./utils/constraints"],
-	function(require, when, on, domAttr, declare, lang, Deferred, model, constraints){
+	"dojo/Deferred", "./utils/constraints"],
+	function(require, when, on, domAttr, declare, lang, Deferred, constraints){
 	return declare(null, {
 		// summary:
-		//		View base class with model & controller capabilities. Subclass must implement rendering capabilities.
+		//		View base class with controller capabilities. Subclass must implement rendering capabilities.
 		constructor: function(params){
 			// summary:
 			//		Constructs a ViewBase instance.
@@ -40,9 +40,8 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/_base/declare"
 			}
 			this._startDef = new Deferred();
 			when(this.load(), lang.hitch(this, function(){
-				// call setupModel, after setupModel startup will be called after startup the loadViewDeferred will be resolved
 				this._createDataStore(this);
-				this._setupModel();
+				this._startup();
 			}));
 			return this._startDef;
 		},
@@ -103,35 +102,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/_base/declare"
 					}
 				}
 			}
-		},
-
-		_setupModel: function(){
-			// summary:
-			//		Load views model if it is not already loaded then call _startup.
-			// tags:
-			//		private
-						
-			if(!this.loadedModels){
-				var createPromise;
-				try{
-					createPromise = model(this.models, this.parent, this.app);
-				}catch(e){
-					throw new Error("Error creating models: "+e.message);
-				}
-				when(createPromise, lang.hitch(this, function(models){
-					if(models){
-						// if models is an array it comes from dojo/promise/all. Each array slot contains the same result object
-						// so pick slot 0.
-						this.loadedModels = lang.isArray(models)?models[0]:models;
-					}
-					this._startup();
-				}),
-				function(err){
-					throw new Error("Error creating models: "+err.message);					
-				});
-			}else{ // loadedModels already created so call _startup
-				this._startup();				
-			}		
 		},
 
 		_startup: function(){
