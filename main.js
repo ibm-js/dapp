@@ -1,6 +1,6 @@
 define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
 	"dojo/_base/window", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/ready",
-	"dojo/dom-construct", "dojo/dom-attr", "./utils/nls", "./module/lifecycle",
+	"dojo/dom-construct", "dojo/dom-attr", "./utils/nls", "./modules/lifecycle",
 	"./utils/hash", "./utils/constraints", "./utils/config"],
 	function(require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, ready, domConstruct, domAttr,
 		nls, lifecycle, hash, constraints, configUtils){
@@ -263,7 +263,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			config.modules = [];
 		}
 		// add dojox/app lifecycle module by default
-		config.modules.push("./module/lifecycle");
+		config.modules.push("./modules/lifecycle");
 		var modules = config.modules.concat(config.dependencies?config.dependencies:[]);
 
 		if(config.template){

@@ -18,6 +18,7 @@ This is the former dojox/app project.
 
 Migration steps from dojox/app to dapp:
 
+* replace any use of "dojox/app/module" AMD module path by "dapp/modules"
 * replace any use of "dojox/app" AMD module path by "dapp"
 
 ## Licensing
