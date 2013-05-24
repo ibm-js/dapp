@@ -5,7 +5,7 @@
 
 	"loaderConfig": {
 		"paths": {
-			"globalizedApp": "../appfirst/tests/globalizedApp"
+			"globalizedApp": "../dapp/tests/globalizedApp"
 		}
 	},
 
@@ -15,20 +15,20 @@
 	],
 
 	"controllers": [
-		"appfirst/controllers/Load",
-		"appfirst/controllers/Transition",
-		"appfirst/controllers/Layout"
+		"dapp/controllers/Load",
+		"dapp/controllers/Transition",
+		"dapp/controllers/Layout"
 	],	
 
 	"has" : {
 		"ie9orLess" : {
 			"controllers": [
-				"appfirst/controllers/HistoryHash"
+				"dapp/controllers/HistoryHash"
 			]
 		},
 		"!ie9orLess" : {
 			"controllers": [
-				"appfirst/controllers/History"
+				"dapp/controllers/History"
 			]
 		}
 	},	

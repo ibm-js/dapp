@@ -1,4 +1,4 @@
-# appfirst
+# dapp
 
 This project provides an AMD-based Application Framework for building Web & Mobile applications from a JSON
 configuration file defining:
@@ -16,9 +16,9 @@ No official release yet.
 
 This is the former dojox/app project.
 
-Migration steps from dojox/app to appfirst:
+Migration steps from dojox/app to dapp:
 
-* replace any use of "dojox/app" AMD module path by "appfirst"
+* replace any use of "dojox/app" AMD module path by "dapp"
 
 ## Licensing
 
@@ -35,14 +35,14 @@ This project requires the following other projects to run:
 
 ## Installation
 
-* Manual installation of by dropping appfirst as a sibling of the top level Dojo modules:
+* Manual installation of by dropping dapp as a sibling of the top level Dojo modules:
  * dojo
  * dijit
- * appfirst
+ * dapp
 
- To install the latest master, go to the root Dojo installation directory and clone appfirst from github
+ To install the latest master, go to the root Dojo installation directory and clone dapp from github
 
- git clone git://github.com/ibm-dojo/appfirst.git
+ git clone git://github.com/ibm-dojo/dapp.git
 
 ## Documentation
 
