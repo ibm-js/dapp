@@ -15,7 +15,6 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			this.defaultView = params.defaultView;
 			this.controllers = [];
 			this.children = {};
-			this.loadedModels = {};
 			this.loadedStores = {};
 			// Create a new domNode and append to body
 			// Need to bind startTransition event on application domNode,
