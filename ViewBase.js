@@ -163,25 +163,15 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/_base/declare"
 
 			var requireSignal;
 			try{
-				var loadFile = path;
-				var index = loadFile.indexOf("./");
-				if(index >= 0){
-					loadFile = path.substring(index+2);
-				}
 				requireSignal = require.on("error", function(error){
 					if(viewControllerDef.isResolved() || viewControllerDef.isRejected()){
 						return;
 					}
-					if(error.info[0] && (error.info[0].indexOf(loadFile) >= 0)){
+					if(error.info[0] && (error.info[0].indexOf(path) >= 0)){
 						viewControllerDef.resolve(false);
 						requireSignal.remove();
 					}
 				});
-
-				if(path.indexOf("./") == 0){
-					path = "app/"+path;
-				}
-
 				require([path], function(controller){
 					viewControllerDef.resolve(controller);
 					requireSignal.remove();

@@ -73,9 +73,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/_base/declare", "dojo/_base/lan
 				var tpl = this.template;
 				var deps = this.dependencies?this.dependencies:[];
 				if(tpl){
-					if(tpl.indexOf("./") == 0){
-						tpl = "app/"+tpl;
-					}
 					deps = deps.concat(["dojo/text!"+tpl]);
 				}
 				var def = new Deferred();

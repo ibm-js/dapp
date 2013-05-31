@@ -13,7 +13,6 @@ define([
 				continue;
 			}
 			var view = views[key];
-			// TODO deal with "./" shortcut & default view location (which relies on "./")
 			if(view.controller && view.controller != "none"){
 				var mid = view.controller.replace(/(\.js)$/, "");
 				if(!bc.layers[mid] && bc.multipleAppConfigLayers){
