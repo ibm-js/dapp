@@ -10,10 +10,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 	var Application = declare(Evented, {
 		constructor: function(params, node){
 			lang.mixin(this, params);
-			this.params = params;
-			this.id = params.id;
-			this.defaultView = params.defaultView;
-			this.controllers = [];
+			this.loadedControllers = [];
 			this.children = {};
 			this.loadedStores = {};
 			// Create a new domNode and append to body
@@ -27,21 +24,17 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			node.appendChild(this.domNode);
 		},
 
-		createDataStore: function(params){
+		_createDataStore: function(){
 			// summary:
 			//		Create data store instance
-			//
-			// params: Object
-			//		data stores configuration.
-
-			if(params.stores){
+			if(this.stores){
 				//create stores in the configuration.
-				for(var item in params.stores){
+				for(var item in this.stores){
 					if(item.charAt(0) !== "_"){//skip the private properties
-						var type = params.stores[item].type ? params.stores[item].type : "dojo/store/Memory";
+						var type = this.stores[item].type ? this.stores[item].type : "dojo/store/Memory";
 						var config = {};
-						if(params.stores[item].params){
-							lang.mixin(config, params.stores[item].params);
+						if(this.stores[item].params){
+							lang.mixin(config, this.stores[item].params);
 						}
 						// we assume the store is here through dependencies
 						try{
@@ -56,17 +49,17 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 							//and will cause infinitive loop when creating StatefulModel.
 							config.data = lang.getObject(config.data);
 						}
-						if(params.stores[item].observable){
+						if(this.stores[item].observable){
 							try{
 								var observableCtor = require("dojo/store/Observable");
 							}catch(e){
 								throw new Error("dojo/store/Observable must be listed in the dependencies");
 							}
-							params.stores[item].store = observableCtor(new storeCtor(config));
+							this.stores[item].store = observableCtor(new storeCtor(config));
 						}else{
-							params.stores[item].store = new storeCtor(config);
+							this.stores[item].store = new storeCtor(config);
 						}
-						this.loadedStores[item] = params.stores[item].store;							
+						this.loadedStores[item] = this.stores[item].store;
 					}
 				}
 			}
@@ -112,7 +105,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				when(def, lang.hitch(this, function(){
 					for(var i = 0; i < arguments[0].length; i++){
 						// instantiate controllers, set Application object, and perform auto binding
-						this.controllers.push((new arguments[0][i](this)).bind());
+						this.loadedControllers.push((new arguments[0][i](this)).bind());
 					}
 					controllerDef.resolve(this);
 				}), function(){
@@ -127,10 +120,10 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 		start: function(){
 			//
 			//create application level data store
-			this.createDataStore(this.params);
+			this._createDataStore();
 			this.setupControllers();
 			// if available load root NLS
-			when(nls(this.params), lang.hitch(this, function(nls){
+			when(nls(this), lang.hitch(this, function(nls){
 				if(nls){
 					lang.mixin(this.nls = {}, nls);
 				}
@@ -160,10 +153,10 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			// load controllers and views
 			//
 			this.selectedChildren = {};			
-			var controllers = this.createControllers(this.params.controllers);
+			var controllers = this.createControllers(this.controllers);
 			// constraint on app
 			if(this.hasOwnProperty("constraint")){
-				constraints.register(this.params.constraints);
+				constraints.register(this.constraints);
 			}else{
 				this.constraint = "center";
 			}

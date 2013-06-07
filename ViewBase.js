@@ -40,7 +40,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/_base/declare"
 			}
 			this._startDef = new Deferred();
 			when(this.load(), lang.hitch(this, function(){
-				this._createDataStore(this);
+				this._createDataStore();
 				this._startup();
 			}));
 			return this._startDef;
