@@ -558,7 +558,8 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 					}else{
 						this.currentLastSubChildMatch = p.selectedChildren[hash];
 						currentSubViewArray.push(this.currentLastSubChildMatch);
-						// Here since they had the constraint but it was not the same I need to deactivate all children of this.currentLastSubChildMatch
+						this.nextLastSubChildMatch = nextSubViewArray[i]; // setting this means the transition will be done to the child instead of the parent
+						// since the constraint was set, but it did not match, need to deactivate all selected children of this.currentLastSubChildMatch
 						if(!removeView){
 							var selChildren = constraints.getAllSelectedChildren(this.currentLastSubChildMatch);
 							currentSubViewArray = currentSubViewArray.concat(selChildren);
