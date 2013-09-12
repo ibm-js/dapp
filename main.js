@@ -290,7 +290,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 						// arguments: 
 						//		the message to be logged, 
 						//		all but the last argument will be treated as Strings and be concatenated together, 
-						//      the last argument can be an object it will be added as an argument to the console.log 						
+						//      the last argument can be an object it will be added as an argument to the console.log
 						var msg = "";
 						try{
 							for(var i = 0; i < arguments.length-1; i++){
