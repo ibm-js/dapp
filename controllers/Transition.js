@@ -187,7 +187,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 			});
 		},
 
-		_getTransition: function(parent, transitionTo, opts){
+		_getTransition: function(nextView, parent, transitionTo, opts){
 			// summary:
 			//		Get view's transition type from the config for the view or from the parent view recursively.
 			//		If not available use the transition option otherwise get view default transition type in the
@@ -204,13 +204,16 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 			//		transition type like "slide", "fade", "flip" or "none".
 			var parentView = parent;
 			var transition = null;
-			if(parentView.views[transitionTo]){
+			if(nextView){
+				transition = nextView.transition;
+			}
+			if(!transition && parentView.views[transitionTo]){
 				transition = parentView.views[transitionTo].transition;
 			} 
 			if(!transition){
 				transition = parentView.transition;
 			}
-			var defaultTransition = parentView.defaultTransition;
+			var defaultTransition = (nextView && nextView.defaultTransition) ?  nextView.defaultTransition : parentView.defaultTransition;
 			while(!transition && parentView.parent){
 				parentView = parentView.parent;
 				transition = parentView.transition;
@@ -621,22 +624,23 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 			//		the promise returned by the call to transit
 			var F = MODULE+":_handleTransit";
 
+			var nextLastSubChild = this.nextLastSubChildMatch || next;
+
 			var mergedOpts = lang.mixin({}, opts); // handle reverse from mergedOpts or transitionDir
 			mergedOpts = lang.mixin({}, mergedOpts, {
 				reverse: (mergedOpts.reverse || mergedOpts.transitionDir === -1)?true:false,
 				// if transition is set for the view (or parent) in the config use it, otherwise use it from the event or defaultTransition from the config
-				transition: this._getTransition(parent, toId, mergedOpts)
+				transition: this._getTransition(nextLastSubChild, parent, toId, mergedOpts)
 			});
 
-			var nextLastSubChild = this.nextLastSubChildMatch || next;
 			if(removeView){
 				nextLastSubChild = null;
 			}
 			if(currentLastSubChild){
-				this.app.log(LOGKEY,F,"transit FROM currentLastSubChild.id="+currentLastSubChild.id);
+				this.app.log(LOGKEY,F,"transit FROM currentLastSubChild.id=["+currentLastSubChild.id+"]");
 			}
 			if(nextLastSubChild){
-				this.app.log(LOGKEY,F,"transit TO nextLastSubChild.id="+nextLastSubChild.id);
+				this.app.log(LOGKEY,F,"transit TO nextLastSubChild.id=["+nextLastSubChild.id+"] transition=["+mergedOpts.transition+"]");
 			}
 			return transit(currentLastSubChild && currentLastSubChild.domNode, nextLastSubChild && nextLastSubChild.domNode, mergedOpts);
 		}
