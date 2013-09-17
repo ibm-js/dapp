@@ -1,8 +1,8 @@
 define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
-	"dojo/_base/window", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/ready",
+	"dojo/_base/window", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
 	"dojo/dom-construct", "dojo/dom-attr", "./utils/nls", "./modules/lifecycle",
 	"./utils/hash", "./utils/constraints", "./utils/config"],
-	function(require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, ready, domConstruct, domAttr,
+	function(require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, domReady, domConstruct, domAttr,
 		nls, lifecycle, hash, constraints, configUtils){
 
 	has.add("app-log-api", (config["app"] || {}).debugApp);
@@ -293,7 +293,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			}
 			App = declare(modules, ext);
 
-			ready(function(){
+			domReady(function(){
 				var app = new App(config, node || win.body());
 
 				if(has("app-log-api")){
