@@ -178,15 +178,14 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				// emit "app-load" event and let controller to load view.
 				this.emit("app-load", {
 					viewId: this.defaultView,
+					initLoad: true,
 					params: this._startParams,
 					callback: lang.hitch(this, function (){
-						var saveTrans = this.transition; // save this to set it to none and restore it
-						this.transition = "none";	// we want to avoid the transition on the first display for the defaultView
 						this.emit("app-transition", {
 							viewId: this.defaultView,
+							forceTransitionNone: true, // we want to avoid the transition on the first display for the defaultView
 							opts: { params: this._startParams }
 						});
-						this.transition = saveTrans;
 						if(this.defaultView !== this._startView){
 						// transition to startView. If startView==defaultView, that means initial the default view.
 							this.emit("app-transition", {
