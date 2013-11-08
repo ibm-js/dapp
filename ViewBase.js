@@ -21,6 +21,14 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 			this.children = {};
 			this.selectedChildren = {};
 			this.loadedStores = {};
+			this.transitionCount = 0;
+
+			// skipNodeCache: [protected] Boolean (from dijit._TemplatedMixin)
+			//		If using a cached widget template nodes poses issues for a
+			//		particular widget class, it can set this property to ensure
+			//		that its template is always re-built from a string
+			this._skipNodeCache = true; // use true to avoid Detached domNodes for each view created.
+
 			// private
 			this._started = false;
 			lang.mixin(this, params);

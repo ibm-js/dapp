@@ -40,7 +40,7 @@ function(lang, declare, has, win, config, domAttr, topic, domStyle, constraints,
 					this._doResize(this.app.selectedChildren[hash]);
 				}
 			}
-			
+
 		},
 		
 		initLayout: function(event){
