@@ -50,18 +50,22 @@ define([
 			var node, params = this.scrollableParams;
 			if(this.fixedHeader){
 				node = dom.byId(this.fixedHeader);
-				if(node.parentNode == this.domNode){ // local footer
-					this.isLocalHeader = true;
+				if(node){
+					if(node.parentNode == this.domNode){ // local footer
+						this.isLocalHeader = true;
+					}
+					params.fixedHeaderHeight = node.offsetHeight;
 				}
-				params.fixedHeaderHeight = node.offsetHeight;
 			}
 			if(this.fixedFooter){
 				node = dom.byId(this.fixedFooter);
-				if(node.parentNode == this.domNode){ // local footer
-					this.isLocalFooter = true;
-					node.style.bottom = "0px";
+				if(node){
+					if(node.parentNode == this.domNode){ // local footer
+						this.isLocalFooter = true;
+						node.style.bottom = "0px";
+					}
+					params.fixedFooterHeight = node.offsetHeight;
 				}
-				params.fixedFooterHeight = node.offsetHeight;
 			}
 			
 			this.init(params);

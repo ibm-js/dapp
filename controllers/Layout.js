@@ -33,11 +33,11 @@ function(declare, lang, array, win, query, domGeom, domAttr, domStyle, registry,
 					this.app.log("in Layout resizeSelectedChildren calling resizeSelectedChildren calling _doResize for w.selectedChildren[hash].id="+w.selectedChildren[hash].id);
 					this._doResize(w.selectedChildren[hash]);
 					// Call resize on child widgets, needed to get the scrollableView to resize correctly initially	
-					array.forEach(w.selectedChildren[hash].domNode.children, function(child){
-						if(registry.byId(child.id) && registry.byId(child.id).resize){ 
-							registry.byId(child.id).resize(); 
-						}
-					});	
+				//	array.forEach(w.selectedChildren[hash].domNode.children, function(child){
+				//		if(registry.byId(child.id) && registry.byId(child.id).resize){
+				//			registry.byId(child.id).resize();
+				//		}
+				//	});
 
 					this.resizeSelectedChildren(w.selectedChildren[hash]);
 				}
@@ -187,7 +187,7 @@ function(declare, lang, array, win, query, domGeom, domAttr, domStyle, registry,
 				}
 			}
 			// We don't need to layout children if this._contentBox is null for the operation will do nothing.
-			if(view._contentBox){
+			if(view._contentBox && view._active !== false){
 				layout.layoutChildren(view.domNode, view._contentBox, children);
 			}
 		}

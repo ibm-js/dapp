@@ -48,6 +48,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 			//		"app-transition" event parameter. It should be like: {"viewId": viewId, "opts": opts}
 			var F = MODULE+":transition";
 			this.app.log(LOGKEY,F,"New Transition event.viewId=["+event.viewId+"]");
+			this.app.log("logLoadViews:",F,"New Transition event.viewId=["+event.viewId+"]");
 			this.app.log(F,"event.viewId=["+event.viewId+"]","event.opts=",event.opts);
 
 			var viewsId = event.viewId || "";
@@ -204,7 +205,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 			
 			this.proceeding = true;
 
-			this.app.log(F+" calling trigger load", transitionEvt);
+			this.app.log("logLoadViews:",F," emit app-load for ["+ transitionEvt.viewId+"]");
 			if(!transitionEvt.opts){
 				transitionEvt.opts = {};
 			}
@@ -439,11 +440,11 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 				}
 
 				if(current && current._active){
-					this._handleBeforeDeactivateCalls(currentSubViewArray, this.nextLastSubChildMatch || next, current, data, subIds);
+					this._handleBeforeDeactivateCalls(currentSubViewArray, this.nextLastSubChildMatch || next, current, data);
 				}
 				if(next){
 					this.app.log(F+" calling _handleBeforeActivateCalls next name=[",next.name,"], parent.name=[",next.parent.name,"]");
-					this._handleBeforeActivateCalls(nextSubViewArray, this.currentLastSubChildMatch || current, data, subIds);
+					this._handleBeforeActivateCalls(nextSubViewArray, this.currentLastSubChildMatch || current, data);
 				}
 				if(!removeView){
 					var nextLastSubChild = this.nextLastSubChildMatch || next;
@@ -481,30 +482,94 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 					}
 
 					// Add call to handleAfterDeactivate and handleAfterActivate here!
-					this._handleAfterDeactivateCalls(currentSubViewArray, this.nextLastSubChildMatch || next, current, data, subIds);
-					this._handleAfterActivateCalls(nextSubViewArray, removeView, this.currentLastSubChildMatch || current, data, subIds);
+					this._handleAfterDeactivateCalls(currentSubViewArray, this.nextLastSubChildMatch || next, current, data);
+					this._checkForViewsToUnload(currentSubViewArray, nextSubViewArray, this.nextLastSubChildMatch || next);
+					this._handleAfterActivateCalls(nextSubViewArray, removeView, this.currentLastSubChildMatch || current, data);
 				}));
 				return result; // dojo/promise/all
 			}
 		},
+
+
+		_checkForViewsToUnload: function(subs, nextSubViewArray, next){
+			// summary:
+			//		Call _handleViewUnloads for each of the current views which may need to be unloaded
+			var F = MODULE+":_checkForViewsToUnload";
+			for(var i = 0; i < subs.length; i++){
+				var v = subs[i];
+				if (v && nextSubViewArray.indexOf(v) < 0) {
+					if (this._handleViewUnloads(v, next)) { // call handleViewUnloads and if true return
+						return;
+					}
+				}
+			}
+		},
+
+		_handleViewUnloads: function(viewToUnload, next){
+			// summary:
+			//		Check to see if this view or one of it's siblings need to be unloaded, and unload it.
+			//
+			// view: Object
+			//		the view
+			var F = MODULE+":_handleViewUnloads";
+			if(!viewToUnload || viewToUnload == next){
+				return;
+			}
+			this.app.log("logLoadViews:",F," _handleViewUnloads called for ["+viewToUnload.id+"]");
+
+			// if alwaysAutoUnload is true unload the viewToUnload view and its children
+			if(viewToUnload.alwaysAutoUnload){
+				var params = {};
+				params.view = viewToUnload;
+				this.app.log("logLoadViews:",F," viewToUnload.alwaysAutoUnload true emit app-unload-view for ["+viewToUnload.id+"]");
+				this.app.emit("app-unload-view", params);
+
+				return true;
+			}
+			//if autoUnloadCount is set we need to check other sibling views to see if any views should be unloaded.
+			var parent = viewToUnload.parent;
+			if(parent.autoUnloadCount && Object.keys(parent.children).length > parent.autoUnloadCount){
+				var constraint = viewToUnload.constraint;// || "center";
+				var type = typeof(constraint);
+				var hash = (type == "string" || type == "number") ? constraint : constraint.__hash;
+				for(var otherChildKey in parent.children){
+					var otherChild = parent.children[otherChildKey];
+					var otherChildConstraint = otherChild.constraint;// || "center";
+					var childtype = typeof(otherChildConstraint);
+					var childhash = (childtype == "string" || childtype == "number") ? otherChildConstraint : otherChildConstraint.__hash;
+					if(hash == childhash && otherChild !== next){
+						if(!otherChild.neverAutoUnload && otherChild.transitionCount >= parent.autoUnloadCount ||
+							(otherChild.transitionCount > 0 && otherChild.alwaysAutoUnload)){
+							var params = {};
+							params.view = otherChild;
+							this.app.log("logLoadViews:",F," over unload count emit app-unload-view for ["+otherChild.id+"]");
+							this.app.emit("app-unload-view", params);
+							return true;
+						}
+					}
+				}
+
+			}
+		},
+
 
 		_handleMatchingViews: function(subs, next, current, parent, data, removeView, doResize, subIds, currentSubNames, toId, forceTransitionNone, opts){
 			// summary:
 			//		Called when the current views and the next views match
 			var F = MODULE+":_handleMatchingViews";
 
-			this._handleBeforeDeactivateCalls(subs, this.nextLastSubChildMatch || next, current, data, subIds);
+			this._handleBeforeDeactivateCalls(subs, this.nextLastSubChildMatch || next, current, data);
 			// this is the order that things were being done before on a reload of the same views, so I left it
 			// calling _handleAfterDeactivateCalls here instead of after _handleLayoutAndResizeCalls
-			this._handleAfterDeactivateCalls(subs, this.nextLastSubChildMatch || next, current, data, subIds);
-			this._handleBeforeActivateCalls(subs, this.currentLastSubChildMatch || current, data, subIds);
+			this._handleAfterDeactivateCalls(subs, this.nextLastSubChildMatch || next, current, data);
+			this._handleBeforeActivateCalls(subs, this.currentLastSubChildMatch || current, data);
 			var nextLastSubChild = this.nextLastSubChildMatch || next;
 			var trans = this._getTransition(nextLastSubChild, parent, toId, opts, forceTransitionNone)
 			this._handleLayoutAndResizeCalls(subs, removeView, doResize, subIds, trans);
-			this._handleAfterActivateCalls(subs, removeView, this.currentLastSubChildMatch || current, data, subIds);
+			this._handleAfterActivateCalls(subs, removeView, this.currentLastSubChildMatch || current, data);
 		},
 
-		_handleBeforeDeactivateCalls: function(subs, next, current, /*parent,*/ data, /*removeView, doResize,*/ subIds/*, currentSubNames*/){
+		_handleBeforeDeactivateCalls: function(subs, next, current, data){
 			// summary:
 			//		Call beforeDeactivate for each of the current views which are about to be deactivated
 			var F = MODULE+":_handleBeforeDeactivateCalls";
@@ -520,7 +585,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 			}
 		},
 
-		_handleAfterDeactivateCalls: function(subs, next, current, data, subIds){
+		_handleAfterDeactivateCalls: function(subs, next, current, data){
 			// summary:
 			//		Call afterDeactivate for each of the current views which have been deactivated
 			var F = MODULE+":_handleAfterDeactivateCalls";
@@ -528,17 +593,16 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 				//now we need to loop forwards thru subs calling afterDeactivate
 				for(var i = 0; i < subs.length; i++){
 					var v = subs[i];
-					if(v && v.beforeDeactivate && v._active){
+					if(v && v.afterDeactivate && v._active){
 						this.app.log(LOGKEY,F,"afterDeactivate for v.id="+v.id);
 						v.afterDeactivate(next, data);
 						v._active = false;
 					}
 				}
-
 			}
 		},
 
-		_handleBeforeActivateCalls: function(subs, current, data, subIds){
+		_handleBeforeActivateCalls: function(subs, current, data){
 			// summary:
 			//		Call beforeActivate for each of the next views about to be activated
 			var F = MODULE+":_handleBeforeActivateCalls";
@@ -594,7 +658,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/has", "dojo/on
 		},
 
 
-		_handleAfterActivateCalls: function(subs, removeView, current, data, subIds){
+		_handleAfterActivateCalls: function(subs, removeView, current, data){
 			// summary:
 			//		Call afterActivate for each of the next views which have been activated
 			var F = MODULE+":_handleAfterActivateCalls";

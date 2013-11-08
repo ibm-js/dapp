@@ -1,10 +1,13 @@
-define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Deferred", "dojo/when", "dojo/dom-style", "../Controller"],
-	function(require, lang, declare, on, Deferred, when, domStyle, Controller, View){
+define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Deferred", "dojo/when", "dojo/dom-style",
+	"dojo/_base/array", "dojo/dom-construct", "dijit/registry", "../Controller"],
+	function(require, lang, declare, on, Deferred, when, domStyle, array, domConstruct, registry, Controller, View){
 	// module:
 	//		dojox/app/controllers/Load
 	// summary:
 	//		Bind "app-load" event on dojox/app application instance.
 	//		Load child view and sub children at one time.
+
+	var MODULE = "dapp/controllers/Load";
 
 	return declare(Controller, {
 
@@ -21,7 +24,8 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 			//		{event : handler}
 			this.events = {
 				"app-init": this.init,
-				"app-load": this.load
+				"app-load": this.load,
+				"app-unload-view": this.unloadView
 			};
 		},
 
@@ -53,12 +57,12 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 			//		The return value cannot return directly. 
 			//		If the caller need to use the return value, pass callback function in event parameter and process return value in callback function.
 
-			this.app.log("in app/controllers/Load event.viewId="+event.viewId+" event =", event);
+			this.app.log("in app/controllers/Load app-load event.viewId="+event.viewId+" event =", event);
 			var views = event.viewId || "";
 			var viewArray = [];
 			// create an array from the diff views in event.viewId (they are separated by +)
 			var parts = views.split('+');
-			while(parts.length > 0){ 	
+			while(parts.length > 0){
 				var viewId = parts.shift();
 				viewArray.push(viewId);
 			}
@@ -166,6 +170,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 			// returns:
 			//		If view exist, return the view object.
 			//		Otherwise, create the view and return a dojo.Deferred instance.
+			var F = MODULE+":createChild";
 
 			var id = parent.id + '_' + childId;
 			
@@ -179,7 +184,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 				if(params){
 					view.params = params;
 				}
-				this.app.log("in app/controllers/Load createChild view is already loaded so return the loaded view with the new parms ",view);
+				this.app.log("logLoadViews:",F,"view is already loaded so return the loaded view with the new parms for ["+view.id+"]");
 				return view;
 			}
 			var def = new Deferred();
@@ -328,6 +333,83 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 			}
 			viewNames = parts.join('+');
 			return viewNames;
+		},
+
+		unloadView: function(event){
+			// summary:
+			//		Response to dojox/app "unload-view" event.
+			// 		If a view has children loaded the view and any children of the view will be unloaded.
+			//
+			// example:
+			//		Use trigger() to trigger "app-unload-view" event, and this function will response the event. For example:
+			//		|	this.trigger("app-unload-view", {"view":view, "callback":function(){...}});
+			//
+			// event: Object
+			//		app-unload-view event parameter. It should be like this: {"view":view, "callback":function(){...}}
+			var F = MODULE+":unloadView";
+
+			var view = event.view || {};
+			var parent = view.parent || this.app;
+			var viewId = view.id;
+			this.app.log("logLoadViews:",F," app-unload-view called for ["+viewId+"]");
+
+			if(!parent || !view || !viewId){
+				console.warn("unload-view event for view with no parent or with an invalid view with view = ", view);
+				return;
+			}
+
+			if(parent.selectedChildren[viewId]){
+				console.warn("unload-view event for a view which is still in use so it can not be unloaded for view id = " + viewId + "'.");
+				return;
+			}
+
+			if(!parent.children[viewId]){
+				console.warn("unload-view event for a view which was not found in parent.children[viewId] for viewId = " + viewId + "'.");
+				return;
+			}
+
+			this.unloadChild(parent, view);
+
+			if(event.callback){
+				event.callback();
+			}
+		},
+
+		unloadChild: function(parent, viewToUnload){
+			// summary:
+			//		Unload the view, and all of its child views recursively.
+			// 		Destroy all children, destroy all widgets, destroy the domNode, remove the view from the parent.children,
+			// 		then destroy the view.
+			//
+			// parent: Object
+			//		parent of this view.
+			// viewToUnload: Object
+			//		the view to be unloaded.
+			var F = MODULE+":unloadChild";
+			this.app.log("logLoadViews:",F," unloadChild called for ["+viewToUnload.id+"]");
+
+			for(var child in viewToUnload.children){
+				this.app.log("logLoadViews:",F," calling unloadChild for for ["+child+"]");
+				this.unloadChild(viewToUnload, viewToUnload.children[child]);  // unload children then unload the view itself
+			}
+			if(viewToUnload.domNode){
+				// destroy all widgets, then destroy the domNode, then destroy the view.
+				var widList = registry.findWidgets(viewToUnload.domNode);
+				this.app.log("logLoadViews:",F," before destroyRecursive loop registry.length = ["+registry.length+"] for view =["+viewToUnload.id+"]");
+				for(var wid in widList){
+					widList[wid].destroyRecursive();
+				}
+				this.app.log("logLoadViews:",F," after destroyRecursive loop registry.length = ["+registry.length+"] for view =["+viewToUnload.id+"]");
+				this.app.log("logLoadViews:",F," calling domConstruct.destroy for the view ["+viewToUnload.id+"]");
+				domConstruct.destroy(viewToUnload.domNode);
+			}
+
+			delete parent.children[viewToUnload.id]; // remove it from the parents children
+			if(viewToUnload.destroy){
+				this.app.log("logLoadViews:",F," calling destroy for the view ["+viewToUnload.id+"]");
+				viewToUnload.destroy(); // call destroy for the view.
+			}
+			viewToUnload = null;
 		}
 	});
 });
