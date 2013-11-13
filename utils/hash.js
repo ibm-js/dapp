@@ -1,13 +1,13 @@
-define(["dojo/_base/lang"], function(lang){
+define(["dojo/_base/lang"], function (lang) {
 
 // module:
 //		dojox/app/utils/hash
 
-var hashUtil = {
-	// summary:
-	//		This module contains the hash
+	var hashUtil = {
+		// summary:
+		//		This module contains the hash
 
-		getParams: function(/*String*/ hash){
+		getParams: function (/*String*/ hash) {
 			// summary:
 			//		get the params from the hash
 			//
@@ -18,25 +18,29 @@ var hashUtil = {
 			//		the params object
 			//
 			var params;
-			if(hash && hash.length){
+			if (hash && hash.length) {
 				// fixed handle view specific params
-				
-				while(hash.indexOf("(") > 0){ 
+
+				while (hash.indexOf("(") > 0) {
 					var index = hash.indexOf("(");
 					var endindex = hash.indexOf(")");
-					var viewPart = hash.substring(index,endindex+1);
-					if(!params){ params = {}; }
+					var viewPart = hash.substring(index, endindex + 1);
+					if (!params) {
+						params = {};
+					}
 					params = hashUtil.getParamObj(params, viewPart);
 					// next need to remove the viewPart from the hash, and look for the next one
-					var viewName = viewPart.substring(1,viewPart.indexOf("&"));
+					var viewName = viewPart.substring(1, viewPart.indexOf("&"));
 					hash = hash.replace(viewPart, viewName);
-				}	
+				}
 				// after all of the viewParts need to get the other params	
 
-				for(var parts = hash.split("&"), x = 0; x < parts.length; x++){
+				for (var parts = hash.split("&"), x = 0; x < parts.length; x++) {
 					var tp = parts[x].split("="), name = tp[0], value = encodeURIComponent(tp[1] || "");
-					if(name && value){
-						if(!params){ params = {}; }
+					if (name && value) {
+						if (!params) {
+							params = {};
+						}
 						params[name] = value;
 					}
 				}
@@ -44,7 +48,7 @@ var hashUtil = {
 			return params; // Object
 		},
 
-		getParamObj: function(/*Object*/ params, /*String*/ viewPart){
+		getParamObj: function (/*Object*/ params, /*String*/ viewPart) {
 			// summary:
 			//		called to handle a view specific params object
 			// params: Object
@@ -53,23 +57,25 @@ var hashUtil = {
 			//		the part of the view with the params for the view
 			//
 			// returns:
-	 		//		the params object for the view
+			//		the params object for the view
 			//
 			var viewparams;
-			var viewName = viewPart.substring(1,viewPart.indexOf("&"));
-			var hash = viewPart.substring(viewPart.indexOf("&"), viewPart.length-1);
-				for(var parts = hash.split("&"), x = 0; x < parts.length; x++){
-					var tp = parts[x].split("="), name = tp[0], value = encodeURIComponent(tp[1] || "");
-					if(name && value){
-						if(!viewparams){ viewparams = {}; }
-						viewparams[name] = value;
+			var viewName = viewPart.substring(1, viewPart.indexOf("&"));
+			var hash = viewPart.substring(viewPart.indexOf("&"), viewPart.length - 1);
+			for (var parts = hash.split("&"), x = 0; x < parts.length; x++) {
+				var tp = parts[x].split("="), name = tp[0], value = encodeURIComponent(tp[1] || "");
+				if (name && value) {
+					if (!viewparams) {
+						viewparams = {};
 					}
+					viewparams[name] = value;
 				}
-			params[viewName] = 	viewparams;
+			}
+			params[viewName] = viewparams;
 			return params; // Object
 		},
 
-		buildWithParams: function(/*String*/ hash, /*Object*/ params){
+		buildWithParams: function (/*String*/ hash, /*Object*/ params) {
 			// summary:
 			//		build up the url hash adding the params
 			// hash: String
@@ -78,26 +84,26 @@ var hashUtil = {
 			//		the params object
 			//
 			// returns:
-	 		//		the params object
+			//		the params object
 			//
-			if(hash.charAt(0) !== "#"){
-				hash = "#"+hash;
+			if (hash.charAt(0) !== "#") {
+				hash = "#" + hash;
 			}
-			for(var item in params){
+			for (var item in params) {
 				var value = params[item];
-				// add a check to see if the params includes a view name if so setup the hash like (viewName&item=value);
-				if(lang.isObject(value)){
+				// add a check to see if the params includes a view name if so setup the hash
+				if (lang.isObject(value)) {
 					hash = hashUtil.addViewParams(hash, item, value);
-				}else{
-					if(item && value != null){
-						hash = hash+"&"+item+"="+params[item];
+				} else {
+					if (item && value != null) {
+						hash = hash + "&" + item + "=" + params[item];
 					}
 				}
 			}
 			return hash; // String
 		},
 
-		addViewParams: function(/*String*/ hash, /*String*/ view, /*Object*/ params){
+		addViewParams: function (/*String*/ hash, /*String*/ view, /*Object*/ params) {
 			// summary:
 			//		add the view specific params to the hash for example (view1&param1=value1)
 			// hash: String
@@ -110,25 +116,28 @@ var hashUtil = {
 			// returns:
 			//		the hash string
 			//
-			if(hash.charAt(0) !== "#"){
-				hash = "#"+hash;
+			if (hash.charAt(0) !== "#") {
+				hash = "#" + hash;
 			}
 			var index = hash.indexOf(view);
-			if(index > 0){ // found the view?
-				if((hash.charAt(index-1) == "#" || hash.charAt(index-1) == "+") && // assume it is the view? or could check the char after for + or & or -
-					(hash.charAt(index+view.length) == "&" || hash.charAt(index+view.length) == "+" || hash.charAt(index+view.length) == "-")){
+			if (index > 0) { // found the view?
+				// assume it is the view? or could check the char after for + or & or -
+				if ((hash.charAt(index - 1) === "#" || hash.charAt(index - 1) === "+") &&
+					(hash.charAt(index + view.length) === "&" || hash.charAt(index + view.length) === "+" ||
+						hash.charAt(index + view.length) === "-")) {
 					// found the view at this index.
-					var oldView = hash.substring(index-1,index+view.length+1);
+					var oldView = hash.substring(index - 1, index + view.length + 1);
 					var paramString = hashUtil.getParamString(params);
-					var newView = hash.charAt(index-1) + "(" + view + paramString + ")" + hash.charAt(index+view.length);
+					var newView = hash.charAt(index - 1) + "(" + view + paramString + ")" +
+						hash.charAt(index + view.length);
 					hash = hash.replace(oldView, newView);
 				}
 			}
-			
+
 			return hash; // String
 		},
 
-		getParamString: function(/*Object*/ params){
+		getParamString: function (/*Object*/ params) {
 			// summary:
 			//		return the param string
 			// params: Object
@@ -138,16 +147,16 @@ var hashUtil = {
 			//		the params string
 			//
 			var paramStr = "";
-			for(var item in params){
+			for (var item in params) {
 				var value = params[item];
-				if(item && value != null){
-					paramStr = paramStr+"&"+item+"="+params[item];
+				if (item && value != null) {
+					paramStr = paramStr + "&" + item + "=" + params[item];
 				}
 			}
 			return paramStr; // String
 		},
 
-		getTarget: function(/*String*/ hash, /*String?*/ defaultView){
+		getTarget: function (/*String*/ hash, /*String?*/ defaultView) {
 			// summary:
 			//		return the target string
 			// hash: String
@@ -158,19 +167,21 @@ var hashUtil = {
 			// returns:
 			//		the target string
 			//
-			if(!defaultView){ defaultView = ""}
-			while(hash.indexOf("(") > 0){ 
+			if (!defaultView) {
+				defaultView = "";
+			}
+			while (hash.indexOf("(") > 0) {
 				var index = hash.indexOf("(");
 				var endindex = hash.indexOf(")");
-				var viewPart = hash.substring(index,endindex+1);
-				var viewName = viewPart.substring(1,viewPart.indexOf("&"));
+				var viewPart = hash.substring(index, endindex + 1);
+				var viewName = viewPart.substring(1, viewPart.indexOf("&"));
 				hash = hash.replace(viewPart, viewName);
-			}	
-			
-			return (((hash && hash.charAt(0) == "#") ? hash.substr(1) : hash) || defaultView).split('&')[0];	// String
-		}
-};
+			}
 
-return hashUtil;
+			return (((hash && hash.charAt(0) === "#") ? hash.substr(1) : hash) || defaultView).split("&")[0]; // String
+		}
+	};
+
+	return hashUtil;
 
 });

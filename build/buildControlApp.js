@@ -1,4 +1,4 @@
-define(["build/buildControlDefault"], function(bc){
+define(["build/buildControlDefault"], function (bc) {
 	// module:
 	//		dojox/app/build/buildControlApp
 	// summary:

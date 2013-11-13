@@ -1,7 +1,7 @@
-define(["dojo/_base/array"], function(arr){
+define(["dojo/_base/array"], function (arr) {
 	var constraints = [];
 	return {
-		getSelectedChild: function(view, constraint){
+		getSelectedChild: function (view, constraint) {
 			// summary:
 			//		get current selected child according to the constraint
 			//
@@ -13,12 +13,12 @@ define(["dojo/_base/array"], function(arr){
 			// returns:
 			//		the selected child view for this constraint
 			var type = typeof(constraint);
-			var hash = (type == "string" || type == "number") ? constraint : constraint.__hash;
+			var hash = (type === "string" || type === "number") ? constraint : constraint.__hash;
 			return (view && view.selectedChildren && view.selectedChildren[hash]) ?
 				view.selectedChildren[hash] : null;
 		},
 
-		setSelectedChild: function(view, constraint, child){
+		setSelectedChild: function (view, constraint, child) {
 			// summary:
 			//		set current selected child according to the constraint
 			//
@@ -29,21 +29,23 @@ define(["dojo/_base/array"], function(arr){
 			// child: View
 			//		the child to select
 			var type = typeof(constraint);
-			var hash = (type == "string" || type == "number") ? constraint : constraint.__hash;
+			var hash = (type === "string" || type === "number") ? constraint : constraint.__hash;
 			view.selectedChildren[hash] = child;
-			if(child && child.app.autoUnloadCount){
+			if (child && child.app.autoUnloadCount) {
 				child.transitionCount = 0;
 
-			//	console.log("in constraints.setSelectedChild looking for sibling for view ["+child.id+ "]");
+				//	console.log("in constraints.setSelectedChild looking for sibling for view ["+child.id+ "]");
 				// add code to bump the transitionCounter to see when to unload other child views
-				for(var otherChildKey in view.children){
+				for (var otherChildKey in view.children) {
 					var otherChild = view.children[otherChildKey];
 					var otherChildConstraint = otherChild.constraint;
 					var childtype = typeof(otherChildConstraint);
-					var childhash = (childtype == "string" || childtype == "number") ? otherChildConstraint : otherChildConstraint.__hash;
-					if(hash == childhash && otherChild !== child){
+					var childhash = (childtype === "string" || childtype === "number") ? otherChildConstraint :
+						otherChildConstraint.__hash;
+					if (hash === childhash && otherChild !== child) {
 						otherChild.transitionCount++;
-			//			console.log("in constraints.setSelectedChild otherChild.transitionCount for view ["+otherChildKey+ "] =["+otherChild.transitionCount+"]");
+						//console.log("in constraints.setSelectedChild otherChild.transitionCount for view [" +
+						//	otherChildKey+ "] =["+otherChild.transitionCount + "]");
 					}
 				}
 			}
@@ -51,7 +53,7 @@ define(["dojo/_base/array"], function(arr){
 		},
 
 
-		getAllSelectedChildren: function(view, selChildren){
+		getAllSelectedChildren: function (view, selChildren) {
 			// summary:
 			//		get current all selected children for this view and it's selected subviews
 			//
@@ -65,9 +67,9 @@ define(["dojo/_base/array"], function(arr){
 			//		selChildren array of all of the selected child views
 			//
 			selChildren = selChildren || [];
-			if(view && view.selectedChildren){
-				for(var hash in view.selectedChildren){
-					if(view.selectedChildren[hash]){
+			if (view && view.selectedChildren) {
+				for (var hash in view.selectedChildren) {
+					if (view.selectedChildren[hash]) {
 						var subChild = view.selectedChildren[hash];
 						selChildren.push(subChild);
 						this.getAllSelectedChildren(subChild, selChildren);
@@ -77,33 +79,33 @@ define(["dojo/_base/array"], function(arr){
 			return selChildren;
 		},
 
-		register: function(constraint){
+		register: function (constraint) {
 			// if the constraint has already been registered we don't care about it...
 			var type = typeof(constraint);
-			if(!constraint.__hash && type != "string" && type != "number"){
+			if (!constraint.__hash && type !== "string" && type !== "number") {
 				var match = null;
-				arr.some(constraints, function(item){
+				arr.some(constraints, function (item) {
 					var ok = true;
-					for(var prop in item){
-						if(prop.charAt(0) !== "_"){//skip the private properties
-							if(item[prop] != constraint[prop]){
+					for (var prop in item) {
+						if (prop.charAt(0) !== "_") {//skip the private properties
+							if (item[prop] !== constraint[prop]) {
 								ok = false;
 								break;
 							}
 						}
 					}
-					if(ok == true){
+					if (ok === true) {
 						match = item;
 					}
 					return ok;
 				});
-				if(match){
+				if (match) {
 					constraint.__hash = match.__hash;
-				}else{
+				} else {
 					// create a new "hash"
 					var hash = "";
-					for(var prop in constraint){
-						if(prop.charAt(0) !== "_"){
+					for (var prop in constraint) {
+						if (prop.charAt(0) !== "_") {
 							hash += constraint[prop];
 						}
 					}
