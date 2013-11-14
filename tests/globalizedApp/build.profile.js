@@ -1,4 +1,5 @@
-require(["dojox/app/build/buildControlApp"], function(bc){
+/* jshint unused: false */
+require(["dojox/app/build/buildControlApp"], function (bc) {
 });
 
 var profile = {
@@ -6,20 +7,25 @@ var profile = {
 	releaseDir: "./globalizedApp/release",
 	action: "release",
 	cssOptimize: "comments",
-	packages:[{
-		name: "dojo",
-		location: "../../../dojo"
-	},{
-		name: "dijit",
-		location: "../../../dijit"
-	},{
-		name: "globalizedApp",
-		location: "../../../dojox/app/tests/globalizedApp",
-		destLocation: "./dojox/app/tests/globalizedApp"
-	},{
-		name: "dojox",
-		location: "../../../dojox"
-	}],
+	packages: [
+		{
+			name: "dojo",
+			location: "../../../dojo"
+		},
+		{
+			name: "dijit",
+			location: "../../../dijit"
+		},
+		{
+			name: "globalizedApp",
+			location: "../../../dojox/app/tests/globalizedApp",
+			destLocation: "./dojox/app/tests/globalizedApp"
+		},
+		{
+			name: "dojox",
+			location: "../../../dojox"
+		}
+	],
 	layers: {
 		"globalizedApp/globalizedApp": {
 			include: [ "globalizedApp/index.html" ]

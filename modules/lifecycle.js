@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "dojo/topic"], function(declare, topic){
+define(["dojo/_base/declare", "dojo/topic"], function (declare, topic) {
 	return declare(null, {
 
 		lifecycle: {
@@ -11,11 +11,11 @@ define(["dojo/_base/declare", "dojo/topic"], function(declare, topic){
 
 		_status: 0, //unknown
 
-		getStatus: function(){
+		getStatus: function () {
 			return this._status;
 		},
 
-		setStatus: function(newStatus){
+		setStatus: function (newStatus) {
 			this._status = newStatus;
 
 			// publish /app/status event.
