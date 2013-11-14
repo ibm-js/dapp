@@ -1,13 +1,14 @@
+/* jshint unused: false */
 var profile = {
-	resourceTags:{
-		declarative: function(filename){
-	 		return /\.html?$/.test(filename); // tags any .html or .htm files as declarative
-	 	},
-		amd: function(filename){
-			return /\.js$/.test(filename);
+	resourceTags: {
+		declarative: function (filename) {
+			return (/\.html?$/.test(filename)); // tags any .html or .htm files as declarative
 		},
-		copyOnly: function(filename, mid){
-			return mid == "globalizedApp/build.profile";
+		amd: function (filename) {
+			return (/\.js$/.test(filename));
+		},
+		copyOnly: function (filename, mid) {
+			return mid === "globalizedApp/build.profile";
 		}
 	}
 };
