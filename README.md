@@ -1,4 +1,4 @@
-# dapp
+# dapp [![Build Status](https://travis-ci.org/ibm-dojo/dapp.png?branch=master)](https://travis-ci.org/ibm-dojo/dapp)
 
 This project provides an AMD-based Application Framework for building Web & Mobile applications from a JSON
 configuration file defining:
