@@ -1,0 +1,19 @@
+{
+	"name": "dapp",
+	"version": "0.1-dev",
+	"description": "AMD-based Application Framework for building Web & Mobile applications ",
+	"licenses": [
+		{
+			"type": "BSD",
+			"url": "https://github.com/ibm-dojo/dapp/blob/master/LICENSE"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ibm-dojo/dapp.git"
+	},
+	"dependencies": {
+		"dojo": ["1.9"]
+	},
+	"dojoBuild": "package.js"
+}
