@@ -1,5 +1,5 @@
-define(["dojo/_base/declare"], function (declare) {
-	return declare(null, {
+define(["dcl/dcl"], function (dcl) {
+	return dcl(null, {
 		mode: "",
 		init: function () {
 

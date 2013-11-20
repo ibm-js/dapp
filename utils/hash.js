@@ -1,7 +1,7 @@
 define(["dojo/_base/lang"], function (lang) {
 
 // module:
-//		dojox/app/utils/hash
+//		dapp/utils/hash
 
 	var hashUtil = {
 		// summary:

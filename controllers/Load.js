@@ -1,15 +1,15 @@
-define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Deferred", "dojo/when", "dojo/dom-style",
+define(["dcl/dcl", "require", "dojo/_base/lang", "dojo/on", "dojo/Deferred", "dojo/when", "dojo/dom-style",
 	"dojo/_base/array", "dojo/dom-construct", "dijit/registry", "../Controller"],
-	function (require, lang, declare, on, Deferred, when, domStyle, array, domConstruct, registry, Controller) {
+	function (dcl, require, lang, on, Deferred, when, domStyle, array, domConstruct, registry, Controller) {
 		// module:
-		//		dojox/app/controllers/Load
+		//		dapp/controllers/Load
 		// summary:
-		//		Bind "app-load" event on dojox/app application instance.
+		//		Bind "app-load" event on dapp application instance.
 		//		Load child view and sub children at one time.
 
 		var MODULE = "dapp/controllers/Load";
 
-		return declare(Controller, {
+		return dcl(Controller, {
 
 
 			_waitingQueue: [],
@@ -20,7 +20,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 				//		bind "app-load" event on application instance.
 				//
 				// app:
-				//		dojox/app application instance.
+				//		dapp application instance.
 				// events:
 				//		{event : handler}
 				this.events = {
@@ -46,7 +46,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 
 			load: function (event) {
 				// summary:
-				//		Response to dojox/app "loadArray" event.
+				//		Response to dapp "loadArray" event.
 				//
 				// example:
 				//		Use trigger() to trigger "loadArray" event, and this function will response the event.
@@ -62,8 +62,10 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 				//		The return value cannot return directly.
 				//		If the caller need to use the return value, pass callback function in event parameter and
 				// 		process return value in callback function.
+				var F = MODULE + ":load";
 
 				this.app.log("in app/controllers/Load app-load event.viewId=" + event.viewId + " event =", event);
+				this.app.log("logLoadViews:", F, "Load app-load fired with event.viewId=[" + event.viewId + "]");
 				var views = event.viewId || "";
 				var viewArray = [];
 				// create an array from the diff views in event.viewId (they are separated by +)
@@ -123,7 +125,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 
 			loadView: function (loadEvent) {
 				// summary:
-				//		Response to dojox/app "app-load" event.
+				//		Response to dapp "app-load" event.
 				//
 				// example:
 				//		Use trigger() to trigger "app-load" event, and this function will response the event.
@@ -171,7 +173,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 			createChild: function (parent, childId, subIds, params) {
 				// summary:
 				//		Create a view instance if not already loaded by calling createView. This is typically a
-				//		dojox/app/View.
+				//		dapp/View.
 				//
 				// parent: Object
 				//		parent of the view.
@@ -214,7 +216,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 
 			createView: function (parent, id, name, mixin, params, type) {
 				// summary:
-				//		Create a dojox/app/View instance. Can be overridden to create different type of views.
+				//		Create a dapp/View instance. Can be overridden to create different type of views.
 				// parent: Object
 				//		parent of this view.
 				// id: String
@@ -226,7 +228,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 				// params: Object
 				//		params of this view.
 				// type: String
-				//		the MID of the View. If not provided "dojox/app/View".
+				//		the MID of the View. If not provided "dapp/View".
 				// returns:
 				//		A dojo/Deferred instance which will be resolved when the view will be instantiated.
 				// tags:
@@ -355,7 +357,7 @@ define(["require", "dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Def
 
 			unloadView: function (event) {
 				// summary:
-				//		Response to dojox/app "unload-view" event.
+				//		Response to dapp "unload-view" event.
 				// 		If a view has children loaded the view and any children of the view will be unloaded.
 				//
 				// example:
