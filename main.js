@@ -1,8 +1,8 @@
-define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
+define(["dcl/dcl", "require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
 	"dojo/_base/window", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
 	"dojo/dom-construct", "dojo/dom-attr", "./utils/nls", "./modules/lifecycle",
 	"./utils/hash", "./utils/constraints", "./utils/config"],
-	function (require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, domReady,
+	function (dcl, require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, domReady,
 			  domConstruct, domAttr, nls, lifecycle, hash, constraints, configUtils) {
 
 		has.add("app-log-api", (config.app || {}).debugApp);
@@ -269,7 +269,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			if (!config.modules) {
 				config.modules = [];
 			}
-			// add dojox/app lifecycle module by default
+			// add dapp lifecycle module by default
 			config.modules.push("./modules/lifecycle");
 			var modules = config.modules.concat(config.dependencies ? config.dependencies : []);
 
@@ -341,6 +341,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				throw new Error("App Config Missing");
 			}
 
+		/*	// remove validate code since we do not have an appSchema
 			if (config.validate) {
 				require(["dojox/json/schema", "dojox/json/ref", "dojo/text!dojox/application/schema/application.json"],
 					function (schema, jsonRef, appSchema) {
@@ -352,5 +353,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			} else {
 				generateApp(config, node);
 			}
+		*/
+			generateApp(config, node);
 		};
 	});

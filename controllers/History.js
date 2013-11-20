@@ -1,14 +1,14 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "../Controller", "../utils/hash", "dojo/topic"],
-	function (lang, declare, on, Controller, hash, topic) {
+define(["dcl/dcl", "dojo/_base/lang", "dojo/on", "../Controller", "../utils/hash", "dojo/topic"],
+	function (dcl, lang, on, Controller, hash, topic) {
 		// module:
-		//		dojox/app/controllers/History
+		//		dapp/controllers/History
 		// summary:
-		//		Bind "app-domNode" event on dojox/app application instance.
-		//		Bind "startTransition" event on dojox/app application domNode.
+		//		Bind "app-domNode" event on dapp application instance.
+		//		Bind "startTransition" event on dapp application domNode.
 		//		Bind "popstate" event on window object.
 		//		Maintain history by HTML5 "pushState" method and "popstate" event.
 
-		return declare(Controller, {
+		return dcl(Controller, {
 			// _currentPosition:     Integer
 			//              Persistent variable which indicates the current position/index in the history
 			//              (so as to be able to figure out whether the popState event was triggerd by
@@ -21,8 +21,8 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "../Controller", "..
 
 			constructor: function () {
 				// summary:
-				//		Bind "app-domNode" event on dojox/app application instance.
-				//		Bind "startTransition" event on dojox/app application domNode.
+				//		Bind "app-domNode" event on dapp application instance.
+				//		Bind "startTransition" event on dapp application domNode.
 				//		Bind "popstate" event on window object.
 				//
 
@@ -44,7 +44,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "../Controller", "..
 
 			onStartTransition: function (evt) {
 				// summary:
-				//		Response to dojox/app "startTransition" event.
+				//		Response to dapp "startTransition" event.
 				//
 				// example:
 				//		Use "dojox/mobile/TransitionEvent" to trigger "startTransition" event, and this function will
@@ -98,7 +98,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "../Controller", "..
 
 			onPopState: function (evt) {
 				// summary:
-				//		Response to dojox/app "popstate" event.
+				//		Response to dapp "popstate" event.
 				//
 				// evt: Object
 				//		Transition options parameter

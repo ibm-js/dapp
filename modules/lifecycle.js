@@ -1,5 +1,5 @@
-define(["dojo/_base/declare", "dojo/topic"], function (declare, topic) {
-	return declare(null, {
+define(["dcl/dcl", "dojo/topic"], function (dcl, topic) {
+	return dcl(null, {
 
 		lifecycle: {
 			UNKNOWN: 0, //unknown

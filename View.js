@@ -1,8 +1,9 @@
-define(["require", "dojo/when", "dojo/on", "dojo/_base/declare", "dojo/_base/lang", "dojo/Deferred",
+define(["dcl/dcl", "require", "dojo/when", "dojo/on", "dojo/_base/declare", "dojo/_base/lang", "dojo/Deferred",
 	"dijit/Destroyable", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "./ViewBase", "./utils/nls"],
-	function (require, when, on, declare, lang, Deferred, Destroyable, _TemplatedMixin, _WidgetsInTemplateMixin,
+	function (dcl, require, when, on, declare, lang, Deferred, Destroyable, _TemplatedMixin, _WidgetsInTemplateMixin,
 		ViewBase, nls) {
 
+	//	return dcl([_TemplatedMixin, _WidgetsInTemplateMixin, Destroyable, ViewBase], {
 		return declare([_TemplatedMixin, _WidgetsInTemplateMixin, Destroyable, ViewBase], {
 			// summary:
 			//		View class inheriting from ViewBase adding templating & globalization capabilities.
@@ -135,6 +136,46 @@ define(["require", "dojo/when", "dojo/on", "dojo/_base/declare", "dojo/_base/lan
 				return tplDef;
 			},
 
+/*		//	load: function using dcl
+			load: dcl.superCall(function (sup) {
+			    return function () {
+					var tplDef = new Deferred();
+				//	var defDef = this.inherited(arguments);
+					var defDef = sup.call(this);
+					var nlsDef = nls(this);
+					// when parent loading is done (controller), proceed with template
+					// (for data-dojo-* to work we need to wait for controller to be here, this is also
+					// useful when the controller is used as a layer for the view)
+					when(defDef, lang.hitch(this, function () {
+						when(nlsDef, lang.hitch(this, function (nls) {
+							// we inherit from the parent NLS
+							this.nls = lang.mixin({}, this.parent.nls);
+							if (nls) {
+								// make sure template can access nls doing ${nls.myprop}
+								lang.mixin(this.nls, nls);
+							}
+							when(this._loadTemplate(), function (value) {
+								tplDef.resolve(value);
+							});
+						}));
+					}));
+					return tplDef;
+				};
+			}),
+
+			//_startup: function using dcl
+			_startup: dcl.superCall(function (sup) {
+			    return function () {
+				// summary:
+				//		startup widgets in view template.
+				// tags:
+				//		private
+					this.buildRendering();
+					sup.call(this);
+				//	this.inherited(arguments);
+				};
+			})
+*/
 			_startup: function () {
 				// summary:
 				//		startup widgets in view template.

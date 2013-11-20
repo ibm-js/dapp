@@ -1,10 +1,10 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on"], function (lang, declare, on) {
+define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
 	// module:
-	//		dojox/app/Controller
+	//		dapp/Controller
 	// summary:
-	//		Bind events on dojox/app application's dojo/Evented instance or document.
+	//		Bind events on dapp application's dojo/Evented instance or document.
 
-	return declare(null, {
+	return dcl(null, {
 		constructor: function (app, events) {
 			// summary:
 			//		bind events on application dojo/Evented instance.
@@ -12,7 +12,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on"], function (lang, dec
 			//
 
 			// app:
-			//		dojox/app application instance.
+			//		dapp application instance.
 			// events:
 			//		{event : handler}
 

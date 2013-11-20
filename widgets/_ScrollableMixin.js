@@ -1,13 +1,13 @@
 // This module is modified from dojox/mobile/_ScrollableMixin and dojox/mobile/ScrollableView
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/dom-class",
+define(["dcl/dcl", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/dom-class",
 	"dijit/registry", "dojo/dom", "dojo/dom-construct", "dojox/mobile/scrollable"],
-	function (declare, lang, array, win, domClass, registry, dom, domConstruct, Scrollable) {
+	function (dcl, lang, array, win, domClass, registry, dom, domConstruct, Scrollable) {
 		// module:
 		//		dojox/mobile/_ScrollableMixin
 		// summary:
 		//		Mixin for widgets to have a touch scrolling capability.
 
-		return declare(Scrollable, {
+		return dcl(Scrollable, {
 			// summary:
 			//		Mixin for widgets to have a touch scrolling capability.
 			// description:
