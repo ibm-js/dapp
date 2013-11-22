@@ -48,7 +48,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				}
 				this._startDef = new Deferred();
 				when(this.load(), lang.hitch(this, function () {
-					this._createDataStore();
+					this._createDataStores();
 					this._startup();
 				}));
 				return this._startDef;
@@ -64,9 +64,9 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				return vcDef;
 			},
 
-			_createDataStore: function () { // jshint maxcomplexity: 11
+			_createDataStores: function () {
 				// summary:
-				//		Create data store instance for View specific stores
+				//		Create data store instances for View specific stores
 				//
 				// TODO: move this into a common place for use by main and ViewBase
 				//
@@ -83,35 +83,44 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 							if (this.stores[item].params) {
 								lang.mixin(config, this.stores[item].params);
 							}
-							// we assume the store is here through dependencies
-							var StoreCtor;
-							try {
-								StoreCtor = require(type);
-							} catch (e) {
-								throw new Error(type + " must be listed in the dependencies");
-							}
-							if (config.data && lang.isString(config.data)) {
-								//get the object specified by string value of data property
-								//cannot assign object literal or reference to data property
-								//because json.ref will generate __parent to point to its parent
-								//and will cause infinitive loop when creating StatefulModel.
-								config.data = lang.getObject(config.data);
-							}
-							if (this.stores[item].observable) {
-								var observableCtor;
-								try {
-									observableCtor = require("dojo/store/Observable");
-								} catch (e) {
-									throw new Error("dojo/store/Observable must be listed in the dependencies");
-								}
-								this.stores[item].store = observableCtor(new StoreCtor(config));
-							} else {
-								this.stores[item].store = new StoreCtor(config);
-							}
-							this.loadedStores[item] = this.stores[item].store; // add store to loadedStores for the view
+							this._createDataStore(item, type, config);
 						}
+
 					}
 				}
+			},
+
+			_createDataStore: function (item, type, config) {
+				// summary:
+				//		Create a data store instance for View specific store
+				//
+				// TODO: move this into a common place for use by main and ViewBase
+				//
+				var StoreCtor;
+				try {
+					StoreCtor = require(type);
+				} catch (e) {
+					throw new Error(type + " must be listed in the dependencies");
+				}
+				if (config.data && lang.isString(config.data)) {
+					//get the object specified by string value of data property
+					//cannot assign object literal or reference to data property
+					//because json.ref will generate __parent to point to its parent
+					//and will cause infinitive loop when creating StatefulModel.
+					config.data = lang.getObject(config.data);
+				}
+				if (this.stores[item].observable) {
+					var observableCtor;
+					try {
+						observableCtor = require("dojo/store/Observable");
+					} catch (e) {
+						throw new Error("dojo/store/Observable must be listed in the dependencies");
+					}
+					this.stores[item].store = observableCtor(new StoreCtor(config));
+				} else {
+					this.stores[item].store = new StoreCtor(config);
+				}
+				this.loadedStores[item] = this.stores[item].store; // add store to loadedStores for the view
 			},
 
 			_startup: function () {

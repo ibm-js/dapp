@@ -1,12 +1,12 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/_base/window", "dojo/_base/config",
+define(["dcl/dcl", "dojo/_base/lang", "dojo/sniff", "dojo/_base/window", "dojo/_base/config",
 	"dojo/dom-attr", "dojo/topic", "dojo/dom-style", "../utils/constraints", "../Controller"],
-	function (lang, declare, has, win, config, domAttr, topic, domStyle, constraints, Controller) {
+	function (dcl, lang, has, win, config, domAttr, topic, domStyle, constraints, Controller) {
 		// module:
-		//		dojox/app/controllers/LayoutBase
+		//		dapp/controllers/LayoutBase
 		// summary:
 		//		Bind "app-initLayout", "app-layoutView" and "app-resize" events on application instance.
 
-		return declare(Controller, {
+		return dcl(Controller, {
 
 			/* jshint unused: vars */
 			constructor: function (app, events) {
@@ -14,7 +14,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/_base/windo
 				//		bind "app-initLayout", "app-layoutView" and "app-resize" events on application instance.
 				//
 				// app:
-				//		dojox/app application instance.
+				//		dapp application instance.
 				// events:
 				//		{event : handler}
 				this.events = {
@@ -47,7 +47,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/_base/windo
 
 			initLayout: function (event) {
 				// summary:
-				//		Response to dojox/app "app-initLayout" event.
+				//		Response to dapp "app-initLayout" event.
 				//
 				// example:
 				//		Use emit to trigger "app-initLayout" event, and this function will respond to the event.
@@ -86,7 +86,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/_base/windo
 
 			layoutView: function (event) {
 				// summary:
-				//		Response to dojox/app "app-layoutView" event.
+				//		Response to dapp "app-layoutView" event.
 				//
 				// example:
 				//		Use emit to trigger "app-layoutView" event, and this function will response the event.
@@ -133,7 +133,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/_base/windo
 
 			hideView: function (view) {
 				this.app.log("logTransitions:",
-					"LayoutBase" + " setting domStyle display none for view.id=[" + view.id + "], visibility=[" +
+					"LayoutBase" + " set domStyle display none for view.id=[" + view.id + "], visibility=[" +
 						view.domNode.style.visibility + "]");
 				domStyle.set(view.domNode, "display", "none");
 			},
@@ -141,7 +141,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/_base/windo
 			showView: function (view) {
 				if (view.domNode) {
 					this.app.log("logTransitions:",
-						"LayoutBase" + " setting domStyle display to display for view.id=[" + view.id +
+						"LayoutBase" + " set domStyle display for view.id=[" + view.id +
 							"], visibility=[" + view.domNode.style.visibility + "]");
 					domStyle.set(view.domNode, "display", "");
 				}

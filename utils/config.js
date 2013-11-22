@@ -1,7 +1,7 @@
 define(["dojo/sniff"], function (has) {
 
 // module:
-//		dojox/app/utils/config
+//		dapp/utils/config
 
 	return {
 		// summary:

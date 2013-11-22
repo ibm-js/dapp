@@ -269,7 +269,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			if (!config.modules) {
 				config.modules = [];
 			}
-			// add dojox/app lifecycle module by default
+			// add dapp lifecycle module by default
 			config.modules.push("./modules/lifecycle");
 			var modules = config.modules.concat(config.dependencies ? config.dependencies : []);
 
@@ -341,16 +341,6 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				throw new Error("App Config Missing");
 			}
 
-			if (config.validate) {
-				require(["dojox/json/schema", "dojox/json/ref", "dojo/text!dojox/application/schema/application.json"],
-					function (schema, jsonRef, appSchema) {
-					schema = jsonRef.resolveJson(schema);
-					if (schema.validate(config, appSchema)) {
-						generateApp(config, node);
-					}
-				});
-			} else {
-				generateApp(config, node);
-			}
+			generateApp(config, node);
 		};
 	});
