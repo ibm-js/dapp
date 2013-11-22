@@ -107,7 +107,7 @@ define([
 				mids.push(config.view);
 			} else {
 				// regular view
-				mids.push("dojox/app/View");
+				mids.push("dapp/View");
 			}
 			// go into the view children
 			if (config.views) {
@@ -115,7 +115,7 @@ define([
 			}
 			Array.prototype.splice.apply(bc.layers[mainLayer].include, [bc.layers[mainLayer].length, 0].concat(mids));
 		} else {
-			messages.log("pacify", argv.args.appConfigFile + " is not a valid dojox/app JSON config file");
+			messages.log("pacify", argv.args.appConfigFile + " is not a valid dapp JSON config file");
 			process.exit(-1);
 		}
 	};

@@ -1,25 +1,25 @@
 define(
-	["dojo/_base/lang", "dojo/_base/declare", "dojo/topic", "dojo/on", "../Controller", "../utils/hash", "dojo/hash"],
-	function (lang, declare, topic, on, Controller, hash) {
+	["dcl/dcl", "dojo/_base/lang", "dojo/topic", "dojo/on", "../Controller", "../utils/hash", "dojo/hash"],
+	function (dcl, lang, topic, on, Controller, hash) {
 		// module:
-		//		dojox/app/controllers/HistoryHash
+		//		dapp/controllers/HistoryHash
 		// summary:
-		//		Bind "app-domNode" event on dojox/app application instance,
-		//		Bind "startTransition" event on dojox/app application domNode,
+		//		Bind "app-domNode" event on dapp application instance,
+		//		Bind "startTransition" event on dapp application domNode,
 		//		Bind "/dojo/hashchange" event on window object.
 		//		Maintain history by history hash.
 
-		return declare(Controller, {
+		return dcl(Controller, {
 
 			/* jshint unused: vars */
 			constructor: function (app) {
 				// summary:
-				//		Bind "app-domNode" event on dojox/app application instance,
-				//		Bind "startTransition" event on dojox/app application domNode,
+				//		Bind "app-domNode" event on dapp application instance,
+				//		Bind "startTransition" event on dapp application domNode,
 				//		subscribe "/dojo/hashchange" event.
 				//
 				// app:
-				//		dojox/app application instance.
+				//		dapp application instance.
 				this.events = {
 					"app-domNode": this.onDomNodeChange
 				};
@@ -70,7 +70,7 @@ define(
 
 			onStartTransition: function (evt) {
 				// summary:
-				//		Response to dojox/app "startTransition" event.
+				//		Response to dapp "startTransition" event.
 				//
 				// example:
 				//		Use "dojox/mobile/TransitionEvent" to trigger "startTransition" event, and this function will

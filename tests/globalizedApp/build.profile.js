@@ -1,5 +1,5 @@
 /* jshint unused: false */
-require(["dojox/app/build/buildControlApp"], function (bc) {
+require(["dapp/build/buildControlApp"], function (bc) {
 });
 
 var profile = {
@@ -18,8 +18,8 @@ var profile = {
 		},
 		{
 			name: "globalizedApp",
-			location: "../../../dojox/app/tests/globalizedApp",
-			destLocation: "./dojox/app/tests/globalizedApp"
+			location: "../../../dapp/tests/globalizedApp",
+			destLocation: "./dapp/tests/globalizedApp"
 		},
 		{
 			name: "dojox",

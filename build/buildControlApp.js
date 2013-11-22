@@ -1,9 +1,9 @@
 define(["build/buildControlDefault"], function (bc) {
 	// module:
-	//		dojox/app/build/buildControlApp
+	//		dapp/build/buildControlApp
 	// summary:
-	//		This module extend default build control module to add dojox/app build support
+	//		This module extend default build control module to add dapp build support
 	// enhance buildControl
-	bc.discoveryProcs.splice(0, 0, "dojox/app/build/discoverAppConfig");
+	bc.discoveryProcs.splice(0, 0, "dapp/build/discoverAppConfig");
 	return bc;
 });
