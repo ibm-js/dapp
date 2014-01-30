@@ -6,5 +6,12 @@
 		"requirejs": "2.1.x",
 		"dcl": "1.1.x",
 		"delite": "0.1.0-dev"
-	}
+	},
+	"ignore": [
+		".jshintrc",
+		".gitattributes",
+		".travis.yml",
+		"tests",
+		"CONTRIBUTING.md"
+	]
 }
