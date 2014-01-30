@@ -1,4 +1,4 @@
-# dapp [![Build Status](https://travis-ci.org/ibm-dojo/dapp.png?branch=master)](https://travis-ci.org/ibm-dojo/dapp)
+# dapp [![Build Status](https://travis-ci.org/ibm-js/dapp.png?branch=master)](https://travis-ci.org/ibm-js/dapp)
 
 This project provides an AMD-based Application Framework for building Web & Mobile applications from a JSON
 configuration file defining:
@@ -30,20 +30,26 @@ All contributions require a [Dojo Foundation CLA](http://dojofoundation.org/abou
 
 This project requires the following other projects to run:
  * dojo
- * dijit
- * dojox/css3
- * (optional, only useful to run the tests) dojox/mobile
+ * requirejs
+ * dcl
+ * delite
+ * (optional, only useful to run applications using deliteful) deliteful
+ * (optional, only useful to run applications using jquery mobile) jquery mobile
 
 ## Installation
 
-* Manual installation of by dropping dapp as a sibling of the top level Dojo modules:
- * dojo
- * dijit
- * dapp
+_Bower_ release installation:
 
- To install the latest master, go to the root Dojo installation directory and clone dapp from github
+    $ bower install dapp
 
- git clone git://github.com/ibm-dojo/dapp.git
+_Manual_ master installation: go to the root installation directory and clone dapp from github:
+
+    $ git clone git://github.com/ibm-js/dapp.git
+
+Then install dependencies with bower or manual if you want to:
+
+	$ cd dapp
+	$ bower install
 
 ## Documentation
 
