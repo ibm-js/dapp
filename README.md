@@ -46,7 +46,7 @@ _Manual_ master installation: go to the root installation directory and clone da
 
     $ git clone git://github.com/ibm-js/dapp.git
 
-Then install dependencies with bower or manual if you want to:
+Then install dependencies with bower (or manually from github if you prefer to):
 
 	$ cd dapp
 	$ bower install
