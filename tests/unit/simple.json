@@ -1,0 +1,22 @@
+{
+	"id": "simpleApp",
+	"name": "simpleApp",
+	"loaderConfig": {
+		"paths": {
+			"simpleApp": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+	"controllers": [
+		"dapp/controllers/Load",
+		"dapp/controllers/Transition",
+		"dapp/controllers/Layout"
+	],
+	"defaultView": "home",
+	"views": {
+		"home": {
+			"template": "simpleApp/simple.html"
+		}
+	}
+}
