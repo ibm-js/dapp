@@ -110,39 +110,14 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 					for (var i = 0; i < controllers.length; i++) {
 						requireItems.push(controllers[i]);
 					}
-
-					var def = new Deferred();
-					var requireSignal;
-					try {
-						requireSignal = require.on("error", function (error) {
-							if (def.isResolved() || def.isRejected()) {
-								return;
-							}
-							def.reject("load controllers error." + error);
-							requireSignal.remove();
-						});
-						require(requireItems, function () {
-							def.resolve.call(def, arguments);
-							requireSignal.remove();
-						});
-					} catch (e) {
-						def.reject(e);
-						if (requireSignal) {
-							requireSignal.remove();
-						}
-					}
-
 					var controllerDef = new Deferred();
-					when(def, lang.hitch(this, function () {
-						for (var i = 0; i < arguments[0].length; i++) {
+					require(requireItems, lang.hitch(this, function () {
+						for (var i = 0; i < arguments.length; i++) {
 							// instantiate controllers, set Application object, and perform auto binding
-							this.loadedControllers.push((new arguments[0][i](this)).bind());
+							this.loadedControllers.push((new arguments[i](this)).bind());
 						}
 						controllerDef.resolve(this);
-					}), function () {
-						//require def error, reject loadChildDeferred
-						controllerDef.reject("load controllers error.");
-					});
+					}));
 					return controllerDef;
 				}
 			},
@@ -264,7 +239,14 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				}
 				config.loaderConfig.paths.app = path;
 			}
-			require(config.loaderConfig);
+
+			/* global requirejs */
+			if (requirejs) {
+				requirejs.config(config.loaderConfig);
+			} else {
+				// Dojo loader?
+				require(config.loaderConfig);
+			}
 
 			if (!config.modules) {
 				config.modules = [];
