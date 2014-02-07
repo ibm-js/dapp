@@ -192,27 +192,10 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 					path = this.controller.replace(/(\.js)$/, "");
 				}
 
-				var requireSignal;
-				try {
-					requireSignal = require.on("error", function (error) {
-						if (viewControllerDef.isResolved() || viewControllerDef.isRejected()) {
-							return;
-						}
-						if (error.info[0] && (error.info[0].indexOf(path) >= 0)) {
-							viewControllerDef.resolve(false);
-							requireSignal.remove();
-						}
-					});
-					require([path], function (controller) {
-						viewControllerDef.resolve(controller);
-						requireSignal.remove();
-					});
-				} catch (e) {
-					viewControllerDef.reject(e);
-					if (requireSignal) {
-						requireSignal.remove();
-					}
-				}
+				require([path], function (controller) {
+					viewControllerDef.resolve(controller);
+				});
+
 				return viewControllerDef;
 			},
 

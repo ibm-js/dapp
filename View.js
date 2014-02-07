@@ -76,35 +76,9 @@ define(["require", "dojo/when", "dojo/on", "dojo/_base/declare", "dojo/_base/lan
 					if (tpl) {
 						deps = deps.concat(["dojo/text!" + tpl]);
 					}
-					var def = new Deferred();
-					if (deps.length > 0) {
-						var requireSignal;
-						try {
-							requireSignal = require.on("error", lang.hitch(this, function (error) {
-								if (def.isResolved() || def.isRejected()) {
-									return;
-								}
-								if (error.info[0] && error.info[0].indexOf(this.template) >= 0) {
-									def.resolve(false);
-									requireSignal.remove();
-								}
-							}));
-							require(deps, function () {
-								def.resolve.call(def, arguments);
-								requireSignal.remove();
-							});
-						} catch (e) {
-							def.resolve(false);
-							if (requireSignal) {
-								requireSignal.remove();
-							}
-						}
-					} else {
-						def.resolve(true);
-					}
 					var loadViewDeferred = new Deferred();
-					when(def, lang.hitch(this, function () {
-						this.templateString = this.template ? arguments[0][arguments[0].length - 1] : "<div></div>";
+					require(deps, lang.hitch(this, function () {
+						this.templateString = this.template ? arguments[arguments.length - 1] : "<div></div>";
 						loadViewDeferred.resolve(this);
 					}));
 					return loadViewDeferred;
