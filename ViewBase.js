@@ -1,9 +1,12 @@
-define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/_base/declare", "dojo/_base/lang",
-	"dojo/Deferred", "./utils/constraints"],
-	function (require, when, on, domAttr, domStyle, declare, lang, Deferred, constraints) {
+define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/dom-class", "dojo/_base/declare",
+		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/constraints"
+	],
+	function (require, when, on, domAttr, domStyle, domClass, declare, lang, dcl, Deferred, constraints) {
+		var MODULE = "ViewBase:";
 		return declare(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
+			attributes: {},
 			constructor: function (params) {
 				// summary:
 				//		Constructs a ViewBase instance.
@@ -16,8 +19,9 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		- parent: parent view
 				//		- controller: view controller module identifier
 				//		- children: children views
+				var F = MODULE + "constructor ";
 				this.id = "";
-				this.name = "";
+				this.viewName = "";
 				this.children = {};
 				this.selectedChildren = {};
 				this.loadedStores = {};
@@ -31,11 +35,16 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 
 				// private
 				this._started = false;
-				lang.mixin(this, params);
-				// mixin views configuration to current view instance.
-				if (this.parent.views) {
-					lang.mixin(this, this.parent.views[this.name]);
+				dcl.mix(this, params);
+				var p = this.parentView;
+				if (!p || !p.views) {
+					p = this.app;
 				}
+				// mixin views configuration to current view instance.
+				if (p && p.views) {
+					dcl.mix(this, p.views[this.viewName]);
+				}
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 			},
 
 			// start view
@@ -43,6 +52,8 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				// summary:
 				//		start view object.
 				//		load view template, view controller implement and startup all widgets in view template.
+				var F = MODULE + "start ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				if (this._started) {
 					return this;
 				}
@@ -55,10 +66,12 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 			},
 
 			load: function () {
+				var F = MODULE + "load ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				var vcDef = this._loadViewController();
 				when(vcDef, lang.hitch(this, function (controller) {
 					if (controller) {
-						lang.mixin(this, controller);
+						dcl.mix(this, controller);
 					}
 				}));
 				return vcDef;
@@ -70,18 +83,20 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//
 				// TODO: move this into a common place for use by main and ViewBase
 				//
-				if (this.parent.loadedStores) {
-					lang.mixin(this.loadedStores, this.parent.loadedStores);
+				var F = MODULE + "_createDataStores ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
+				if (this.parentView && this.parentView.loadedStores) {
+					dcl.mix(this.loadedStores, this.parentView.loadedStores);
 				}
 
 				if (this.stores) {
 					//create stores in the configuration.
 					for (var item in this.stores) {
-						if (item.charAt(0) !== "_") {//skip the private properties
+						if (item.charAt(0) !== "_") { //skip the private properties
 							var type = this.stores[item].type ? this.stores[item].type : "dojo/store/Memory";
 							var config = {};
 							if (this.stores[item].params) {
-								lang.mixin(config, this.stores[item].params);
+								dcl.mix(config, this.stores[item].params);
 							}
 							this._createDataStore(item, type, config);
 						}
@@ -96,6 +111,8 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//
 				// TODO: move this into a common place for use by main and ViewBase
 				//
+				var F = MODULE + "_createDataStore ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				var StoreCtor;
 				try {
 					StoreCtor = require(type);
@@ -128,14 +145,13 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		startup widgets in view template.
 				// tags:
 				//		private
-
-				this._initViewHidden();
-				this._needsResize = true; // flag used to be sure resize has been called before transition
-
-				this._startLayout();
+				var F = MODULE + "_startup ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 			},
 
 			_initViewHidden: function () {
+				var F = MODULE + "_initViewHidden ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				domStyle.set(this.domNode, "visibility", "hidden");
 			},
 
@@ -144,34 +160,27 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		startup widgets in view template.
 				// tags:
 				//		private
-				this.app.log("  > in app/ViewBase _startLayout firing layout for name=[", this.name,
-					"], parent.name=[",
-					this.parent.name, "]");
+				var F = MODULE + "_startLayout ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
+
+				this.app.log(MODULE, F + "  >  firing layout for name=[" + this.viewName +
+					"], parentView.viewName=[" + (this.parentView ? this.parentView.viewName : "") + "]");
 
 				if (!this.hasOwnProperty("constraint")) {
 					this.constraint = domAttr.get(this.domNode, "data-app-constraint") || "center";
 				}
 				constraints.register(this.constraint);
 
-
-				this.app.emit("app-initLayout", {
-					"view": this,
-					"callback": lang.hitch(this, function () {
-						//start widget
-						this.startup();
-
-						// call view assistant's init() method to initialize view
-						this.app.log("  > in app/ViewBase calling init() name=[", this.name, "], parent.name=[",
-							this.parent.name, "]");
-						this.init();
-						this._started = true;
-						if (this._startDef) {
-							this._startDef.resolve(this);
-						}
-					})
-				});
+				if (this.parentNode.getIndexOfChild(this.domNode) === -1) {
+					//		this.parentNode.addChild(this.domNode, null);
+				}
+				this.app.log("  > in app/ViewBase calling this.startup and resolve() id=[" + this.id + "], " +
+					"parentView.viewName=[" + (this.parentView ? this.parentView.viewName : "") + "]");
+				this._started = true;
+				if (this._startDef) {
+					this._startDef.resolve(this);
+				}
 			},
-
 
 			_loadViewController: function () {
 				// summary:
@@ -179,13 +188,19 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				// tags:
 				//		private
 				//
+				var F = MODULE + "_loadViewController ";
+				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				var viewControllerDef = new Deferred();
 				var path;
 
+				//TODO: There is a problem with the order of views being added if no controller is listed
+				//TODO: Seems like order problem can be solved by using ViewBase if it is not set, try this for now!
+				if (!this.controller) {
+					this.controller = "dapp/ViewBase";
+				}
 				if (!this.controller) { // no longer using this.controller === "none", if we dont have one it means none
-					this.app.log("  > in app/ViewBase _loadViewController no controller set for view name=[",
-						this.name,
-						"], parent.name=[", this.parent.name, "]");
+					this.app.log(MODULE, F + "  > no controller set for view name=[" + this.viewName +
+						"], parentView.viewName=[" + this.parentView.viewName, "]");
 					viewControllerDef.resolve(true);
 					return viewControllerDef;
 				} else {
@@ -195,7 +210,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				require([path], function (controller) {
 					viewControllerDef.resolve(controller);
 				});
-
 				return viewControllerDef;
 			},
 

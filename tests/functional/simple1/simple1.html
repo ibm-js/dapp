@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>StarRating Tests</title>
+<script type="text/javascript" src="../../../delite/tests/boilerplate.js"></script>
+<script language="JavaScript" type="text/javascript">
+	var ready = false; // set to true when the test page is ready
+	var timeoutInterval = 1000;
+	var val = 0;
+	require([
+		"delite/register",
+		"dojo/dom",
+		"deliteful/StarRating",
+		"dojo/domReady!"
+	], function(register, dom, StarRating){
+		// Set global variable to signal that the test page is ready
+		require(["./simple1/App1.js"], function(){
+						// Set global variable to signal that the test page is ready
+					//	ready = true; // moved to App1.js
+						console.log("in index.html after require simple1/App1.js");
+					})
+	})
+</script>
+</head>
+<body style="width:100%; height: 100%">
+<div style="position: relative; height: 100%">
+	<!--(note initial size was not be set right, had to set ; height: 100% above) -->
+	<d-linear-layout style="width:100%; height: 100%" direction="vertical">
+		<d-view-stack id="headerViewStack" style="width: 100%; height: 10%; background-color: blue;">
+		</d-view-stack>
+		<d-view-stack id="centerViewStack" class="fill" style="width: 100%; background-color: green">
+		</d-view-stack>
+		<d-view-stack id="footerViewStack" style="width: 100%; height: 10%; background-color: pink">
+		</d-view-stack>
+	</d-linear-layout>
+</div>
+</body>
+</html>

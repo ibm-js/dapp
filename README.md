@@ -21,6 +21,9 @@ Migration steps from dojox/app to dapp:
 * replace any use of "dojox/app/module" AMD module path by "dapp/modules"
 * replace any use of "dojox/app" AMD module path by "dapp"
 
+Bugs and open issues are tracked in the
+[github issues tracker](https://github.com/ibm-js/dapp/issues).
+
 ## Licensing
 
 This project is distributed by the Dojo Foundation and licensed under the ["New" BSD License](./LICENSE).
@@ -30,8 +33,10 @@ All contributions require a [Dojo Foundation CLA](http://dojofoundation.org/abou
 
 This project requires the following other projects to run:
  * dojo
- * requirejs
- * dcl
+ * dcl    (git clone https://github.com/uhop/dcl.git)
+ * requirejs (git clone https://github.com/jrburke/requirejs.git)
+ * requirejs-dplugins
+ * requirejs-text
  * delite
  * (optional, only useful to run applications using deliteful) deliteful
  * (optional, only useful to run applications using jquery mobile) jquery mobile
@@ -53,7 +58,7 @@ Then install dependencies with bower (or manually from github if you prefer to):
 
 ## Documentation
 
-http://livedocs.dojotoolkit.org/dojox/app
+See the [docs directory](./docs).
 
 ## Credits
 

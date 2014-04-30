@@ -13,5 +13,5 @@ define({
 	},
 
 	// Non-functional test suites
-	suites: [ "dapp/tests/unit/all" ]
+	suites: ["dapp/tests/unit/all"]
 });

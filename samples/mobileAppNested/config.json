@@ -1,0 +1,141 @@
+{
+	"id": "mobileAppNested",
+
+	"loaderConfig": {
+		"paths": {
+			"has" : {
+				"requirejs" : {
+					"mobileAppNested": "../mobileAppNested"
+				},
+				"!requirejs" : {
+					"mobileAppNested": "../dapp/samples/mobileAppNested"
+				}
+			}
+		}
+	},
+
+	"containerSelector" : "#main",
+	/*TEST comment aaa */
+	// another test comment
+	"modules": [
+	],
+
+	"parseOnLoad": true,
+
+	"dependencies": [
+		"delite/register",
+		"deliteful/ViewStack",
+		"deliteful/SidePane",
+		"deliteful/LinearLayout",
+		"deliteful/Button"
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+
+	"defaultView": "vs,aaa+footer",
+
+	"views": {
+		"sidemenu":{
+			"constraint": "leftStack",
+			"parentSelector": "#leftStack",
+			"controller" : "mobileAppNested/sidepane.js",
+			"template": "mobileAppNested/sidepane.html"
+		},
+		"sidepane": {
+			"constraint": "sidePaneContainer",
+			"parentSelector": "#sidePaneContainer",
+			"controller" : "mobileAppNested/sidepane.js",
+			"template": "mobileAppNested/sidepane.html",
+			"nls": "mobileAppNested/nls/home"
+		},
+		"vs": {
+			"constraint": "vsparent",  // this is a hack for now used in layout...
+			"parentSelector": "#vsparent",
+			"controller" : "mobileAppNested/vs.js",
+			"template": "mobileAppNested/vs.html",
+			"views": {
+				"aaa": {
+					"constraint": "vs-view-stack1",
+					"parentSelector": "#vs-view-stack1",
+					"controller" : "mobileAppNested/aaa.js",
+					"template": "mobileAppNested/aaa.html"
+				},
+				"bbb": {
+					"constraint": "vs-view-stack1",
+					"parentSelector": "#vs-view-stack1",
+					"controller" : "mobileAppNested/bbb.js",
+					"template": "mobileAppNested/bbb.html"
+				},
+				"ccc": {
+					"constraint": "vs-view-stack1",
+					"parentSelector": "#vs-view-stack1",
+					"controller" : "mobileAppNested/ccc.js",
+					"template": "mobileAppNested/ccc.html"
+				},
+				"ddd": {
+					"constraint": "vs-view-stack1",
+					"parentSelector": "#vs-view-stack1",
+					"controller" : "mobileAppNested/ddd.js",
+					"template": "mobileAppNested/ddd.html"
+				}
+			}
+		},
+		"footer": {
+			"constraint": "vsparent",  // this is a hack for now used in layout...
+			"parentSelector": "#vsparent",
+			"controller" : "mobileAppNested/footer.js",
+			"template": "mobileAppNested/footer.html"
+		},
+		"main": {
+			"constraint": "mainContainer",
+			"parentSelector": "#mainContainer",
+			"controller" : "mobileAppNested/main.js",
+			"template": "mobileAppNested/main.html"
+		},
+		"header": {
+			"constraint": "main",
+			"parentSelector": "#main",
+			"template": "mobileAppNested/header.html"
+		},
+		"home2": {
+			"constraint": "main-view-stack",
+			"parentSelector": "#main-view-stack",
+			"controller" : "mobileAppNested/home.js",
+			"template": "mobileAppNested/home.html",
+			"nls": "mobileAppNested/nls/home"
+		},
+		"detail2": {
+			"constraint": "main-view-stack",
+			"parentSelector": "#main-view-stack",
+			"controller" : "mobileAppNested/detail.js",
+			"template": "mobileAppNested/detail.html"
+		},
+		"content": {
+			"dependencies": [
+				"deliteful/ViewStack"
+			],
+			"constraint": "main",
+			"parentSelector": "#main",
+			"template": "mobileAppNested/content.html",
+			"defaultView": "home",
+			"views": {
+				"home": {
+					"constraint": "main-view-stack",
+					"controller" : "mobileAppNested/home.js",
+					"template": "mobileAppNested/home.html",
+					"nls": "mobileAppNested/nls/home"
+				},
+				"detail": {
+					"constraint": "main-view-stack",
+					"controller" : "mobileAppNested/detail.js",
+					"template": "mobileAppNested/detail.html"
+				}
+			}
+		}
+	}
+}

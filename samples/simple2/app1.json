@@ -1,0 +1,85 @@
+{
+	"id": "simple2App1",
+	"name": "simple2App1",
+	"loaderConfig": {
+		"paths": {
+			"simple2App1": "dapp/samples"
+		}
+	},
+	"modules": [
+	],
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/delite/Logger"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"dapp/samples/simple2/viewController1",
+		"dapp/samples/simple2/parentController1"
+	],
+
+	"containerSelector" : "#nested1App1dviewStack",
+
+	"appLogging": {
+		"logAll": 0,
+		"logTimeStamp": 0,
+		"loggingList": [
+			"TestTransition"
+		//	"app-view:" ,"testApp:"
+		//	,"Main:","ViewBase:","View:"
+		//	,"controllers/delite/Load:","controllers/delite/Layout:","controllers/delite/Transition:","utils/constraints:"
+		]
+	},
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	//"defaultView": "P1,S1,V1",
+	"defaultView": "P2",
+	"views": {
+		"P1": {
+			"constraint": "main",
+			"parentSelector": "#nested1App1dviewStack",
+			"controller": "dapp/samples/simple2/parentController1.js",
+			"template": "dapp/samples/simple2/parentTemplate.html",
+			"defaultView": "S1",
+			"views": {
+				"S1": {
+					"constraint": "main2",
+				//	"parentSelector": "#nested1App1dviewStack",
+					"controller": "dapp/samples/simple2/parentController1.js",
+					"template": "dapp/samples/simple2/subParentTemplate.html",
+					"defaultView": "V1",
+					"views": {
+						"V1": {
+							"constraint": "main3",
+						//	"parentSelector": "#nested1App1dviewStack",
+							"controller": "dapp/samples/simple2/viewController1.js",
+							"template": "dapp/samples/simple2/viewTemplate.html"
+						},
+						"V2": {
+							"constraint": "main3",
+						//	"parentSelector": "#nested1App1dviewStack",
+							"controller": "dapp/samples/simple2/viewController1.js",
+							"template": "dapp/samples/simple2/viewTemplate.html"
+						}
+					}
+				}
+			}
+		},
+		"V7": {
+			"constraint": "main",
+			"parentSelector": "#nested1App1dviewStack",
+			"controller": "dapp/samples/simple2/viewController1.js",
+			"template": "dapp/samples/simple2/viewTemplate.html"
+		},
+		"P2": {
+			"constraint": "main",
+			"parentSelector": "#nested1App1dviewStack",
+			"controller": "dapp/samples/simple2/parentController1.js",
+			"template": "dapp/samples/simple2/viewTemplate1.html"
+		}
+	}
+}

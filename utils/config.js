@@ -1,13 +1,13 @@
 define(["dojo/sniff"], function (has) {
 
-// module:
-//		dapp/utils/config
+	// module:
+	//		dapp/utils/config
 
 	return {
 		// summary:
 		//		This module contains the config
 
-		configProcessHas: function (/*Object*/ source) {
+		configProcessHas: function ( /*Object*/ source) {
 			// summary:
 			//		scan the source config for has checks and call configMerge to merge has sections, and remove the
 			// 		has sections from the source.
@@ -40,13 +40,13 @@ define(["dojo/sniff"], function (has) {
 										var hasval = sval[hasname];
 										// merge this has section into the source config
 										this.configMerge(source, hasval);
-										break;	// found a match for this multiple has test, so go to the next one
+										break; // found a match for this multiple has test, so go to the next one
 									}
 								}
 							}
 						}
 					}
-					delete source.has;	// after merge remove this has section from the config
+					delete source.has; // after merge remove this has section from the config
 				} else {
 					if (!(name.charAt(0) === "_" && name.charAt(1) === "_") && sval && typeof sval === "object") {
 						this.configProcessHas(sval);
@@ -56,7 +56,7 @@ define(["dojo/sniff"], function (has) {
 			return source;
 		},
 
-		configMerge: function (/*Object*/ target, /*Object*/ source) {
+		configMerge: function ( /*Object*/ target, /*Object*/ source) {
 			// summary:
 			//		does a deep copy of the source into the target to merge the config from the source into the target
 			// description:

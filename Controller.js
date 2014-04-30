@@ -36,7 +36,7 @@ define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
 			if (arguments.length === 0) {
 				if (this.events) {
 					for (var item in this.events) {
-						if (item.charAt(0) !== "_") {//skip the private properties
+						if (item.charAt(0) !== "_") { //skip the private properties
 							this.bind(this.app, item, lang.hitch(this, this.events[item]));
 						}
 					}
@@ -70,6 +70,25 @@ define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
 				}
 			}
 			console.warn("event '" + event + "' not bind on ", evented);
+			return this;
+		},
+
+		unbindAll: function () {
+			// summary:
+			//		remove a binded event signal.
+			//
+			// evented: Object
+			//		dojo/Evented instance, document, domNode or window
+			// event: String
+			//		event
+
+			var len = this._boundEvents.length;
+			for (var i = 0; i < len; i++) {
+				this._boundEvents[i].signal.remove();
+				//		this._boundEvents.splice(i, 1);
+			}
+			this._boundEvents = [];
+			//console.warn("event '" + event + "' not bind on ", evented);
 			return this;
 		}
 	});

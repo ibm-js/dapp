@@ -1,0 +1,73 @@
+{
+	"id": "simple1App3",
+	"name": "simple1App3",
+	"loaderConfig": {
+		"paths": {
+			"simple1App3": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/delite/Logger"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"dapp/tests/unit/simple1/viewController1"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0,
+		"logTimeStamp": 0,
+		"loggingList": [
+		//	"app-view:"
+		//	,"testApp:"
+		//	,"Main:"
+		//	,"ViewBase:"
+		//	,"View:"
+		//	,"controllers/delite/Load:"
+		//	,"controllers/delite/Layout:"
+		//	,"controllers/delite/Transition:"
+		//	,"utils/constraints:"
+		]
+	},
+
+	"parseOnLoad": true,
+	"nls": "dapp/tests/unit/simple1/nls/app",
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "simple1App3Home1",
+	"views": {
+		"simple1App3Home1": {
+			"constraint": "main",
+			"parentSelector": "#simple1App3dviewStack",
+			"nls": "dapp/tests/unit/simple1/nls/home",
+		// TODO, I could not use the loaderConfig path for simple1App3 here, not sure why it did not find the template
+		//	"template": "simple1App3/viewTemplate.html"
+			"controller": "dapp/tests/unit/simple1/viewController1.js",
+			"template": "dapp/tests/unit/simple1/viewTemplate.html"
+		},
+		"simple1App3Home2": {
+			"constraint": "main",
+			"parentSelector": "#simple1App3dviewStack",
+			"nls": "dapp/tests/unit/simple1/nls/home",
+			"controller": "dapp/tests/unit/simple1/viewController1.js",
+			"template": "dapp/tests/unit/simple1/viewTemplate.html"
+		},
+		"simple1App3Home3NoController": {
+			"constraint": "main",
+			"parentSelector": "#simple1App3dviewStack",
+			"nls": "dapp/tests/unit/simple1/nls/home",
+			"controller": "dapp/tests/unit/simple1/viewController1.js",
+			"template": "dapp/tests/unit/simple1/viewTemplate.html"
+		}
+
+	}
+}

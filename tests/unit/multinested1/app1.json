@@ -1,0 +1,152 @@
+{
+	"id": "multinested1App1",
+	"name": "multinested1App1",
+	"loaderConfig": {
+		"paths": {
+			"multinested1App1": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/delite/Logger"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"dapp/tests/unit/multinested1/viewController1",
+		"dapp/tests/unit/multinested1/parentController1"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 1
+	//	"logTimeStamp": 1,
+	//	"loggingList": [
+		//	"app-view:" ,"testApp:"
+		//	,"Main:","ViewBase:","View:"
+		//	,"controllers/delite/Load:",
+		//	"controllers/delite/Layout:",
+		//	"controllers/delite/Transition:",
+		//	"utils/constraints:"
+	//	]
+	},
+
+	"parseOnLoad": true,
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	//"defaultView": "P1,S1,V1",
+	"defaultView": "H1+content,P1",
+	"views": {
+		"H1": {
+			"constraint": "top1",
+			"parentSelector": "#multinested1App1linearlayout",
+			"controller": "dapp/tests/unit/multinested1/parentController1.js",
+			"template": "dapp/tests/unit/multinested1/parentTemplate.html",
+			"defaultView": "HS1",
+			"views": {
+				"HS1": {
+					"constraint": "top2",
+				//	"parentSelector": "#multinested1App1linearlayout",
+					"controller": "dapp/tests/unit/multinested1/parentController1.js",
+					"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+					"defaultView": "HV1",
+					"views": {
+						"HV1": {
+							"constraint": "top3",
+						//	"parentSelector": "#multinested1App1linearlayout",
+							"controller": "dapp/tests/unit/multinested1/viewController1.js",
+							"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+						},
+						"HV2": {
+							"constraint": "top3",
+						//	"parentSelector": "#multinested1App1linearlayout",
+							"controller": "dapp/tests/unit/multinested1/viewController1.js",
+							"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+						}
+					}
+				}
+			}
+		},
+		"content": {
+			"constraint": "content1",
+			"parentSelector": "#multinested1App1linearlayout",
+			"controller": "dapp/tests/unit/multinested1/parentController1.js",
+			"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+			"defaultView": "S1",
+			"views": {
+			"P1": {
+			//	"constraint": "main",
+			//	"parentSelector": "#multinested1App1linearlayout",
+				"controller": "dapp/tests/unit/multinested1/parentController1.js",
+				"template": "dapp/tests/unit/multinested1/parentTemplate.html",
+				"defaultView": "S1",
+				"views": {
+					"S1": {
+						"constraint": "main2",
+					//	"parentSelector": "#multinested1App1linearlayout",
+						"controller": "dapp/tests/unit/multinested1/parentController1.js",
+						"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+						"defaultView": "V1",
+						"views": {
+							"V1": {
+								"constraint": "main3",
+							//	"parentSelector": "#multinested1App1linearlayout",
+								"controller": "dapp/tests/unit/multinested1/viewController1.js",
+								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+							},
+							"V2": {
+								"constraint": "main3",
+							//	"parentSelector": "#multinested1App1linearlayout",
+								"controller": "dapp/tests/unit/multinested1/viewController1.js",
+								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+							}
+						}
+					}
+				}
+			},
+			"P2": {
+			//	"constraint": "main",
+			//	"parentSelector": "#multinested1App1linearlayout",
+				"controller": "dapp/tests/unit/multinested1/parentController1.js",
+				"template": "dapp/tests/unit/multinested1/parentTemplate.html",
+				"defaultView": "P2S1",
+				"views": {
+					"P2S1": {
+						"constraint": "main2",
+					//	"parentSelector": "#multinested1App1linearlayout",
+						"controller": "dapp/tests/unit/multinested1/parentController1.js",
+						"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+						"defaultView": "P2V1",
+						"views": {
+							"P2V1": {
+								"constraint": "main3",
+							//	"parentSelector": "#multinested1App1linearlayout",
+								"controller": "dapp/tests/unit/multinested1/viewController1.js",
+								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+							},
+							"P2V2": {
+								"constraint": "main3",
+							//	"parentSelector": "#multinested1App1linearlayout",
+								"controller": "dapp/tests/unit/multinested1/viewController1.js",
+								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+							}
+						}
+					}
+				}
+			},
+			"V7": {
+			//	"constraint": "main",
+			//	"parentSelector": "#multinested1App1linearlayout",
+				"controller": "dapp/tests/unit/multinested1/viewController1.js",
+				"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+			}
+		}
+		}
+	}
+}

@@ -1,0 +1,143 @@
+{
+	"id": "mobileApp",
+
+	"loaderConfig": {
+		"paths": {
+			"has" : {
+				"requirejs" : {
+					"mobileApp": "../mobileApp"
+				},
+				"!requirejs" : {
+					"mobileApp": "../dapp/samples/mobileApp"
+				}
+			}
+		}
+	},
+
+	"containerSelector" : "#vs",
+	/*TEST comment aaa */
+	// another test comment
+	"modules": [
+	],
+
+	"parseOnLoad": true,
+
+	"dependencies": [
+		"delite/register",
+		"deliteful/ViewStack",
+		"deliteful/SidePane",
+		"deliteful/LinearLayout",
+		"deliteful/Button"
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Logger",
+		"dapp/controllers/delite/Transition"
+	],
+
+
+	"appLogging": {
+		"logAll": 0,
+		"logTimeStamp": 0,
+		"loggingList": [
+			"app-view:"
+			,"testApp:"
+			,"Main:"
+			,"ViewBase:"
+			,"View:"
+			,"controllers/delite/Load:"
+			,"controllers/delite/Layout:"
+			,"controllers/delite/Transition:"
+		]
+	},
+
+	"defaultView": "aaa",
+
+	"views": {
+		"sidemenu":{
+			"constraint": "leftStack",
+			"parentSelector": "#leftStack",
+			"controller" : "mobileApp/sidepane.js",
+			"template": "mobileApp/sidepane.html"
+		},
+		"sidepane": {
+			"constraint": "sidePaneContainer",
+			"parentSelector": "#sidePaneContainer",
+			"controller" : "mobileApp/sidepane.js",
+			"template": "mobileApp/sidepane.html",
+			"nls": "mobileApp/nls/home"
+		},
+		"aaa": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "mobileApp/aaa.js",
+			"template": "mobileApp/aaa.html"
+		},
+		"bbb": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "mobileApp/bbb.js",
+			"template": "mobileApp/bbb.html"
+		},
+		"ccc": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "mobileApp/ccc.js",
+			"template": "mobileApp/ccc.html"
+		},
+		"ddd": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "mobileApp/ddd.js",
+			"template": "mobileApp/ddd.html"
+		},
+		"main": {
+			"constraint": "mainContainer",
+			"parentSelector": "#mainContainer",
+			"controller" : "mobileApp/main.js",
+			"template": "mobileApp/main.html"
+		},
+		"header": {
+			"constraint": "main",
+			"parentSelector": "#main",
+			"template": "mobileApp/header.html"
+		},
+		"home2": {
+			"constraint": "main-view-stack",
+			"parentSelector": "#main-view-stack",
+			"controller" : "mobileApp/home.js",
+			"template": "mobileApp/home.html",
+			"nls": "mobileApp/nls/home"
+		},
+		"detail2": {
+			"constraint": "main-view-stack",
+			"parentSelector": "#main-view-stack",
+			"controller" : "mobileApp/detail.js",
+			"template": "mobileApp/detail.html"
+		},
+		"content": {
+			"dependencies": [
+				"deliteful/ViewStack"
+			],
+			"constraint": "main",
+			"parentSelector": "#main",
+			"template": "mobileApp/content.html",
+			"defaultView": "home",
+			"views": {
+				"home": {
+					"constraint": "main-view-stack",
+					"controller" : "mobileApp/home.js",
+					"template": "mobileApp/home.html",
+					"nls": "mobileApp/nls/home"
+				},
+				"detail": {
+					"constraint": "main-view-stack",
+					"controller" : "mobileApp/detail.js",
+					"template": "mobileApp/detail.html"
+				}
+			}
+		}
+	}
+}

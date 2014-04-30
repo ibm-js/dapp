@@ -1,69 +1,89 @@
-define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
-	"dojo/_base/window", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
-	"dojo/dom-construct", "dojo/dom-attr", "./utils/nls", "./modules/lifecycle",
-	"./utils/hash", "./utils/constraints", "./utils/config"],
-	function (require, kernel, lang, declare, config, win, Evented, Deferred, when, has, on, domReady,
-			  domConstruct, domAttr, nls, lifecycle, hash, constraints, configUtils) {
+define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
+		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
+		"./utils/nls", "dojo/topic", "./utils/hash", "./utils/constraints", "./utils/config", "dojo/_base/window"
+	],
+	function (require, kernel, dcl, lang, declare, config, Evented, Deferred, when, has, on, domReady,
+		nls, topic, hash, constraints, configUtils) {
+		var MODULE = "Main:";
 
 		has.add("app-log-api", (config.app || {}).debugApp);
 
 		var Application = declare(Evented, {
+			lifecycle: {
+				UNKNOWN: 0, //unknown
+				STARTING: 1, //starting
+				STARTED: 2, //started
+				STOPPING: 3, //stopping
+				STOPPED: 4 //stopped
+			},
+
+			_status: 0, //unknown
+
 			constructor: function (params, node) {
-				lang.mixin(this, params);
-				this.loadedControllers = [];
+				dcl.mix(this, params);
+				this.domNode = node;
 				this.children = {};
 				this.loadedStores = {};
-				// Create a new domNode and append to body
-				// Need to bind startTransition event on application domNode,
-				// Because dojox/mobile/ViewController bind startTransition event on document.body
-				// Make application's root domNode id unique, this id can be visited by window namespace on Chrome 18.
-				this.setDomNode(domConstruct.create("div", {
-					id: this.id + "_Root",
-					style: "width:100%; height:100%; overflow-y:hidden; overflow-x:hidden;"
-				}));
-				node.appendChild(this.domNode);
+				this.loadedControllers = [];
 			},
 
-			transitionToView: function (/*DomNode*/target, /*Object*/transitionOptions, /*Event?*/triggerEvent) {
+			getStatus: function () {
 				// summary:
-				//		A convenience function to fire the transition event to transition to the view.
+				//		Get the application status, use the lifecycle status to see what the status is.
 				//
-				// target:
-				//		The DOM node that initiates the transition (for example a ListItem).
-				// transitionOptions:
-				//		Contains the transition options.
-				// triggerEvent:
-				//		The event that triggered the transition (for example a touch event on a ListItem).
-				var opts = {bubbles: true, cancelable: true, detail: transitionOptions,
-							triggerEvent: triggerEvent || null};
-				on.emit(target, "startTransition", opts);
+				// returns:
+				//		the status
+				return this._status;
 			},
 
-			unloadView: function (/*Object*/view, /*function?*/callback) {
+			setStatus: function (newStatus) {
 				// summary:
-				//		A convenience function to fire the app-unload-view event to unload the view and
-				// the children of the view.
+				//		Set the application status, use the lifecycle status to set the status.
+				//		The application can subscribe the "/app/status" event to be notified of status changes.
 				//
-				// view:
-				//		The view to be unloaded.
-				// callback:
-				//		The callback function to call after the view and all child views are unloaded.
-				var evt = {"view": view, "callback": callback};
-				on.emit(this, "app-unload-view", evt);
+				// newStatus:
+				//		The new status it should be one of the lifecycle status like lifecycle.STARTED etc.
+				this._status = newStatus;
+
+				// publish /app/status event
+				topic.publish("/app/status", newStatus, this.id);
 			},
 
+			displayView: function (viewPath, params) {
+				// summary:
+				//		A convenience function to fire the delite-display event to transition to a view,
+				// 		or a set of views.
+				//
+				// viewPath:
+				//		The viewPath to use as the dest for the event, it can be multiple views separated by "+" or
+				//		"-" to hide a view, or it can be a nested view with parent,child for example "H1+P1,S1,V1+F1"
+				// params:
+				//		Contains the params for the event which can include transition and direction.
+				var opts = {
+					bubbles: true,
+					cancelable: true,
+					dest: viewPath
+				};
+				dcl.mix(opts,
+					params ? params : {
+						transition: "slide",
+						direction: "end"
+					});
+				on.emit(document, "delite-display", opts);
+			},
 
+			// TODO: move to a Store controller?
 			_createDataStore: function () {
 				// summary:
 				//		Create data store instance
 				if (this.stores) {
 					//create stores in the configuration.
 					for (var item in this.stores) {
-						if (item.charAt(0) !== "_") {//skip the private properties
+						if (item.charAt(0) !== "_") { //skip the private properties
 							var type = this.stores[item].type ? this.stores[item].type : "dojo/store/Memory";
 							var config = {};
 							if (this.stores[item].params) {
-								lang.mixin(config, this.stores[item].params);
+								dcl.mix(config, this.stores[item].params);
 							}
 							// we assume the store is here through dependencies
 							var StoreCtor;
@@ -98,12 +118,12 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 
 			createControllers: function (controllers) {
 				// summary:
-				//		Create controller instance
+				// 		Create controller instance
 				//
 				// controllers: Array
-				//		controller configuration array.
+				// 		controller configuration array.
 				// returns:
-				//		controllerDeferred object
+				// 		controllerDeferred object
 
 				if (controllers) {
 					var requireItems = [];
@@ -124,31 +144,216 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 
 			// setup default view and Controllers and startup the default view
 			start: function () {
+				// summary:
+				// 		Make calls to setup the Stores, Controllers and nls for the application
 				//
 				//create application level data store
 				this._createDataStore();
+				//create application level controllers
 				this.setupControllers();
 				// if available load root NLS
 				when(nls(this), lang.hitch(this, function (nls) {
 					if (nls) {
-						lang.mixin(this.nls = {}, nls);
+						this.nls = {};
+						dcl.mix(this.nls, nls);
 					}
 					this.startup();
 				}));
 			},
 
-			setDomNode: function (domNode) {
-				var oldNode = this.domNode;
-				this.domNode = domNode;
-				this.emit("app-domNode", {
-					oldNode: oldNode,
-					newNode: domNode
-				});
+			_addDefaultViewsToPath: function (dest) {
+				var F = MODULE + "_addDefaultViewsToPath ";
+				var viewPath = dest;
+				this.log(MODULE, F + "called with dest=[" + dest + "]");
+				var viewDef = this.getViewDefFromDest(dest);
+				while (viewDef && viewDef.defaultView) {
+					viewPath = viewPath + "," + viewDef.defaultView;
+					this.log(MODULE, F + "set viewPath=[" + viewPath + "]");
+					viewDef = this.getViewDefFromDest(viewPath);
+				}
+				this.log(MODULE, F + "final set  returning viewPath=[" + viewPath + "]");
+				return viewPath;
+			},
+
+			getViewDefFromEvent: function (evnt) {
+				var F = MODULE + "getViewDefFromEvent ";
+				var viewPath;
+				this.log(MODULE, F + "called with evnt.dest=[" + evnt.dest + "]");
+				if (evnt.dest.indexOf("_") >= 0) { // viewId?
+					this.getViewDefFromViewId(evnt.dest);
+					return;
+				}
+				if (evnt.dapp && evnt.dapp.parentView) { // parent has to be a view to use the id
+					if (evnt.dapp.parentView === this) {
+						viewPath = evnt.dest;
+					} else {
+						return this.getViewDefFromViewId(evnt.dapp.parentView.id + "_" + evnt.dest);
+					}
+				}
+				var viewName = evnt.dest;
+				if (viewName && viewPath) {
+					var parts = viewPath.split(",");
+					var viewDef = this;
+					//	this.log(MODULE, F + "parts=["+parts+"] viewDef.id=["+viewDef.id+"]");
+					for (var item in parts) {
+						viewDef = viewDef.views[parts[item]];
+						if (parts[item] === viewName) {
+							break;
+						}
+						//this.log(MODULE, F + "item=["+item+"] viewDef.parentSelector=["+viewDef.parentSelector+"]");
+					}
+					this.log(MODULE, F + "called with viewName=[" + viewName + "] viewPath=[" + viewPath + "]" +
+						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
+					return viewDef;
+				}
+				this.log(MODULE, F + "called with viewName=[" + viewName + "] viewPath=[" + viewPath +
+					"] returning null");
+				this.log(MODULE, F + "returning null");
+				return null;
+			},
+
+			getViewDestFromViewid: function (viewId) {
+				var F = MODULE + "getViewDestFromViewid ";
+				if (viewId) {
+					var parts = viewId.split("_");
+					var viewDef = this;
+					var viewName = "";
+					//	this.log(MODULE, F + "parts=["+parts+"] viewDef.id=["+viewDef.id+"]");
+					for (var item in parts) {
+						viewName = parts[item];
+						viewDef = viewDef.views[parts[item]];
+						//this.log(MODULE, F + "item=["+item+"] viewDef.parentSelector=["+viewDef.parentSelector+"]");
+					}
+					this.log(MODULE, F + "called with viewId=[" + viewId +
+						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
+					return viewName;
+				}
+				this.log(MODULE, F + "called with viewId=[" + viewId +
+					"] returning viewId");
+				this.log(MODULE, F + "returning viewId");
+				return viewId;
+			},
+
+			getViewDefFromViewId: function (viewId) {
+				var F = MODULE + "getViewDefFromViewId ";
+				if (viewId) {
+					var parts = viewId.split("_");
+					var viewDef = this;
+					//	this.log(MODULE, F + "parts=["+parts+"] viewDef.id=["+viewDef.id+"]");
+					for (var item in parts) {
+						viewDef = viewDef.views[parts[item]];
+						//this.log(MODULE, F + "item=["+item+"] viewDef.parentSelector=["+viewDef.parentSelector+"]");
+					}
+					this.log(MODULE, F + "called with viewId=[" + viewId +
+						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
+					return viewDef;
+				}
+				this.log(MODULE, F + "called with viewId=[" + viewId +
+					"] returning null");
+				this.log(MODULE, F + "returning null");
+				return null;
+			},
+
+			getViewDefFromDest: function (viewPath) {
+				var F = MODULE + "getViewDefFromDest ";
+				if (viewPath) {
+					var parts = viewPath.split(",");
+					var viewDef = this;
+					for (var item in parts) {
+						viewDef = viewDef.views[parts[item]];
+					}
+					this.log(MODULE, F + "called with viewPath=[" + viewPath +
+						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
+					return viewDef;
+				}
+				this.log(MODULE, F + "called with viewPath=[" + viewPath + "] returning null");
+				return null;
+			},
+
+			getViewIdFromEvent: function (event) {
+				var dest = event.dest;
+				var parentNode = event.target;
+				var pViewId;
+				if (event.dapp && event.dapp.parentView && event.dapp.parentView !== this) {
+					pViewId = event.dapp.parentView.id + "_" + dest;
+					return pViewId;
+				}
+				var pView = this.getParentViewFromViewName(dest, parentNode);
+				if (this === pView) { // pView is the app
+					return dest;
+				}
+				// check to see if the parent view has this dest as a child
+				var vdef = this.getViewDefFromViewId(pView.id);
+				if (vdef && vdef.views && vdef.views[dest]) {
+					return pView.id + "_" + dest;
+				}
+				return dest;
+
+			},
+
+			getParentViewFromViewName: function (viewName, parentNode) {
+				if (this.containerNode === parentNode) {
+					return this;
+				}
+				var pNode = parentNode;
+				while (!pNode.viewId && pNode.parentNode) {
+					pNode = pNode.parentNode;
+				}
+				// found first parentView from parentNode, now check to see if this view is a child
+				if (pNode && pNode.viewId) {
+					var parentViewId = pNode.viewId;
+					var pView = this.getViewFromViewId(parentViewId);
+					while (pView !== this) {
+						if (pView.views && pView.views[viewName]) {
+							return pView;
+						}
+						pView = pView.parentView;
+					}
+				}
+				if (!this.views[viewName]) {
+					console.error("Did not find parentView will use the app for viewName = " + viewName);
+				}
+				return this;
+			},
+
+			getViewFromViewId: function (viewId) {
+				//var F = MODULE + "getViewFromViewId ";
+				if (viewId) {
+					var parts = viewId.split("_");
+					var view = this;
+					var nextChildId = "";
+					for (var item in parts) {
+						var childId = nextChildId + parts[item];
+						view = view.children[childId];
+						nextChildId = childId + "_";
+					}
+					return view;
+				}
+				return null;
+			},
+
+			getParentViewFromViewId: function (viewId) {
+				//var F = MODULE + "getParentViewFromViewId ";
+				if (viewId) {
+					var parts = viewId.split("_");
+					parts.pop();
+					var view = this;
+					var nextChildId = "";
+					for (var item in parts) {
+						var childId = nextChildId + parts[item];
+						view = view.children[childId];
+						nextChildId = childId + "_";
+					}
+					return view;
+				}
+				return null;
 			},
 
 			setupControllers: function () {
 				// create application controller instance
 				// move set _startView operation from history module to application
+				//var F = MODULE + "setupControllers ";
+
 				var currentHash = window.location.hash;
 				this._startView = hash.getTarget(currentHash, this.defaultView);
 				this._startParams = hash.getParams(currentHash);
@@ -165,49 +370,161 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				} else {
 					this.constraint = "center";
 				}
-				var emitLoad = function () {
-					// emit "app-load" event and let controller to load view.
-					this.emit("app-load", {
-						viewId: this.defaultView,
-						initLoad: true,
-						params: this._startParams,
-						callback: lang.hitch(this, function () {
-							this.emit("app-transition", {
-								viewId: this.defaultView,
-								forceTransitionNone: true, // we want to avoid the transition on the 1st default view.
-								opts: { params: this._startParams }
-							});
-							if (this.defaultView !== this._startView) {
-								// transition to startView. If startView==defaultView, then initial is the default view.
-								this.emit("app-transition", {
-									viewId: this._startView,
-									opts: { params: this._startParams }
-								});
-							}
-							this.setStatus(this.lifecycle.STARTED);
-						})
-					});
-				};
 				when(controllers, lang.hitch(this, function () {
-					if (this.template) {
-						// emit "app-init" event so that the Load controller can initialize root view
-						this.emit("app-init", {
-							app: this,	// pass the app into the View so it can have easy access to app
-							name: this.name,
-							type: this.type,
-							parent: this,
-							templateString: this.templateString,
-							controller: this.controller,
-							callback: lang.hitch(this, function (view) {
-								this.setDomNode(view.domNode);
-								emitLoad.call(this);
-							})
-						});
-					} else {
-						emitLoad.call(this);
-					}
+					// emit "app-init" event so that the Init controller can initialize the app and the root view
+					this.emit("app-init", {});
 				}));
-			}
+			},
+
+			unloadApp: function () {
+				// summary:
+				//		Unload the application, and all of its child views.
+				// 		set the status for STOPPING during the unload and STOPPED when complete
+				// 		emit app-unload-view to have controllers stop, and delete the global app reference.
+				//
+				var F = MODULE + "unloadApp ";
+				var appStoppedDef = new Deferred();
+				this.setStatus(this.lifecycle.STOPPING);
+				this.emit("app-unload-app", {}); // for controllers to cleanup
+
+				var params = {};
+				params.view = this;
+				params.parentView = this;
+				params.unloadApp = true;
+				params.callback = lang.hitch(this, function () {
+					this.setStatus(this.lifecycle.STOPPED);
+					delete window[this.name]; // remove the global for the app
+					appStoppedDef.resolve();
+				});
+				this.log(MODULE, F + "emit app-unload-view for [" + this.id + "]");
+				this.emit("app-unload-view", params);
+				return appStoppedDef;
+			},
+
+			_getViewPaths: function (viewPaths) {
+				// summary:
+				//		Extracts the views form the specified string and returns an array of objects.
+				//		Each element in the array is a sibling or cousin view and in turn contains a lineage.
+				//		The returned array takes the following form:
+				//		[
+				//			{ dest: "ViewName",
+				//				remove: true|false,
+				//				lineage: [ "ViewName", "ViewName", ... ]
+				//			},
+				//			{ dest: "viewDest",
+				//				remove: true|false,
+				//				lineage: [ "ViewName", "ViewName", ... ]
+				//			},
+				//			. . .
+				//		]
+				//
+				if (viewPaths.trim().length <= 0) {
+					return null;
+				}
+				var sepIndices = this.destIndexesOf(viewPaths, "+-");
+				var siblings = this.destSplit(viewPaths, "+-");
+				var result = [];
+				var index = 0;
+				var removes = [];
+				var sepIndex = 0;
+				var sep = "";
+				for (index = 0; index < sepIndices.length; index++) {
+					sepIndex = sepIndices[index];
+					sep = viewPaths.charAt(sepIndex);
+					removes.push(sep === "-" ? true : false);
+				}
+				if ((sepIndices.length > 0) && (sepIndices[0] === 0)) {
+					// we begin with a separator so ignore first sibling
+					// which should be empty-string
+					siblings.shift();
+				} else {
+					// the first character is not a plus or minux, so assume
+					// it is a plus by default so the first sibling is an add
+					removes.unshift(false);
+				}
+				for (index = 0; index < siblings.length; index++) {
+					var lastViewDef = this.getViewDefFromDest(siblings[index]);
+					if (!removes[index] && lastViewDef.defaultView) {
+						siblings[index] = this._addDefaultViewsToPath(siblings[index]);
+					}
+					result.push({
+						dest: siblings[index],
+						remove: removes[index],
+						lineage: this.destSplit(siblings[index], ","),
+						syncLoadView: lastViewDef.syncLoadView,
+						lastViewId: siblings[index].replace(/,/g, "_")
+					});
+				}
+				return result;
+			},
+
+			destIndexesOf: function ( /*string*/ text, /*string*/ chars) {
+				// summary:
+				//		Searches the specified text for the first index of a character contained in the specified
+				//		string of characters.
+				// text: string
+				// 		The text to search.
+				// chars: string
+				// 		The characters for which to search (any of these).
+				// returns: {Number[]}
+				//		The array of indexes at which one of the specified characters is found or an empty array
+				// 		if not found.
+				//
+				if (!chars || (chars.length === 0)) {
+					throw "One or more characters must be provided to search for unescaped characters: " + " chars=[ " +
+						chars + " ], text=[ " + text + " ]";
+				}
+				var result = [];
+				var index = 0;
+				var current = null;
+				for (index = 0; index < text.length; index++) {
+					current = text.charAt(index);
+					if (chars.indexOf(current) >= 0) {
+						result.push(index);
+					}
+				}
+				return result;
+			},
+
+			destSplit: function ( /*string*/ text, /*string*/ separators) {
+				// summary:
+				//		split the the specified text on separator characters
+				// text: string
+				// 		The text to split.
+				// separators: string
+				// 		The characters for which to split (any of these).
+				// returns: {String[]}
+				//		Return an array of string parts.
+				//
+				if (!separators || (separators.length === 0)) {
+					separators = ",";
+				}
+				var result = [];
+				var index = 0;
+				var current = null;
+				var start = 0;
+				for (index = 0; index < text.length; index++) {
+					current = text.charAt(index);
+					if (separators.indexOf(current) >= 0) {
+						if (start === index) {
+							result.push("");
+						} else {
+							result.push(text.substring(start, index));
+						}
+						start = index + 1;
+					}
+				}
+				if (start === text.length) {
+					result.push("");
+				} else {
+					result.push(text.substring(start));
+				}
+				return result;
+			},
+
+			log: function () {} // noop may be replaced by a logger controller
+
+
 		});
 
 		function generateApp(config, node) {
@@ -215,10 +532,11 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			//		generate the application
 			//
 			// config: Object
-			//		app config
+			// 		app config
 			// node: domNode
-			//		domNode.
+			// 		domNode.
 			var path;
+			var appStartedDef = new Deferred();
 
 			// call configProcessHas to process any has blocks in the config
 			config = configUtils.configProcessHas(config);
@@ -241,7 +559,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			}
 
 			/* global requirejs */
-			if (requirejs) {
+			if (window.requirejs) {
 				requirejs.config(config.loaderConfig);
 			} else {
 				// Dojo loader?
@@ -251,8 +569,6 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 			if (!config.modules) {
 				config.modules = [];
 			}
-			// add dapp lifecycle module by default
-			config.modules.push("./modules/lifecycle");
 			var modules = config.modules.concat(config.dependencies ? config.dependencies : []);
 
 			if (config.template) {
@@ -260,7 +576,7 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 				if (path.indexOf("./") === 0) {
 					path = "app/" + path;
 				}
-				modules.push("dojo/text!" + path);
+				modules.push("requirejs-text/text!" + path);
 			}
 
 			require(modules, function () {
@@ -280,49 +596,29 @@ define(["require", "dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare",
 
 
 				domReady(function () {
-					var app = new App(config, node || win.body());
-
-					if (has("app-log-api")) {
-						app.log = function () {
-							// summary:
-							//		If config is set to turn on app logging, then log msg to the console
-							//
-							// arguments:
-							//		the message to be logged,
-							//		all but the last argument will be treated as Strings and be concatenated together,
-							//      the last argument can be an object it will be added as an argument to console.log
-							var msg = "";
-							try {
-								for (var i = 0; i < arguments.length - 1; i++) {
-									msg = msg + arguments[i];
-								}
-								console.log(msg, arguments[arguments.length - 1]);
-							} catch (e) {
-							}
-						};
-					} else {
-						app.log = function () {
-						}; // noop
-					}
-
+					var app = new App(config, node || document.body);
 					app.setStatus(app.lifecycle.STARTING);
 					// Create global namespace for application.
 					// The global name is application id. For example, modelApp
 					var globalAppName = app.id;
 					if (window[globalAppName]) {
-						lang.mixin(app, window[globalAppName]);
+						dcl.mix(app, window[globalAppName]);
 					}
 					window[globalAppName] = app;
+					app.appStartedDef = appStartedDef;
 					app.start();
 				});
+			}, function (obj) {
+				console.error("error back from require message =" + obj.message);
 			});
+			return appStartedDef;
 		}
+
 
 		return function (config, node) {
 			if (!config) {
-				throw new Error("App Config Missing");
+				throw new Error("Application Configuration Missing");
 			}
-
-			generateApp(config, node);
+			return generateApp(config, node);
 		};
 	});

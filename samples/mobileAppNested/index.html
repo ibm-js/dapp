@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>Mobile Application</title>
+
+	<link rel="stylesheet" href="../../../delite/themes/defaultapp.css">
+	<link rel="stylesheet" href="app.css">
+
+	<!-- for dojo -->
+	<!--
+	<script type="text/javascript" data-dojo-config="async: true" src="../../../dojo/dojo.js"></script>
+	 -->
+
+	<!-- for requireJS -->
+	<!-- -->
+	<script src="../../../requirejs/require.js"></script>
+		<script>
+			require.config({
+			//    baseUrl: "/another/path",
+			    paths: {
+			        "dapp": "../../../dapp",
+					"dcl": "../../../dcl",
+					"dojo": "../../../dojo",
+					"dpointer": "../../../dpointer",
+					"delite": "../../../delite",
+					"deliteful": "../../../deliteful",
+					"requirejs": "../../../requirejs",
+					"requirejs-text": "../../../requirejs-text"
+			    },
+			    waitSeconds: 15
+			  });
+        </script>
+	<!-- -->
+
+	<!-- for requireJS from a boilerplate -->
+	<!--
+		<script type="text/javascript" src="../boilerplate.js"></script>
+	-->
+
+
+	<script>
+		require(["./deliteApp.js"]);
+	</script>
+
+	</head>
+	<body style="width:100%; height: 100%">
+	<!-- A SidePane for the left menu -->
+	<d-side-pane mode="push" position="start" id="leftPane">
+		<d-linear-layout id="sidePaneContainer" class="height100">
+			<d-linear-layout vertical="false" class="pageHeader">
+				<div><button is="d-button" onclick="leftPane.close()"></button></div>
+				<div class="fill titleStyle">Menu</div>
+				<div><button is="d-button" onclick="leftStack.show('settings')"></button></div>
+			</d-linear-layout>
+			<d-view-stack id="leftStack" class="width100 fill" style="background-color: white">
+				<div id="settings" style="text-align: center">
+					<button is="d-button" onclick="leftStack.show('sidemenu', {reverse:true})"></button>
+				</div>
+			</d-view-stack>
+
+
+		</d-linear-layout>
+	</d-side-pane>
+
+	<!-- Main application -->
+	<d-linear-layout id="vsparent" class=" width100 height100 page">
+		<!-- Header -->
+		<d-linear-layout vertical="false" class=" width100 pageHeader">
+			<div><button is="d-button" onclick="leftPane.open()"></button></div>
+			<div class="fill titleStyle">Deliteful Mobile App</div>
+			<div><button is="d-button"></button></div>
+		</d-linear-layout>
+		<!-- Main content (ViewStack)
+		<div  class="width100 fill">
+		</div>
+		-->
+		<!-- Footer
+		<d-linear-layout vertical="false" class="pageFooter">
+			<div class="fill"><button is="d-button" onclick="vs.show('aaa')"></button></div>
+			<div class="fill"><button is="d-button" onclick="vs.show('bbb')"></button></div>
+			<div class="fill"><button is="d-button" onclick="vs.show('ccc')"></button></div>
+			<div class="fill"><button is="d-button" onclick="vs.show('ddd')"></button></div>
+		</d-linear-layout>
+		-->
+	</d-linear-layout>
+	</body>
+</html>
