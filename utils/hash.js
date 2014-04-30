@@ -1,13 +1,13 @@
 define(["dojo/_base/lang"], function (lang) {
 
-// module:
-//		dapp/utils/hash
+	// module:
+	//		dapp/utils/hash
 
 	var hashUtil = {
 		// summary:
 		//		This module contains the hash
 
-		getParams: function (/*String*/ hash) {
+		getParams: function ( /*String*/ hash) {
 			// summary:
 			//		get the params from the hash
 			//
@@ -36,7 +36,9 @@ define(["dojo/_base/lang"], function (lang) {
 				// after all of the viewParts need to get the other params	
 
 				for (var parts = hash.split("&"), x = 0; x < parts.length; x++) {
-					var tp = parts[x].split("="), name = tp[0], value = encodeURIComponent(tp[1] || "");
+					var tp = parts[x].split("="),
+						name = tp[0],
+						value = encodeURIComponent(tp[1] || "");
 					if (name && value) {
 						if (!params) {
 							params = {};
@@ -48,7 +50,7 @@ define(["dojo/_base/lang"], function (lang) {
 			return params; // Object
 		},
 
-		getParamObj: function (/*Object*/ params, /*String*/ viewPart) {
+		getParamObj: function ( /*Object*/ params, /*String*/ viewPart) {
 			// summary:
 			//		called to handle a view specific params object
 			// params: Object
@@ -63,7 +65,9 @@ define(["dojo/_base/lang"], function (lang) {
 			var viewName = viewPart.substring(1, viewPart.indexOf("&"));
 			var hash = viewPart.substring(viewPart.indexOf("&"), viewPart.length - 1);
 			for (var parts = hash.split("&"), x = 0; x < parts.length; x++) {
-				var tp = parts[x].split("="), name = tp[0], value = encodeURIComponent(tp[1] || "");
+				var tp = parts[x].split("="),
+					name = tp[0],
+					value = encodeURIComponent(tp[1] || "");
 				if (name && value) {
 					if (!viewparams) {
 						viewparams = {};
@@ -75,7 +79,7 @@ define(["dojo/_base/lang"], function (lang) {
 			return params; // Object
 		},
 
-		buildWithParams: function (/*String*/ hash, /*Object*/ params) {
+		buildWithParams: function ( /*String*/ hash, /*Object*/ params) {
 			// summary:
 			//		build up the url hash adding the params
 			// hash: String
@@ -103,7 +107,7 @@ define(["dojo/_base/lang"], function (lang) {
 			return hash; // String
 		},
 
-		addViewParams: function (/*String*/ hash, /*String*/ view, /*Object*/ params) {
+		addViewParams: function ( /*String*/ hash, /*String*/ view, /*Object*/ params) {
 			// summary:
 			//		add the view specific params to the hash for example (view1&param1=value1)
 			// hash: String
@@ -137,7 +141,7 @@ define(["dojo/_base/lang"], function (lang) {
 			return hash; // String
 		},
 
-		getParamString: function (/*Object*/ params) {
+		getParamString: function ( /*Object*/ params) {
 			// summary:
 			//		return the param string
 			// params: Object
@@ -156,7 +160,7 @@ define(["dojo/_base/lang"], function (lang) {
 			return paramStr; // String
 		},
 
-		getTarget: function (/*String*/ hash, /*String?*/ defaultView) {
+		getTarget: function ( /*String*/ hash, /*String?*/ defaultView) {
 			// summary:
 			//		return the target string
 			// hash: String

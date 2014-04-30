@@ -41,7 +41,7 @@ that you are listed under your companies authorised contributors).
 
 ## Coding Style and Linting
 
-All pull requests should adhere to the [coding guidelines]. 
+All pull requests should adhere to the [coding guidelines].
 
 ## Inline Documentation
 

@@ -1,4 +1,4 @@
-define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
+define(["dcl/dcl", "dojo/on"], function (dcl, on) {
 	// module:
 	//		dapp/Controller
 	// summary:
@@ -19,6 +19,11 @@ define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
 			this.events = this.events || events;
 			this._boundEvents = [];
 			this.app = app;
+			this.app.on("dapp-unload-app", this._unloadApp.bind(this));
+		},
+
+		_unloadApp: function () {
+			this.unbind(); // remove all bound events
 		},
 
 		bind: function (evented, event, handler) {
@@ -36,8 +41,8 @@ define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
 			if (arguments.length === 0) {
 				if (this.events) {
 					for (var item in this.events) {
-						if (item.charAt(0) !== "_") {//skip the private properties
-							this.bind(this.app, item, lang.hitch(this, this.events[item]));
+						if (item.charAt(0) !== "_") { //skip the private properties
+							this.bind(this.app, item, this.events[item].bind(this));
 						}
 					}
 				}
@@ -62,14 +67,23 @@ define(["dcl/dcl", "dojo/_base/lang", "dojo/on"], function (dcl, lang, on) {
 			//		event
 
 			var len = this._boundEvents.length;
-			for (var i = 0; i < len; i++) {
-				if ((this._boundEvents[i].event === event) && (this._boundEvents[i].evented === evented)) {
+			if (arguments.length === 0) {
+				for (var i = 0; i < len; i++) {
 					this._boundEvents[i].signal.remove();
-					this._boundEvents.splice(i, 1);
-					return;
+					//		this._boundEvents.splice(i, 1);
+				}
+				this._boundEvents = [];
+				return this;
+			} else {
+				for (var j = 0; j < len; j++) {
+					if ((this._boundEvents[j].event === event) && (this._boundEvents[j].evented === evented)) {
+						this._boundEvents[j].signal.remove();
+						this._boundEvents.splice(j, 1);
+						return this;
+					}
 				}
 			}
-			console.warn("event '" + event + "' not bind on ", evented);
+			//console.warn("event '" + event + "' not bind on ", evented);
 			return this;
 		}
 	});

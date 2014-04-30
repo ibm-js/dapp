@@ -1,6 +1,6 @@
 define(["require", "dojo/Deferred"], function (require, Deferred) {
 	/* jshint unused: vars */
-	return function (/*Object*/ config, /*Object*/ parent) {
+	return function ( /*Object*/ config, /*Object*/ parent) {
 		// summary:
 		//		nsl is called to create to load the nls all for the app, or for a view.
 		// config: Object
