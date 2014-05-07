@@ -1,14 +1,14 @@
-define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/config",
-		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
-		"./utils/nls", "dojo/topic", "./utils/hash", "./utils/constraints", "./utils/config", "dojo/_base/window"
+define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "delite/Stateful",
+		"dojo/_base/config", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
+		"./utils/nls", "dojo/topic", "./utils/hash", "./utils/viewUtils", "./utils/config", "dojo/_base/window"
 	],
-	function (require, kernel, dcl, lang, declare, config, Evented, Deferred, when, has, on, domReady,
-		nls, topic, hash, constraints, configUtils) {
+	function (require, dcl, lang, declare, Stateful, dconfig, Evented, Deferred, when, has, on, domReady,
+		nls, topic, hash, viewUtils, configUtils) {
 		var MODULE = "Main:";
 
-		has.add("app-log-api", (config.app || {}).debugApp);
+		has.add("app-log-api", (dconfig.app || {}).debugApp);
 
-		var Application = declare(Evented, {
+		var Application = declare([Evented, Stateful], {
 			lifecycle: {
 				UNKNOWN: 0, //unknown
 				STARTING: 1, //starting
@@ -17,7 +17,7 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 				STOPPED: 4 //stopped
 			},
 
-			_status: 0, //unknown
+			status: 0, //unknown
 
 			constructor: function (params, node) {
 				dcl.mix(this, params);
@@ -25,33 +25,15 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 				this.children = {};
 				this.loadedStores = {};
 				this.loadedControllers = [];
+				//TODO: do we need to save and remove this watch on unload?
+				this.watch("status", function (name, oldValue, value) {
+					topic.publish("/dapp/status", value, this.id);
+				});
 			},
 
-			getStatus: function () {
+			showOrHideView: function (viewPath, params) {
 				// summary:
-				//		Get the application status, use the lifecycle status to see what the status is.
-				//
-				// returns:
-				//		the status
-				return this._status;
-			},
-
-			setStatus: function (newStatus) {
-				// summary:
-				//		Set the application status, use the lifecycle status to set the status.
-				//		The application can subscribe the "/app/status" event to be notified of status changes.
-				//
-				// newStatus:
-				//		The new status it should be one of the lifecycle status like lifecycle.STARTED etc.
-				this._status = newStatus;
-
-				// publish /app/status event
-				topic.publish("/app/status", newStatus, this.id);
-			},
-
-			displayView: function (viewPath, params) {
-				// summary:
-				//		A convenience function to fire the delite-display event to transition to a view,
+				//		A convenience function to fire the dapp-display event to transition to a view,
 				// 		or a set of views.
 				//
 				// viewPath:
@@ -69,7 +51,7 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 						transition: "slide",
 						direction: "end"
 					});
-				on.emit(document, "delite-display", opts);
+				on.emit(document, "dapp-display", opts);
 			},
 
 			// TODO: move to a Store controller?
@@ -131,13 +113,13 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 						requireItems.push(controllers[i]);
 					}
 					var controllerDef = new Deferred();
-					require(requireItems, lang.hitch(this, function () {
+					require(requireItems, function () {
 						for (var i = 0; i < arguments.length; i++) {
 							// instantiate controllers, set Application object, and perform auto binding
 							this.loadedControllers.push((new arguments[i](this)).bind());
 						}
 						controllerDef.resolve(this);
-					}));
+					}.bind(this));
 					return controllerDef;
 				}
 			},
@@ -152,201 +134,13 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 				//create application level controllers
 				this.setupControllers();
 				// if available load root NLS
-				when(nls(this), lang.hitch(this, function (nls) {
+				when(nls(this), function (nls) {
 					if (nls) {
 						this.nls = {};
 						dcl.mix(this.nls, nls);
 					}
 					this.startup();
-				}));
-			},
-
-			_addDefaultViewsToPath: function (dest) {
-				var F = MODULE + "_addDefaultViewsToPath ";
-				var viewPath = dest;
-				this.log(MODULE, F + "called with dest=[" + dest + "]");
-				var viewDef = this.getViewDefFromDest(dest);
-				while (viewDef && viewDef.defaultView) {
-					viewPath = viewPath + "," + viewDef.defaultView;
-					this.log(MODULE, F + "set viewPath=[" + viewPath + "]");
-					viewDef = this.getViewDefFromDest(viewPath);
-				}
-				this.log(MODULE, F + "final set  returning viewPath=[" + viewPath + "]");
-				return viewPath;
-			},
-
-			getViewDefFromEvent: function (evnt) {
-				var F = MODULE + "getViewDefFromEvent ";
-				var viewPath;
-				this.log(MODULE, F + "called with evnt.dest=[" + evnt.dest + "]");
-				if (evnt.dest.indexOf("_") >= 0) { // viewId?
-					this.getViewDefFromViewId(evnt.dest);
-					return;
-				}
-				if (evnt.dapp && evnt.dapp.parentView) { // parent has to be a view to use the id
-					if (evnt.dapp.parentView === this) {
-						viewPath = evnt.dest;
-					} else {
-						return this.getViewDefFromViewId(evnt.dapp.parentView.id + "_" + evnt.dest);
-					}
-				}
-				var viewName = evnt.dest;
-				if (viewName && viewPath) {
-					var parts = viewPath.split(",");
-					var viewDef = this;
-					//	this.log(MODULE, F + "parts=["+parts+"] viewDef.id=["+viewDef.id+"]");
-					for (var item in parts) {
-						viewDef = viewDef.views[parts[item]];
-						if (parts[item] === viewName) {
-							break;
-						}
-						//this.log(MODULE, F + "item=["+item+"] viewDef.parentSelector=["+viewDef.parentSelector+"]");
-					}
-					this.log(MODULE, F + "called with viewName=[" + viewName + "] viewPath=[" + viewPath + "]" +
-						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
-					return viewDef;
-				}
-				this.log(MODULE, F + "called with viewName=[" + viewName + "] viewPath=[" + viewPath +
-					"] returning null");
-				this.log(MODULE, F + "returning null");
-				return null;
-			},
-
-			getViewDestFromViewid: function (viewId) {
-				var F = MODULE + "getViewDestFromViewid ";
-				if (viewId) {
-					var parts = viewId.split("_");
-					var viewDef = this;
-					var viewName = "";
-					//	this.log(MODULE, F + "parts=["+parts+"] viewDef.id=["+viewDef.id+"]");
-					for (var item in parts) {
-						viewName = parts[item];
-						viewDef = viewDef.views[parts[item]];
-						//this.log(MODULE, F + "item=["+item+"] viewDef.parentSelector=["+viewDef.parentSelector+"]");
-					}
-					this.log(MODULE, F + "called with viewId=[" + viewId +
-						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
-					return viewName;
-				}
-				this.log(MODULE, F + "called with viewId=[" + viewId +
-					"] returning viewId");
-				this.log(MODULE, F + "returning viewId");
-				return viewId;
-			},
-
-			getViewDefFromViewId: function (viewId) {
-				var F = MODULE + "getViewDefFromViewId ";
-				if (viewId) {
-					var parts = viewId.split("_");
-					var viewDef = this;
-					//	this.log(MODULE, F + "parts=["+parts+"] viewDef.id=["+viewDef.id+"]");
-					for (var item in parts) {
-						viewDef = viewDef.views[parts[item]];
-						//this.log(MODULE, F + "item=["+item+"] viewDef.parentSelector=["+viewDef.parentSelector+"]");
-					}
-					this.log(MODULE, F + "called with viewId=[" + viewId +
-						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
-					return viewDef;
-				}
-				this.log(MODULE, F + "called with viewId=[" + viewId +
-					"] returning null");
-				this.log(MODULE, F + "returning null");
-				return null;
-			},
-
-			getViewDefFromDest: function (viewPath) {
-				var F = MODULE + "getViewDefFromDest ";
-				if (viewPath) {
-					var parts = viewPath.split(",");
-					var viewDef = this;
-					for (var item in parts) {
-						viewDef = viewDef.views[parts[item]];
-					}
-					this.log(MODULE, F + "called with viewPath=[" + viewPath +
-						" returning viewDef.parentSelector=[" + (viewDef ? viewDef.parentSelector : "") + "]");
-					return viewDef;
-				}
-				this.log(MODULE, F + "called with viewPath=[" + viewPath + "] returning null");
-				return null;
-			},
-
-			getViewIdFromEvent: function (event) {
-				var dest = event.dest;
-				var parentNode = event.target;
-				var pViewId;
-				if (event.dapp && event.dapp.parentView && event.dapp.parentView !== this) {
-					pViewId = event.dapp.parentView.id + "_" + dest;
-					return pViewId;
-				}
-				var pView = this.getParentViewFromViewName(dest, parentNode);
-				if (this === pView) { // pView is the app
-					return dest;
-				}
-				// check to see if the parent view has this dest as a child
-				var vdef = this.getViewDefFromViewId(pView.id);
-				if (vdef && vdef.views && vdef.views[dest]) {
-					return pView.id + "_" + dest;
-				}
-				return dest;
-
-			},
-
-			getParentViewFromViewName: function (viewName, parentNode) {
-				if (this.containerNode === parentNode) {
-					return this;
-				}
-				var pNode = parentNode;
-				while (!pNode.viewId && pNode.parentNode) {
-					pNode = pNode.parentNode;
-				}
-				// found first parentView from parentNode, now check to see if this view is a child
-				if (pNode && pNode.viewId) {
-					var parentViewId = pNode.viewId;
-					var pView = this.getViewFromViewId(parentViewId);
-					while (pView !== this) {
-						if (pView.views && pView.views[viewName]) {
-							return pView;
-						}
-						pView = pView.parentView;
-					}
-				}
-				if (!this.views[viewName]) {
-					console.error("Did not find parentView will use the app for viewName = " + viewName);
-				}
-				return this;
-			},
-
-			getViewFromViewId: function (viewId) {
-				//var F = MODULE + "getViewFromViewId ";
-				if (viewId) {
-					var parts = viewId.split("_");
-					var view = this;
-					var nextChildId = "";
-					for (var item in parts) {
-						var childId = nextChildId + parts[item];
-						view = view.children[childId];
-						nextChildId = childId + "_";
-					}
-					return view;
-				}
-				return null;
-			},
-
-			getParentViewFromViewId: function (viewId) {
-				//var F = MODULE + "getParentViewFromViewId ";
-				if (viewId) {
-					var parts = viewId.split("_");
-					parts.pop();
-					var view = this;
-					var nextChildId = "";
-					for (var item in parts) {
-						var childId = nextChildId + parts[item];
-						view = view.children[childId];
-						nextChildId = childId + "_";
-					}
-					return view;
-				}
-				return null;
+				}.bind(this));
 			},
 
 			setupControllers: function () {
@@ -366,160 +160,40 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 				var controllers = this.createControllers(this.controllers);
 				// constraint on app
 				if (this.hasOwnProperty("constraint")) {
-					constraints.register(this.constraints);
+					viewUtils.register(this.constraints);
 				} else {
 					this.constraint = "center";
 				}
-				when(controllers, lang.hitch(this, function () {
-					// emit "app-init" event so that the Init controller can initialize the app and the root view
-					this.emit("app-init", {});
-				}));
+				when(controllers, function () {
+					// emit "dapp-init" event so that the Init controller can initialize the app and the root view
+					this.emit("dapp-init", {});
+				}.bind(this));
 			},
 
 			unloadApp: function () {
 				// summary:
 				//		Unload the application, and all of its child views.
 				// 		set the status for STOPPING during the unload and STOPPED when complete
-				// 		emit app-unload-view to have controllers stop, and delete the global app reference.
+				// 		emit dapp-unload-view to have controllers stop, and delete the global app reference.
 				//
 				var F = MODULE + "unloadApp ";
 				var appStoppedDef = new Deferred();
-				this.setStatus(this.lifecycle.STOPPING);
-				this.emit("app-unload-app", {}); // for controllers to cleanup
+				this.status = this.lifecycle.STOPPING;
 
 				var params = {};
 				params.view = this;
 				params.parentView = this;
 				params.unloadApp = true;
-				params.callback = lang.hitch(this, function () {
-					this.setStatus(this.lifecycle.STOPPED);
+				params.callback = function () {
+					this.status = this.lifecycle.STOPPED;
 					delete window[this.name]; // remove the global for the app
 					appStoppedDef.resolve();
-				});
-				this.log(MODULE, F + "emit app-unload-view for [" + this.id + "]");
-				this.emit("app-unload-view", params);
+				}.bind(this);
+				this.log(MODULE, F + "emit dapp-unload-view for [" + this.id + "]");
+				this.emit("dapp-unload-view", params);
+
+				this.emit("dapp-unload-app", {}); // for controllers to cleanup
 				return appStoppedDef;
-			},
-
-			_getViewPaths: function (viewPaths) {
-				// summary:
-				//		Extracts the views form the specified string and returns an array of objects.
-				//		Each element in the array is a sibling or cousin view and in turn contains a lineage.
-				//		The returned array takes the following form:
-				//		[
-				//			{ dest: "ViewName",
-				//				remove: true|false,
-				//				lineage: [ "ViewName", "ViewName", ... ]
-				//			},
-				//			{ dest: "viewDest",
-				//				remove: true|false,
-				//				lineage: [ "ViewName", "ViewName", ... ]
-				//			},
-				//			. . .
-				//		]
-				//
-				if (viewPaths.trim().length <= 0) {
-					return null;
-				}
-				var sepIndices = this.destIndexesOf(viewPaths, "+-");
-				var siblings = this.destSplit(viewPaths, "+-");
-				var result = [];
-				var index = 0;
-				var removes = [];
-				var sepIndex = 0;
-				var sep = "";
-				for (index = 0; index < sepIndices.length; index++) {
-					sepIndex = sepIndices[index];
-					sep = viewPaths.charAt(sepIndex);
-					removes.push(sep === "-" ? true : false);
-				}
-				if ((sepIndices.length > 0) && (sepIndices[0] === 0)) {
-					// we begin with a separator so ignore first sibling
-					// which should be empty-string
-					siblings.shift();
-				} else {
-					// the first character is not a plus or minux, so assume
-					// it is a plus by default so the first sibling is an add
-					removes.unshift(false);
-				}
-				for (index = 0; index < siblings.length; index++) {
-					var lastViewDef = this.getViewDefFromDest(siblings[index]);
-					if (!removes[index] && lastViewDef.defaultView) {
-						siblings[index] = this._addDefaultViewsToPath(siblings[index]);
-					}
-					result.push({
-						dest: siblings[index],
-						remove: removes[index],
-						lineage: this.destSplit(siblings[index], ","),
-						syncLoadView: lastViewDef.syncLoadView,
-						lastViewId: siblings[index].replace(/,/g, "_")
-					});
-				}
-				return result;
-			},
-
-			destIndexesOf: function ( /*string*/ text, /*string*/ chars) {
-				// summary:
-				//		Searches the specified text for the first index of a character contained in the specified
-				//		string of characters.
-				// text: string
-				// 		The text to search.
-				// chars: string
-				// 		The characters for which to search (any of these).
-				// returns: {Number[]}
-				//		The array of indexes at which one of the specified characters is found or an empty array
-				// 		if not found.
-				//
-				if (!chars || (chars.length === 0)) {
-					throw "One or more characters must be provided to search for unescaped characters: " + " chars=[ " +
-						chars + " ], text=[ " + text + " ]";
-				}
-				var result = [];
-				var index = 0;
-				var current = null;
-				for (index = 0; index < text.length; index++) {
-					current = text.charAt(index);
-					if (chars.indexOf(current) >= 0) {
-						result.push(index);
-					}
-				}
-				return result;
-			},
-
-			destSplit: function ( /*string*/ text, /*string*/ separators) {
-				// summary:
-				//		split the the specified text on separator characters
-				// text: string
-				// 		The text to split.
-				// separators: string
-				// 		The characters for which to split (any of these).
-				// returns: {String[]}
-				//		Return an array of string parts.
-				//
-				if (!separators || (separators.length === 0)) {
-					separators = ",";
-				}
-				var result = [];
-				var index = 0;
-				var current = null;
-				var start = 0;
-				for (index = 0; index < text.length; index++) {
-					current = text.charAt(index);
-					if (separators.indexOf(current) >= 0) {
-						if (start === index) {
-							result.push("");
-						} else {
-							result.push(text.substring(start, index));
-						}
-						start = index + 1;
-					}
-				}
-				if (start === text.length) {
-					result.push("");
-				} else {
-					result.push(text.substring(start));
-				}
-				return result;
 			},
 
 			log: function () {} // noop may be replaced by a logger controller
@@ -593,11 +267,12 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 				}
 				/*global App:true */
 				App = declare(modules, ext);
+				//	App = dcl(modules, ext);
 
 
 				domReady(function () {
 					var app = new App(config, node || document.body);
-					app.setStatus(app.lifecycle.STARTING);
+					app.status = app.lifecycle.STARTING;
 					// Create global namespace for application.
 					// The global name is application id. For example, modelApp
 					var globalAppName = app.id;
@@ -609,9 +284,9 @@ define(["require", "dojo/_base/kernel", "dcl/dcl", "dojo/_base/lang", "dojo/_bas
 					app.start();
 				});
 			}, function (obj) {
-				console.error("error back from require message =" + obj.message);
+				throw new Error("Application error back from require for modules message =" + obj.message);
 			});
-			return appStartedDef;
+			return appStartedDef.promise;
 		}
 
 

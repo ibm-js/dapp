@@ -12,7 +12,7 @@
 		"dapp/controllers/delite/Init",
 		"dapp/controllers/delite/Load",
 		"dapp/controllers/delite/Transition",
-		"dapp/controllers/delite/Logger"
+		"dapp/controllers/Logger"
 	],
 
 	"dependencies": [
@@ -25,13 +25,7 @@
 
 
 	"appLogging": {
-		"logAll": 0,
-		"logTimeStamp": 0,
-		"loggingList": [
-		//	"app-view:" ,"testApp:"
-		//	,"Main:","ViewBase:","View:"
-		//	,"controllers/delite/Load:","controllers/delite/Layout:","controllers/delite/Transition:","utils/constraints:"
-		]
+		"logAll": 0
 	},
 
 	"parseOnLoad": true,

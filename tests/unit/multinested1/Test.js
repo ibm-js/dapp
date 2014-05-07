@@ -3,6 +3,7 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/main",
+	"dapp/utils/viewUtils",
 	"dojo/json",
 	"dojo/topic",
 	"dojo/on",
@@ -13,7 +14,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/multinested1/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, main, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
 	multinested1config1) {
 	// -------------------------------------------------------------------------------------- //
 	// for multinested1Suite1 transition test
@@ -53,12 +54,12 @@ define([
 				console.log("appStartedDef1.then called ");
 
 				var multinested1App1P1 = document.getElementById("content_P1");
-				multinested1App1ContentView = testApp.getViewFromViewId("content");
+				multinested1App1ContentView = viewUtils.getViewFromViewId(testApp, "content");
 				multinested1App1Content = multinested1App1ContentView.containerNode;
 
 				// Here multinested1App1Home1View should be displayed
 
-				multinested1App1P1View = testApp.getViewFromViewId("content_P1");
+				multinested1App1P1View = viewUtils.getViewFromViewId(testApp, "content_P1");
 				// check the DOM state to see if we are in the expected state
 				assert.isNotNull(multinested1Node1, "root multinested1Node1 must be here");
 				assert.isNotNull(multinested1App1P1, "multinested1App1Home1 view must be here");
@@ -85,9 +86,9 @@ define([
 
 				checkNodeVisibility(multinested1App1Content, multinested1App1V7);
 
-				multinested1App1V7View = testApp.getViewFromViewId("content_V7");
-				multinested1App1S1View = testApp.getViewFromViewId("content_P1_S1");
-				multinested1App1V1View = testApp.getViewFromViewId("content_P1_S1_V1");
+				multinested1App1V7View = viewUtils.getViewFromViewId(testApp, "content_V7");
+				multinested1App1S1View = viewUtils.getViewFromViewId(testApp, "content_P1_S1");
+				multinested1App1V1View = viewUtils.getViewFromViewId(testApp, "content_P1_S1_V1");
 
 				// Now multinested1App1V2View ActivateCallCounts should be 1
 				checkActivateCallCount(multinested1App1V7View, 1);
@@ -100,7 +101,7 @@ define([
 				d.resolve();
 			});
 			// temp test works on IE but does not help on FF
-			//testApp.displayView('content,V7', {
+			//testApp.showOrHideView('content,V7', {
 			//displayDeferred: displayDeferred
 			//});
 		},
@@ -131,7 +132,7 @@ define([
 				var multinested1App1V2 = document.getElementById("content_P1_S1_V2");
 				checkNestedNodeVisibility(multinested1App1Content, multinested1App1V2);
 
-				multinested1App1V2View = testApp.getViewFromViewId("content_P1_S1_V2");
+				multinested1App1V2View = viewUtils.getViewFromViewId(testApp, "content_P1_S1_V2");
 
 				// Now multinested1App1V1View ActivateCallCounts should be 1
 				checkActivateCallCount(multinested1App1V2View, 1);
@@ -150,7 +151,7 @@ define([
 		},
 
 		// Currently showing P1_S1_V2 test transition to V7
-		"testApp.displayView('content,V7')": function () {
+		"testApp.showOrHideView('content,V7')": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -176,13 +177,13 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('content,V7', {
+			testApp.showOrHideView('content,V7', {
 				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
-		"testApp.displayView('content,P1') will show P1,S1,V1": function () {
+		"testApp.showOrHideView('content,P1') will show P1,S1,V1": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -206,7 +207,7 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('content,P1', {
+			testApp.showOrHideView('content,P1', {
 				displayDeferred: displayDeferred
 			});
 		},
@@ -218,7 +219,7 @@ define([
 				var multinested1App1P2V1 = document.getElementById("content_P2_P2S1_P2V1");
 				checkNestedNodeVisibility(multinested1App1Content, multinested1App1P2V1);
 
-				multinested1App1P2V1View = testApp.getViewFromViewId("content_P2_P2S1_P2V1");
+				multinested1App1P2V1View = viewUtils.getViewFromViewId(testApp, "content_P2_P2S1_P2V1");
 
 				// Now multinested1App1V1View ActivateCallCounts should be 1
 				checkActivateCallCount(multinested1App1P2V1View, 1);
@@ -240,12 +241,12 @@ define([
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
-		"testApp.displayView('-content') will hide P2,P2S1,P2V1": function () {
+		"testApp.showOrHideView('-content') will hide P2,P2S1,P2V1": function () {
 			var d = this.async(10000);
 			document.getElementById("content").parentNode.hide(document.getElementById("content").id).then(
 				function (complete) {
 					var multinested1App1P2V2 = document.getElementById("content_P2_P2S1_P2V2");
-					multinested1App1P2V2View = testApp.getViewFromViewId("content_P2_P2S1_P2V2");
+					multinested1App1P2V2View = viewUtils.getViewFromViewId(testApp, "content_P2_P2S1_P2V2");
 
 					//	checkNestedNodeVisibility(multinested1App1Content, multinested1App1P2V1);
 					assert.isNull(multinested1App1P2V2);
@@ -274,14 +275,14 @@ define([
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V2
-		"testApp.displayView('content,P2,P2S1,P2V2') will show P2,P2S1,P2V2": function () {
+		"testApp.showOrHideView('content,P2,P2S1,P2V2') will show P2,P2S1,P2V2": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
 				var multinested1App1P2V2 = document.getElementById("content_P2_P2S1_P2V2");
 				checkNestedNodeVisibility(multinested1App1Content, multinested1App1P2V2);
 
-				multinested1App1P2V2View = testApp.getViewFromViewId("content_P2_P2S1_P2V2");
+				multinested1App1P2V2View = viewUtils.getViewFromViewId(testApp, "content_P2_P2S1_P2V2");
 
 				// Now multinested1App1V1View ActivateCallCounts should be 1
 				checkActivateCallCount(multinested1App1P2V2View, 1);
@@ -300,19 +301,19 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('content,P2,P2S1,P2V2', {
+			testApp.showOrHideView('content,P2,P2S1,P2V2', {
 				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
-		"testApp.displayView('-content,P2,P2S1') NOTE problem with -content,P2!!! will hide P2,P2S1,P2V2": function () {
+		"testApp.showOrHideView('-content,P2,P2S1') NOTE problem with -content,P2!!! will hide P2,P2S1,P2V2": function () {
 			var d = this.async(10000);
 			document.getElementById("content_P2_P2S1").parentNode.hide(document.getElementById("content_P2_P2S1").id)
 				.then(function (complete) {
 					var multinested1App1P2V2 = document.getElementById("content_P2_P2S1_P2V2");
-					multinested1App1P2V2View = testApp.getViewFromViewId("content_P2_P2S1_P2V2");
-					multinested1App1P2S1View = testApp.getViewFromViewId("content_P2_P2S1");
+					multinested1App1P2V2View = viewUtils.getViewFromViewId(testApp, "content_P2_P2S1_P2V2");
+					multinested1App1P2S1View = viewUtils.getViewFromViewId(testApp, "content_P2_P2S1");
 
 					//	checkNestedNodeVisibility(multinested1App1Content, multinested1App1P2V2);
 					assert.isNull(multinested1App1P2V2);

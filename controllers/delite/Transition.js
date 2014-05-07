@@ -1,32 +1,23 @@
-define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", "dojo/_base/lang", "../../Controller",
-		"../../utils/constraints"
-	],
-	function (dcl, on, when, Deferred, all, lang, Controller, constraints) {
+define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Controller", "../../utils/viewUtils"],
+	function (dcl, when, Deferred, all, Controller, viewUtils) {
 		var MODULE = "controllers/delite/Transition:";
 
 		// summary:
-		//		A Transition controller to listen for "delite-display" events and drive the transitions for those
+		//		A Transition controller to listen for "dapp-display" events and drive the transitions for those
 		// 		events.
 		// description:
-		//		A Transition controller to listen for "delite-display" events and drive the transitions for those
+		//		A Transition controller to listen for "dapp-display" events and drive the transitions for those
 		// 		events.
 
 		return dcl(Controller, {
 			constructor: function (app) {
 				// summary:
-				//		add an event listener for "delite-display" event, and
-				//		bind on "app-unload-app" event on application instance.
+				//		add an event listener for "dapp-display" event, and
 				//
 				// app:
 				//		dapp application instance.
 				this.app = app;
-				this.func = lang.hitch(this, "_displayHandler");
-				document.addEventListener("delite-display", this.func, false);
-				this.app.on("app-unload-app", lang.hitch(this, "_unloadApp"));
-			},
-			_unloadApp: function () {
-				//TODO: Look into using own and destroyable to handle destroy
-				document.removeEventListener("delite-display", this.func, false);
+				this.bind(document, "dapp-display", this._displayHandler.bind(this));
 			},
 
 			_getParentNode: function (subEvent) {
@@ -49,17 +40,17 @@ define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", 
 			},
 			_displayHandler: function (event) {
 				// summary:
-				//		_displayHandler for "delite-display" event.
+				//		_displayHandler for "dapp-display" event.
 				//
 				// example:
-				//		Use on.emit to trigger "delite-display" event, and this function will respond to the event.
-				// 		For example: on.emit(document, "delite-display",
+				//		Use on.emit to trigger "dapp-display" event, and this function will respond to the event.
+				// 		For example: on.emit(document, "dapp-display",
 				// 					{bubbles: true, cancelable: true, dest: "viewName", transition: "slide"});
 				//
 				// event: Object
 				//		"app-transition" event parameter. It should include dest, like: {"dest": viewId}
 				var F = MODULE + "_displayHandler ";
-				this.app.log(MODULE, F + "called **NEW** delite-display event with event.dest=[" + event.dest + "]");
+				this.app.log(MODULE, F + "called **NEW** dapp-display event with event.dest=[" + event.dest + "]");
 				var dest = event.dest;
 				this._handleMultipleViewParts({
 					dest: dest,
@@ -70,30 +61,51 @@ define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", 
 					dapp: {}
 				});
 			},
+
 			_syncCallsToDisplayView: function (viewPaths, i, event, syncDef) {
-				var F = MODULE + "_syncCallsToDisplayView ";
+				var F = MODULE + "_loadViewsInOrder ";
 				var self = this;
-				var dispViewDef;
+
 				this.app.log(MODULE, F + "called with event.dest=[" + event.dest + "] and event.viewData=[" +
 					event.viewData + "]");
-				if (viewPaths[i].remove) {
-					dispViewDef = this._hideView(viewPaths[i].dest, event, false, viewPaths[i]);
-				} else {
-					dispViewDef = this._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
-				}
+				var displayViewPromise = (viewPaths[i].remove) ?
+					this._hideView(viewPaths[i].dest, event, false, viewPaths[i]) :
+					this._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
 				i++;
 				if (i < viewPaths.length) { // need to wait before loading the next views.
-					when(dispViewDef, function () {
-						dispViewDef = self._syncCallsToDisplayView(viewPaths, i, event, syncDef);
+					when(displayViewPromise, function () {
+						displayViewPromise = self._syncCallsToDisplayView(viewPaths, i, event, syncDef);
 					});
 				} else {
-					when(dispViewDef, function (value) {
+					when(displayViewPromise, function (value) {
 						syncDef.resolve(value);
 					});
 				}
-				return syncDef;
+				return syncDef.promise;
 
 			},
+			_loadViewsInOrder: function (viewPaths, i, event, syncDef) {
+				var F = MODULE + "_loadViewsInOrder ";
+				var self = this;
+				this.app.log(MODULE, F + "called with event.dest=[" + event.dest + "] and event.viewData=[" +
+					event.viewData + "]");
+				var dispViewDef = (viewPaths[i].remove) ?
+					this._hideView(viewPaths[i].dest, event, false, viewPaths[i]) :
+					this._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
+				i++;
+				if (i < viewPaths.length) { // need to wait before loading the next views.
+					dispViewDef.then(function () {
+						dispViewDef = self._loadViewsInOrder(viewPaths, i, event, syncDef);
+					});
+				} else {
+					dispViewDef.then(function (value) {
+						syncDef.resolve(value);
+					});
+				}
+				return syncDef.promise;
+
+			},
+
 			_handleMultipleViewParts: function (event) {
 				var F = MODULE + "_handleMultipleViewParts ";
 				this.app.log(MODULE, F + "called with event.dest=[" + event.dest + "] and event.viewData=[" +
@@ -101,30 +113,28 @@ define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", 
 				var defs = []; // list of deferreds that need to fire before I am complete
 
 				var syncDeferred;
-				var viewPaths = this.app._getViewPaths(event.dest);
+				//	var viewPaths = this.app._getViewPaths(event.dest);
+				var viewPaths = viewUtils._getViewPaths(this.app, event.dest);
 				var self = this;
 				if (viewPaths) {
-					if (this.app.syncLoadView || viewPaths[0].syncLoadView) {
+					if (this.app.loadViewsInOrder || viewPaths[0].loadViewsInOrder) {
 						syncDeferred = new Deferred();
 						defs.push(syncDeferred);
-						this._syncCallsToDisplayView(viewPaths, 0, event, syncDeferred);
+						this._loadViewsInOrder(viewPaths, 0, event, syncDeferred);
 					} else {
 						var i = 0;
 						while (i < viewPaths.length) {
-							var dispViewDef;
-							if (viewPaths[i].remove) {
-								dispViewDef = self._hideView(viewPaths[i].dest, event, false, viewPaths[i]);
-							} else {
-								dispViewDef = self._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
-							}
-							defs.push(dispViewDef);
+							var displayViewPromise = (viewPaths[i].remove) ?
+								self._hideView(viewPaths[i].dest, event, false, viewPaths[i]) :
+								self._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
+							defs.push(displayViewPromise);
 							i++;
-							// need to wait before loading the next views if syncLoadView is set.
-							if (i < viewPaths.length && viewPaths[i].syncLoadView) {
+							// need to wait before loading the next views if loadViewsInOrder is set.
+							if (i < viewPaths.length && viewPaths[i].loadViewsInOrder) {
 								syncDeferred = new Deferred();
 								defs.push(syncDeferred);
-								when(dispViewDef, function () {
-									self._syncCallsToDisplayView(viewPaths, i, event, syncDeferred);
+								displayViewPromise.then(function () {
+									self._loadViewsInOrder(viewPaths, i, event, syncDeferred);
 								});
 								break;
 							}
@@ -149,7 +159,7 @@ define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", 
 				event.dapp.isParent = isParent;
 				event.dapp.hide = true;
 				event.dapp.viewPath = viewPath;
-				event.dapp.parentView = this.app.getParentViewFromViewId(viewPath.lastViewId);
+				event.dapp.parentView = viewUtils.getParentViewFromViewId(this.app, viewPath.lastViewId);
 				event.dest = event.dapp.parentView.children[viewPath.lastViewId].viewName;
 				var self = this;
 				var p = self._getParentNode(event);
@@ -157,11 +167,11 @@ define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", 
 					//TODO: ELC need a test for this!!
 					console.error("No hide function available on parentNode for viewTarget =" + viewTarget);
 					event.dapp.nextView = event.dapp.parentView.children[viewTarget];
-					var parentSelChild = constraints.getSelectedChild(event.dapp.parentView,
+					var parentSelChild = viewUtils.getSelectedChild(event.dapp.parentView,
 						event.dapp.nextView.constraint);
 					event.dapp.nextView.viewShowing = false;
 					if (event.dapp.nextView === parentSelChild) {
-						constraints.setSelectedChild(event.dapp.parentView,
+						viewUtils.setSelectedChild(event.dapp.parentView,
 							event.dapp.nextView.constraint, null, self.app); // remove from selectedChildren
 					}
 					deferred.resolve(event);
@@ -213,10 +223,10 @@ define(["dcl/dcl", "dojo/on", "dojo/when", "dojo/Deferred", "dojo/promise/all", 
 
 						subEvent.target = p;
 						var viewId = self.app === subEvent.dapp.parentView ? subEvent.dest :
-							self.app.getViewIdFromEvent(subEvent);
-						var viewdef = self.app.getViewDefFromViewId(viewId);
+							viewUtils.getViewIdFromEvent(self.app, subEvent);
+						var viewdef = viewUtils.getViewDefFromViewId(self.app, viewId);
 						var constraint = viewdef && viewdef.constraint ? viewdef.constraint : "center";
-						var selView = constraints.getSelectedChild(subEvent.dapp.parentView, constraint);
+						var selView = viewUtils.getSelectedChild(subEvent.dapp.parentView, constraint);
 						// if viewId is already the selected view set transition to none.
 						if (selView && selView.id === viewId) {
 							subEvent.transition = "none";

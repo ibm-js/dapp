@@ -10,13 +10,10 @@ define([
 	};
 
 	intern.environments = [
-		//	{ browserName: "firefox" },
-		{
-			browserName: "safari"
-		}, {
-			browserName: "chrome"
-		} //,
-		//	{ browserName: "internet explorer", requireWindowFocus: "true" }
+		{ browserName: "safari" },
+		{ browserName: "chrome" }
+	//	{ browserName: "firefox" },
+	//	{ browserName: "internet explorer", requireWindowFocus: "true" }
 	];
 
 	return intern;

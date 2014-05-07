@@ -10,85 +10,16 @@ define({
 	// OnDemand. Options that will be permutated are browserName, version, platform, and platformVersion; any other
 	// capabilities options specified for an environment will be copied as-is
 	environments: [
-		// It seems that specifying version="" or leaving version unspecified
-		// does not default to the latest version of the browser.
-
-		// Desktop.
-		// Not running on IE9 since Widget-attr test depends on domClass methods only available in IE10_
-		{
-			browserName: "internet explorer",
-			version: "11",
-			platform: "Windows 8.1",
-			requireWindowFocus: "true"
-		}, {
-			browserName: "internet explorer",
-			version: "10",
-			platform: "Windows 8",
-			requireWindowFocus: "true"
-		},
+		// { browserName: "internet explorer", version: "11", platform: "Windows 8.1", name : "dapp" },
+		// { browserName: "internet explorer", version: "10", platform: "Windows 8", name : "dapp" },
 		// { browserName: "internet explorer", version: "9", platform: "Windows 7" },
-		{
-			browserName: "firefox",
-			version: "25",
-			platform: [ /*"OS X 10.6", "Linux", */ "Windows 7"]
-		}, {
-			browserName: "chrome",
-			version: "32",
-			platform: [ /*"OS X 10.6", "Linux", */ "Windows 7"]
-		}, {
-			browserName: "safari",
-			version: "6",
-			platform: ["OS X 10.8"]
-		},
+		// { browserName: "firefox", version: "28", platform: "Windows 7", name : "dapp" },
+		{ browserName: "chrome", version: "33", platform: "Windows 7", name : "dapp" },
+		{ browserName: "safari", version: "7", platform: "OS X 10.9", name : "dapp" },
 
 		// Mobile
-		{
-			browserName: "android",
-			platform: "Linux",
-			version: "4.1"
-		}, {
-			browserName: "android",
-			platform: "Linux",
-			"device-type": "tablet",
-			version: "4.1"
-		}, {
-			browserName: "android",
-			platform: "Linux",
-			version: "4.1"
-		}, {
-			browserName: "android",
-			platform: "Linux",
-			"device-type": "tablet",
-			version: "4.0"
-		}, {
-			browserName: "android",
-			platform: "Linux",
-			version: "4.0"
-		}, {
-			browserName: "iphone",
-			platform: "OS X 10.9",
-			version: "7"
-		}, {
-			browserName: "ipad",
-			platform: "OS X 10.9",
-			version: "7"
-		}, {
-			browserName: "iphone",
-			platform: "OS X 10.8",
-			version: "6.1"
-		}, {
-			browserName: "ipad",
-			platform: "OS X 10.8",
-			version: "6.1"
-		}, {
-			browserName: "iphone",
-			platform: "OS X 10.8",
-			version: "6.0"
-		}, {
-			browserName: "ipad",
-			platform: "OS X 10.8",
-			version: "6.0"
-		}
+		{ browserName: "iphone", platform: "OS X 10.9", version: "7", name : "dapp"}
+		// , { browserName: "android", platform: "Android" }		not currently working
 	],
 
 	// Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service

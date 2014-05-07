@@ -1,8 +1,8 @@
 define(
 	["require", "dcl/dcl", "dojo/on", "dojo/_base/lang", "dojo/Deferred", "../../Controller",
-		"../../utils/constraints"
+		"../../utils/viewUtils"
 	],
-	function (require, dcl, on, lang, Deferred, Controller, constraints) {
+	function (require, dcl, on, lang, Deferred, Controller, viewUtils) {
 		var MODULE = "controllers/delite/Load:";
 		var resolveView = function (event, newView, parentView) {
 			// in addition to arguments required by delite we pass our own needed arguments
@@ -29,17 +29,10 @@ define(
 
 		return dcl(Controller, {
 			constructor: function () {
-				this.func = lang.hitch(this, "_loadHandler");
-				this.loadHandler = document.addEventListener("delite-display-load", this.func);
-				this.app.on("app-unload-app", lang.hitch(this, "unloadApp"));
+				this.bind(document, "delite-display-load", this._loadHandler.bind(this));
 				this.events = {
-					"app-unload-view": this.unloadView
+					"dapp-unload-view": this.unloadView
 				};
-			},
-
-			unloadApp: function () {
-				//TODO: should also destroy this controller too!
-				document.removeEventListener("delite-display-load", this.func, false);
 			},
 
 			_loadHandler: function (event) {
@@ -98,9 +91,9 @@ define(
 				var viewId;
 				if (dest.indexOf("_") >= 0) { // if dest is already a view id.
 					viewId = dest;
-					dest = this.app.getViewDestFromViewid(viewId);
+					dest = viewUtils.getViewDestFromViewid(this.app, viewId);
 				} else {
-					viewId = this.app.getViewIdFromEvent(event);
+					viewId = viewUtils.getViewIdFromEvent(this.app, event);
 				}
 
 				// setup dest with the full view path, add in defaultViews if necessary
@@ -119,7 +112,8 @@ define(
 					//	this._handleShowFromDispContainer(event, dest);
 					return event.dapp;
 				}
-				var viewPaths = this.app._getViewPaths(dest);
+				//	var viewPaths = this.app._getViewPaths(dest);
+				var viewPaths = viewUtils._getViewPaths(this.app, dest);
 				event.dest = viewPaths[0].dest;
 				if (event.hide) {
 					dest = "-" + dest;
@@ -136,7 +130,7 @@ define(
 				// Can process this direct call to .show or .hide since it is not multipart or nested
 				event.dapp.parentNode = event.target;
 				event.dapp.viewPath = viewPaths[0]; // viewPaths[0]
-				event.dapp.parentView = this.app.getParentViewFromViewName(dest, event.target);
+				event.dapp.parentView = viewUtils.getParentViewFromViewName(this.app, dest, event.target);
 				this.app.log(MODULE, F + "in .show path after update event.dapp.parentView.id = " +
 					event.dapp.parentView.id);
 				event.dapp.isParent = false;
@@ -184,10 +178,10 @@ define(
 							nextSubViewArray = self._getNextSubViewArray(subIds, firstChildView, appView);
 						}
 
-						// Need to use constraints.getSelectedChild instead of event.target._visibleChild
+						// Need to use viewUtils.getSelectedChild instead of event.target._visibleChild
 						// because in a nested case where isParent is true we replace the event.target._visibleChild
 						// before we are ready to use it.  We wait for !isParent and then process the views.
-						var current = constraints.getSelectedChild(appView, (firstChildView &&
+						var current = viewUtils.getSelectedChild(appView, (firstChildView &&
 							firstChildView.constraint ? firstChildView.constraint : "center"));
 
 						// use the nextSubViewArray to get the currentSubViewArray and current and next last child
@@ -235,11 +229,11 @@ define(
 					//		(complete.dapp.parentView ? complete.dapp.parentView.id : "") + "]");
 
 					if (complete.hide) {
-						var parentSelChild = constraints.getSelectedChild(next.parentView,
+						var parentSelChild = viewUtils.getSelectedChild(next.parentView,
 							next.constraint);
 						next.viewShowing = false;
 						if (next === parentSelChild) {
-							constraints.setSelectedChild(next.parentView,
+							viewUtils.setSelectedChild(next.parentView,
 								next.constraint, null, self.app); // remove from selectedChildren
 						}
 					}
@@ -269,7 +263,7 @@ define(
 				//	var F = MODULE + "_handleShowFromDispContainer ";
 				//	adjusted dest contains + - or , so need to handle specialcase dest
 				var tempDisplaydeferred = new Deferred();
-				on.emit(document, "delite-display", {
+				on.emit(document, "dapp-display", {
 					dest: dest,
 					displayDeferred: tempDisplaydeferred,
 					bubbles: true,
@@ -278,7 +272,7 @@ define(
 				tempDisplaydeferred.then(function (value) {
 					// resolve the loadDeferred here, do not need dapp stuff since we are not waiting on the
 					// "delite-before-show" or "delite-after-show" it was handled already by the emit
-					// for "delite-display" above.
+					// for "dapp-display" above.
 					event.loadDeferred.resolve({
 						child: value[0].child
 					});
@@ -343,7 +337,7 @@ define(
 				for (var i = subs.length - 1; i >= 0; i--) {
 					var v = subs[i];
 					if (!v.beforeActivate) {
-						v = this.app.getViewFromViewId(v.id);
+						v = viewUtils.getViewFromViewId(this.app, v.id);
 					}
 					if (!v.initialized) {
 						v.initialized = true;
@@ -354,7 +348,7 @@ define(
 						v.beforeActivate(current, data);
 					}
 					if (p) {
-						constraints.setSelectedChild(p, (v ? v.constraint : "center"), v, this.app);
+						viewUtils.setSelectedChild(p, (v ? v.constraint : "center"), v, this.app);
 					}
 					p = v;
 				}
@@ -459,7 +453,7 @@ define(
 					if (nextSubViewArray[i].constraint) {
 						constraint = nextSubViewArray[i].constraint;
 					} else {
-						var v = this.app.getViewFromViewId(nextSubViewArray[i].id);
+						var v = viewUtils.getViewFromViewId(this.app, nextSubViewArray[i].id);
 						constraint = v.constraint;
 					}
 
@@ -481,7 +475,7 @@ define(
 							// since the constraint was set, but it did not match, need to deactivate all selected
 							// children of this.currentLastSubChildMatch
 							if (!removeView) {
-								var selChildren = constraints.getAllSelectedChildren(currentLastSubChildMatch);
+								var selChildren = viewUtils.getAllSelectedChildren(currentLastSubChildMatch);
 								currentSubViewArray = currentSubViewArray.concat(selChildren);
 							}
 							break;
@@ -496,7 +490,7 @@ define(
 				}
 				// Here since they had the constraint but it was not the same I need to deactivate all children of p
 				if (removeView) {
-					currentSubViewArray = currentSubViewArray.concat(constraints.getAllSelectedChildren(p));
+					currentSubViewArray = currentSubViewArray.concat(viewUtils.getAllSelectedChildren(p));
 				}
 				//	for (var i = 0; i <= currentSubViewArray.length - 1; i++) {
 				//		console.log(F + "returning  currentSubViewArray with currentSubViewArray[i].id = [" +
@@ -516,19 +510,19 @@ define(
 				// 		If a view has children loaded the view and any children of the view will be unloaded.
 				//
 				// example:
-				//		Use trigger() to trigger "app-unload-view" event, and this function will response the event.
+				//		Use trigger() to trigger "dapp-unload-view" event, and this function will response the event.
 				// 		For example:
-				//		|	this.trigger("app-unload-view", {"view":view, "callback":function(){...}});
+				//		|	this.trigger("dapp-unload-view", {"view":view, "callback":function(){...}});
 				//
 				// event: Object
-				//		app-unload-view event parameter. It should be like this: {"view":view, "parent": parent
+				//		dapp-unload-view event parameter. It should be like this: {"view":view, "parent": parent
 				// 		"callback":function(){...}}
 				var F = MODULE + ":unloadView";
 
 				var view = event.view || {};
 				var parentView = event.parentView || view.parent || this.app;
 				var viewId = view.id;
-				this.app.log(MODULE, F + " app-unload-view called for [" + viewId + "]");
+				this.app.log(MODULE, F + " dapp-unload-view called for [" + viewId + "]");
 
 				if (parentView && event.unloadApp) {
 					// need to clear out selectedChildren

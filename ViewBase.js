@@ -1,7 +1,7 @@
 define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/dom-class", "dojo/_base/declare",
-		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/constraints"
+		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/viewUtils"
 	],
-	function (require, when, on, domAttr, domStyle, domClass, declare, lang, dcl, Deferred, constraints) {
+	function (require, when, on, domAttr, domStyle, domClass, declare, lang, dcl, Deferred, viewUtils) {
 		var MODULE = "ViewBase:";
 		return declare(null, {
 			// summary:
@@ -15,7 +15,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//
 				//		- app: the app
 				//		- id: view id
-				//		- name: view name
+				//		- viewName: view name
 				//		- parent: parent view
 				//		- controller: view controller module identifier
 				//		- children: children views
@@ -27,19 +27,10 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				this.loadedStores = {};
 				this.transitionCount = 0;
 
-				// skipNodeCache: [protected] Boolean (from dijit._TemplatedMixin)
-				//		If using a cached widget template nodes poses issues for a
-				//		particular widget class, it can set this property to ensure
-				//		that its template is always re-built from a string
-				this._skipNodeCache = true; // use true to avoid Detached domNodes for each view created.
-
 				// private
 				this._started = false;
 				dcl.mix(this, params);
 				var p = this.parentView;
-				if (!p || !p.views) {
-					p = this.app;
-				}
 				// mixin views configuration to current view instance.
 				if (p && p.views) {
 					dcl.mix(this, p.views[this.viewName]);
@@ -58,10 +49,10 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 					return this;
 				}
 				this._startDef = new Deferred();
-				when(this.load(), lang.hitch(this, function () {
+				when(this.load(), function () {
 					this._createDataStores();
 					this._startup();
-				}));
+				}.bind(this));
 				return this._startDef;
 			},
 
@@ -69,11 +60,11 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				var F = MODULE + "load ";
 				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				var vcDef = this._loadViewController();
-				when(vcDef, lang.hitch(this, function (controller) {
+				when(vcDef, function (controller) {
 					if (controller) {
 						dcl.mix(this, controller);
 					}
-				}));
+				}.bind(this));
 				return vcDef;
 			},
 
@@ -147,6 +138,10 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		private
 				var F = MODULE + "_startup ";
 				this.app.log(MODULE, F + "called for [" + this.id + "]");
+
+				this._initViewHidden();
+
+				this._startLayout();
 			},
 
 			_initViewHidden: function () {
@@ -169,11 +164,8 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				if (!this.hasOwnProperty("constraint")) {
 					this.constraint = domAttr.get(this.domNode, "data-app-constraint") || "center";
 				}
-				constraints.register(this.constraint);
+				viewUtils.register(this.constraint);
 
-				if (this.parentNode.getIndexOfChild(this.domNode) === -1) {
-					//		this.parentNode.addChild(this.domNode, null);
-				}
 				this.app.log("  > in app/ViewBase calling this.startup and resolve() id=[" + this.id + "], " +
 					"parentView.viewName=[" + (this.parentView ? this.parentView.viewName : "") + "]");
 				this._started = true;

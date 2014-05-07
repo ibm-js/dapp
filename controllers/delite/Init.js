@@ -1,8 +1,8 @@
-define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/on", "dojo/Deferred", "../../Controller"],
-	function (require, dcl, lang, on, Deferred, Controller) {
+define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../../Controller"],
+	function (require, dcl, on, Deferred, Controller) {
 		return dcl(Controller, {
 			constructor: function () {
-				this.app.on("app-init", lang.hitch(this, "_initHandler"));
+				this.app.on("dapp-init", this._initHandler.bind(this));
 			},
 			_initHandler: function () {
 				// we might want to parse first
@@ -46,7 +46,7 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/on", "dojo/Deferred", "..
 				var displayDeferred = new Deferred();
 				var self = this;
 				// let's display default view
-				on.emit(document, "delite-display", {
+				on.emit(document, "dapp-display", {
 					// TODO is that really defaultView a good name? Shouldn't it be defaultTarget or defaultView_s_?
 					dest: this.app.defaultView,
 					displayDeferred: displayDeferred,
@@ -54,9 +54,9 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/on", "dojo/Deferred", "..
 					cancelable: true
 				});
 				// TODO views in the hash MUST be handled by history controller?
-				if (this.app.setStatus) {
+				if (this.app) {
 					displayDeferred.then(function () {
-						self.app.setStatus(self.app.lifecycle.STARTED);
+						self.app.status = self.app.lifecycle.STARTED;
 						self.app.appStartedDef.resolve(self.app); // resolve the deferred from new Application
 					});
 				}

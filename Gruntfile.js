@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 				"utils/**/*.js",
 				"modules/**/*.js",
 				"widgets/**/*.js",
-				"tests/**/*.js",
+				"[tests/**/*.js, , !tests/intern*.js]",
 				"samples/**/*.js"
 			],
 			options: {
@@ -30,11 +30,10 @@ module.exports = function (grunt) {
 			files: ["Gruntfile.js",
 				"*.js", // this will get things in dapp directory
 				"controllers/delite/*.js",
-				//	"controllers/*.js", // jsbeautifier was causing a problem with HistoryHash
 				"utils/**/*.js",
 				"modules/**/*.js",
 				"widgets/**/*.js",
-				"tests/**/*.js",
+				"[tests/**/*.js, , !tests/intern*.js]",
 				"samples/**/*.js"
 			],
 			options: {

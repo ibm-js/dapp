@@ -1,11 +1,9 @@
-define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/_base/lang", "dojo/Deferred",
-		"delite/Widget", "delite/Invalidating", "delite/Destroyable",
-		"delite/register", "delite/handlebars", "./ViewBase", "./utils/nls"
+define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/Widget", "delite/register",
+		"delite/handlebars", "./ViewBase", "./utils/nls"
 	],
-	function (require, when, on, dcl, lang, Deferred, Widget, Invalidating, Destroyable, register,
-		handlebars, ViewBase, nls) {
+	function (require, when, on, dcl, Deferred, Widget, register, handlebars, ViewBase, nls) {
 		var MODULE = "View:";
-		return dcl([ViewBase, Widget, Invalidating /*_TemplatedMixin, _WidgetsInTemplateMixin, Destroyable,*/ ], {
+		return dcl([ViewBase, Widget], {
 			// summary:
 			//		View class inheriting from ViewBase adding templating & globalization capabilities.
 			constructor: function (params) { // jshint unused:false
@@ -64,7 +62,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/_base/lang", "dojo/D
 			connect: function (obj, event, method) {
 				var F = MODULE + "connect ";
 				this.app.log(MODULE, F + "called for [" + this.id + "]");
-				return this.own(on(obj, event, lang.hitch(this, method)))[0]; // handle
+				return this.own(on(obj, event, method.bind(this)))[0]; // handle
 			},
 
 			_loadTemplate: function () {
@@ -88,12 +86,12 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/_base/lang", "dojo/D
 					}
 					var loadViewDeferred = new Deferred();
 					this.app.log(MODULE, F + "before require deps with deps = ", deps);
-					require(deps, lang.hitch(this, function () {
+					require(deps, function () {
 						this.templateString = this.template ? arguments[arguments.length - 1] : "<div></div>";
 						this.app.log(MODULE, F + "after require deps this.templateString=[" + this.templateString +
 							"]");
 						loadViewDeferred.resolve(this);
-					}));
+					}.bind(this));
 					return loadViewDeferred;
 				}
 			},
@@ -107,25 +105,23 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/_base/lang", "dojo/D
 					var defDef = sup.call(this);
 					var nlsDef = nls(this);
 					// when parentView loading is done (controller), proceed with template
-					// (for data-dojo-* to work we need to wait for controller to be here, this is also
-					// useful when the controller is used as a layer for the view)
-					when(defDef, lang.hitch(this, function () {
-						when(nlsDef, lang.hitch(this, function (nls) {
+					defDef.then(function () {
+						when(nlsDef, function (nls) {
 							// we inherit from the parentView NLS
 							this.nls = {};
 							if (this.parentView) {
 								dcl.mix(this.nls, this.parentView.nls);
 							}
 							if (nls) {
-								// make sure template can access nls doing ${nls.myprop}
+								// make sure template can access nls doing {{nls.myprop}}
 								dcl.mix(this.nls, nls);
 							}
 							when(this._loadTemplate(), function (value) {
 								tplDef.resolve(value);
 							});
-						}));
-					}));
-					return tplDef;
+						}.bind(this));
+					}.bind(this));
+					return tplDef.promise;
 				};
 			}),
 
@@ -159,12 +155,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/_base/lang", "dojo/D
 					dcl.mix(params, this.attributes);
 
 					var tag = "dapp-view-" + this.id.toLowerCase();
-					try {
-						register(tag, [HTMLElement, Widget, Invalidating, Destroyable], params);
-					} catch (e) {
-						//ignore error here if already registered
-						//console.warn("Tag already registered for tag="+tag);
-					}
+					register(tag, [HTMLElement, Widget], params);
 
 					this.domNode = register.createElement(tag);
 					this.own(this.domNode);
@@ -182,10 +173,6 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/_base/lang", "dojo/D
 							this.containerNode = this.domNode.children[0];
 						}
 					}
-
-					this._initViewHidden();
-
-					this._startLayout();
 
 					sup.call(this);
 				};

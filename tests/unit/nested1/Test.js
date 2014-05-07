@@ -3,6 +3,7 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/main",
+	"dapp/utils/viewUtils",
 	"dojo/json",
 	"dojo/topic",
 	"dojo/on",
@@ -13,7 +14,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/nested1/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, main, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
 	nested1config1) {
 	// -------------------------------------------------------------------------------------- //
 	// for nested1Suite1 transition test
@@ -50,9 +51,9 @@ define([
 
 				// Here nested1App1Home1View should be displayed
 
-				nested1App1P1View = testApp.getViewFromViewId("P1");
-				nested1App1S1View = testApp.getViewFromViewId("P1_S1");
-				nested1App1V1View = testApp.getViewFromViewId("P1_S1_V1");
+				nested1App1P1View = viewUtils.getViewFromViewId(testApp, "P1");
+				nested1App1S1View = viewUtils.getViewFromViewId(testApp, "P1_S1");
+				nested1App1V1View = viewUtils.getViewFromViewId(testApp, "P1_S1_V1");
 
 				// check that init has been called on these views
 				assert.isTrue(nested1App1P1View.initialized, "nested1App1P1View.initialized should be true");
@@ -80,9 +81,9 @@ define([
 				var nested1App1V7 = document.getElementById("V7");
 				checkNodeVisibility(nested1Node1, nested1App1V7);
 
-				nested1App1V7View = testApp.getViewFromViewId("V7");
-				nested1App1S1View = testApp.getViewFromViewId("P1_S1");
-				nested1App1V1View = testApp.getViewFromViewId("P1_S1_V1");
+				nested1App1V7View = viewUtils.getViewFromViewId(testApp, "V7");
+				nested1App1S1View = viewUtils.getViewFromViewId(testApp, "P1_S1");
+				nested1App1V1View = viewUtils.getViewFromViewId(testApp, "P1_S1_V1");
 
 				// Now nested1App1V2View ActivateCallCounts should be 1
 				checkActivateCallCount(nested1App1V7View, 1);
@@ -122,7 +123,7 @@ define([
 				var nested1App1V2 = document.getElementById("P1_S1_V2");
 				checkNestedNodeVisibility(nested1Node1, nested1App1V2);
 
-				nested1App1V2View = testApp.getViewFromViewId("P1_S1_V2");
+				nested1App1V2View = viewUtils.getViewFromViewId(testApp, "P1_S1_V2");
 
 				// Now nested1App1V1View ActivateCallCounts should be 1
 				checkActivateCallCount(nested1App1V2View, 1);
@@ -141,7 +142,7 @@ define([
 		},
 
 		// Currently showing P1_S1_V2 test transition to V7
-		"testApp.displayView('V7')": function () {
+		"testApp.showOrHideView('V7')": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -166,13 +167,13 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('V7', {
+			testApp.showOrHideView('V7', {
 				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
-		"testApp.displayView('P1') will show P1,S1,V1": function () {
+		"testApp.showOrHideView('P1') will show P1,S1,V1": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -195,7 +196,7 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('P1', {
+			testApp.showOrHideView('P1', {
 				displayDeferred: displayDeferred
 			});
 		},

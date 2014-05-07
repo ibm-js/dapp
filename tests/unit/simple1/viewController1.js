@@ -29,7 +29,7 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 						tempName = this.id + i;
 					}
 				}, 500);
-				//	simple1App.displayView('simp1Home3', {});
+				//	simple1App.showOrHideView('simp1Home3', {});
 			}
 		},
 		beforeActivate: function (previousView, viewData) {
@@ -53,7 +53,7 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 				(nextView ? nextView.id : "") + "]");
 			this.afterDeactivateCallCount++;
 		},
-		// for now destroy function is required or an error can occur during app-unload-app or app-unload-view
+		// for now destroy function is required or an error can occur during dapp-unload-app or dapp-unload-view
 		destroy: function () {
 			this.app.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
 		}

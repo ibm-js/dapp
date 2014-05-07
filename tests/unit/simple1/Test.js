@@ -3,6 +3,7 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/main",
+	"dapp/utils/viewUtils",
 	"dojo/json",
 	"dojo/topic",
 	"dojo/on",
@@ -13,7 +14,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/simple1/app3.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, main, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
 	simple1config3) {
 	// -------------------------------------------------------------------------------------- //
 	// for simple1Suite3 transition test
@@ -49,7 +50,7 @@ define([
 
 				// Here simple1App3Home1View should be displayed
 
-				simple1App3Home1View = testApp.getViewFromViewId("simple1App3Home1");
+				simple1App3Home1View = viewUtils.getViewFromViewId(testApp, "simple1App3Home1");
 
 				// check that init has been called on these views
 				assert.isTrue(simple1App3Home1View.initialized, "simple1App3Home1View.initialized should be true");
@@ -82,7 +83,7 @@ define([
 				var simple1App3Home3NoController = document.getElementById("simple1App3Home3NoController");
 				checkNodeVisibility(simple1Node3, simple1App3Home3NoController);
 
-				simple1App3Home3NoControllerView = testApp.getViewFromViewId("simple1App3Home3NoController");
+				simple1App3Home3NoControllerView = viewUtils.getViewFromViewId(testApp, "simple1App3Home3NoController");
 
 				// Now simple1App3Home3NoController ActivateCallCounts should be 1
 				checkActivateCallCount(simple1App3Home3NoControllerView, 1);
@@ -102,7 +103,7 @@ define([
 		},
 
 		// Currently showing simple1App3Home3NoController test transition back to simple1App3Home1
-		"testApp.displayView('simple1App3Home1', params) tests data passed to view": function () {
+		"testApp.showOrHideView('simple1App3Home1', params) tests data passed to view": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
@@ -126,18 +127,18 @@ define([
 				viewData: "testData",
 				displayDeferred: displayDeferred
 			};
-			testApp.displayView('simple1App3Home1', params);
+			testApp.showOrHideView('simple1App3Home1', params);
 
 		},
 
 		// Currently showing simple1App3Home1 test transition back to simple1App3Home2
-		"testApp.displayView('simple1App3Home2')": function () {
+		"testApp.showOrHideView('simple1App3Home2')": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
 			displayDeferred.then(function (complete) {
 				var simple1App3Home2 = document.getElementById("simple1App3Home2");
-				simple1App3Home2View = testApp.getViewFromViewId("simple1App3Home2");
+				simple1App3Home2View = viewUtils.getViewFromViewId(testApp, "simple1App3Home2");
 				checkNodeVisibility(simple1Node3, simple1App3Home2);
 
 				// Now simple1App3Home2View ActivateCallCounts should be 1
@@ -150,18 +151,18 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('simple1App3Home2', {
+			testApp.showOrHideView('simple1App3Home2', {
 				displayDeferred: displayDeferred
 			});
 		},
 		// Currently showing simple1App3Home2 test hide simple1App3Home2
-		"testApp.displayView('-simple1App3Home2') Hide View": function () {
+		"testApp.showOrHideView('-simple1App3Home2') Hide View": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
 			displayDeferred.then(function (complete) {
 				var simple1App3Home2 = document.getElementById("simple1App3Home2");
-				simple1App3Home2View = testApp.getViewFromViewId("simple1App3Home2");
+				simple1App3Home2View = viewUtils.getViewFromViewId(testApp, "simple1App3Home2");
 				assert.isNull(simple1App3Home2);
 				assert.isNull(simple1App3Home2View.domNode.parentNode);
 
@@ -178,7 +179,7 @@ define([
 
 				d.resolve();
 			});
-			testApp.displayView('-simple1App3Home2', {
+			testApp.showOrHideView('-simple1App3Home2', {
 				displayDeferred: displayDeferred
 			});
 		},

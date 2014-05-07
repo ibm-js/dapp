@@ -40,7 +40,7 @@ define([
 
 			var handle;
 			// check the app status as it updates when the app is started and stopped
-			handle = topic.subscribe("/app/status", function (status, appId) {
+			handle = topic.subscribe("/dapp/status", function (status, appId) {
 				if (appId === appName) {
 					assert.deepEqual(status, previousStatus + 1, "app status should progress from Starting to Stopped");
 					previousStatus = status;
@@ -57,16 +57,16 @@ define([
 				testApp = app;
 
 				// check the app status it should be STARTED
-				testApp.log("testApp:", 'simple2/Simple test testApp.getStatus()=' + testApp.getStatus());
-				assert.deepEqual(testApp.getStatus(), testApp.lifecycle.STARTED);
+				testApp.log("testApp:", 'simple2/Simple test testApp.status=' + testApp.status);
+				assert.deepEqual(testApp.status, testApp.lifecycle.STARTED);
 
 				// This section would normally go in teardown, but do it here to test status
 				sample2Container1.parentNode.removeChild(sample2Container1);
 
 				var appStoppedDef = testApp.unloadApp(); // unload and stop the app
 				appStoppedDef.then(function () { // when the app is unloaded verify status and call resolve
-					testApp.log("testApp:", 'simple2/Simple test testApp.getStatus()=' + testApp.getStatus());
-					assert.deepEqual(testApp.getStatus(), testApp.lifecycle.STOPPED);
+					testApp.log("testApp:", 'simple2/Simple test testApp.status=' + testApp.status);
+					assert.deepEqual(testApp.status, testApp.lifecycle.STOPPED);
 
 					// test is finished resolved the deferred
 					d.resolve();
@@ -75,7 +75,7 @@ define([
 			return d;
 		},
 		teardown: function () {
-			testApp.unloadApp();
+		//	testApp.unloadApp();
 		}
 	};
 	registerSuite(sample2Suite1);
@@ -250,7 +250,7 @@ define([
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
-			testApp.displayView('simple2App3Home2', {
+			testApp.showOrHideView('simple2App3Home2', {
 				displayDeferred: displayDeferred
 			});
 			displayDeferred.then(function () {
