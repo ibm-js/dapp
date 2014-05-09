@@ -3,7 +3,7 @@
 	"name": "multinested1App1",
 	"loaderConfig": {
 		"paths": {
-			"multinested1App1": "dapp/tests/unit"
+			"multinested1App1": "./dapp/tests/unit/multinested1"
 		}
 	},
 	"modules": [
@@ -17,9 +17,7 @@
 
 	"dependencies": [
 		"deliteful/LinearLayout",
-		"deliteful/ViewStack",
-		"dapp/tests/unit/multinested1/viewController1",
-		"dapp/tests/unit/multinested1/parentController1"
+		"deliteful/ViewStack"
 	],
 
 
@@ -37,28 +35,28 @@
 		"H1": {
 			"constraint": "top1",
 			"parentSelector": "#multinested1App1linearlayout",
-			"controller": "dapp/tests/unit/multinested1/parentController1.js",
-			"template": "dapp/tests/unit/multinested1/parentTemplate.html",
+			"controller": "multinested1App1/parentController1.js",
+			"template": "multinested1App1/parentTemplate.html",
 			"defaultView": "HS1",
 			"views": {
 				"HS1": {
 					"constraint": "top2",
 				//	"parentSelector": "#multinested1App1linearlayout",
-					"controller": "dapp/tests/unit/multinested1/parentController1.js",
-					"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+					"controller": "multinested1App1/parentController1.js",
+					"template": "multinested1App1/subParentTemplate.html",
 					"defaultView": "HV1",
 					"views": {
 						"HV1": {
 							"constraint": "top3",
 						//	"parentSelector": "#multinested1App1linearlayout",
-							"controller": "dapp/tests/unit/multinested1/viewController1.js",
-							"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+							"controller": "multinested1App1/viewController1.js",
+							"template": "multinested1App1/viewTemplate.html"
 						},
 						"HV2": {
 							"constraint": "top3",
 						//	"parentSelector": "#multinested1App1linearlayout",
-							"controller": "dapp/tests/unit/multinested1/viewController1.js",
-							"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+							"controller": "multinested1App1/viewController1.js",
+							"template": "multinested1App1/viewTemplate.html"
 						}
 					}
 				}
@@ -67,35 +65,35 @@
 		"content": {
 			"constraint": "content1",
 			"parentSelector": "#multinested1App1linearlayout",
-			"controller": "dapp/tests/unit/multinested1/parentController1.js",
-			"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+			"controller": "multinested1App1/parentController1.js",
+			"template": "multinested1App1/subParentTemplate.html",
 			"defaultView": "S1",
 			"views": {
 			"P1": {
 			//	"constraint": "main",
 			//	"parentSelector": "#multinested1App1linearlayout",
-				"controller": "dapp/tests/unit/multinested1/parentController1.js",
-				"template": "dapp/tests/unit/multinested1/parentTemplate.html",
+				"controller": "multinested1App1/parentController1.js",
+				"template": "multinested1App1/parentTemplate.html",
 				"defaultView": "S1",
 				"views": {
 					"S1": {
 						"constraint": "main2",
 					//	"parentSelector": "#multinested1App1linearlayout",
-						"controller": "dapp/tests/unit/multinested1/parentController1.js",
-						"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+						"controller": "multinested1App1/parentController1.js",
+						"template": "multinested1App1/subParentTemplate.html",
 						"defaultView": "V1",
 						"views": {
 							"V1": {
 								"constraint": "main3",
 							//	"parentSelector": "#multinested1App1linearlayout",
-								"controller": "dapp/tests/unit/multinested1/viewController1.js",
-								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+								"controller": "multinested1App1/viewController1.js",
+								"template": "multinested1App1/viewTemplate.html"
 							},
 							"V2": {
 								"constraint": "main3",
 							//	"parentSelector": "#multinested1App1linearlayout",
-								"controller": "dapp/tests/unit/multinested1/viewController1.js",
-								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+								"controller": "multinested1App1/viewController1.js",
+								"template": "multinested1App1/viewTemplate.html"
 							}
 						}
 					}
@@ -104,28 +102,28 @@
 			"P2": {
 			//	"constraint": "main",
 			//	"parentSelector": "#multinested1App1linearlayout",
-				"controller": "dapp/tests/unit/multinested1/parentController1.js",
-				"template": "dapp/tests/unit/multinested1/parentTemplate.html",
+				"controller": "multinested1App1/parentController1.js",
+				"template": "multinested1App1/parentTemplate.html",
 				"defaultView": "P2S1",
 				"views": {
 					"P2S1": {
 						"constraint": "main2",
 					//	"parentSelector": "#multinested1App1linearlayout",
-						"controller": "dapp/tests/unit/multinested1/parentController1.js",
-						"template": "dapp/tests/unit/multinested1/subParentTemplate.html",
+						"controller": "multinested1App1/parentController1.js",
+						"template": "multinested1App1/subParentTemplate.html",
 						"defaultView": "P2V1",
 						"views": {
 							"P2V1": {
 								"constraint": "main3",
 							//	"parentSelector": "#multinested1App1linearlayout",
-								"controller": "dapp/tests/unit/multinested1/viewController1.js",
-								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+								"controller": "multinested1App1/viewController1.js",
+								"template": "multinested1App1/viewTemplate.html"
 							},
 							"P2V2": {
 								"constraint": "main3",
 							//	"parentSelector": "#multinested1App1linearlayout",
-								"controller": "dapp/tests/unit/multinested1/viewController1.js",
-								"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+								"controller": "multinested1App1/viewController1.js",
+								"template": "multinested1App1/viewTemplate.html"
 							}
 						}
 					}
@@ -134,8 +132,8 @@
 			"V7": {
 			//	"constraint": "main",
 			//	"parentSelector": "#multinested1App1linearlayout",
-				"controller": "dapp/tests/unit/multinested1/viewController1.js",
-				"template": "dapp/tests/unit/multinested1/viewTemplate.html"
+				"controller": "multinested1App1/viewController1.js",
+				"template": "multinested1App1/viewTemplate.html"
 			}
 		}
 		}

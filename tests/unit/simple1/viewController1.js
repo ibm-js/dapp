@@ -29,7 +29,7 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 						tempName = this.id + i;
 					}
 				}, 500);
-				//	simple1App.showOrHideView('simp1Home3', {});
+				//	simple1App.showOrHideViews('simp1Home3', {});
 			}
 		},
 		beforeActivate: function (previousView, viewData) {

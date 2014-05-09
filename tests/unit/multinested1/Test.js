@@ -101,7 +101,7 @@ define([
 				d.resolve();
 			});
 			// temp test works on IE but does not help on FF
-			//testApp.showOrHideView('content,V7', {
+			//testApp.showOrHideViews('content,V7', {
 			//displayDeferred: displayDeferred
 			//});
 		},
@@ -151,7 +151,7 @@ define([
 		},
 
 		// Currently showing P1_S1_V2 test transition to V7
-		"testApp.showOrHideView('content,V7')": function () {
+		"testApp.showOrHideViews('content,V7')": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -177,13 +177,13 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('content,V7', {
+			testApp.showOrHideViews('content,V7', {
 				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
-		"testApp.showOrHideView('content,P1') will show P1,S1,V1": function () {
+		"testApp.showOrHideViews('content,P1') will show P1,S1,V1": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -207,7 +207,7 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('content,P1', {
+			testApp.showOrHideViews('content,P1', {
 				displayDeferred: displayDeferred
 			});
 		},
@@ -241,7 +241,7 @@ define([
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
-		"testApp.showOrHideView('-content') will hide P2,P2S1,P2V1": function () {
+		"testApp.showOrHideViews('-content') will hide P2,P2S1,P2V1": function () {
 			var d = this.async(10000);
 			document.getElementById("content").parentNode.hide(document.getElementById("content").id).then(
 				function (complete) {
@@ -275,7 +275,7 @@ define([
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V2
-		"testApp.showOrHideView('content,P2,P2S1,P2V2') will show P2,P2S1,P2V2": function () {
+		"testApp.showOrHideViews('content,P2,P2S1,P2V2') will show P2,P2S1,P2V2": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -301,13 +301,13 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('content,P2,P2S1,P2V2', {
+			testApp.showOrHideViews('content,P2,P2S1,P2V2', {
 				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
-		"testApp.showOrHideView('-content,P2,P2S1') NOTE problem with -content,P2!!! will hide P2,P2S1,P2V2": function () {
+		"testApp.showOrHideViews('-content,P2,P2S1') NOTE problem w/ -content,P2!!! hides P2,P2S1,P2V2": function () {
 			var d = this.async(10000);
 			document.getElementById("content_P2_P2S1").parentNode.hide(document.getElementById("content_P2_P2S1").id)
 				.then(function (complete) {

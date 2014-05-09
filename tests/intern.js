@@ -10,12 +10,12 @@ define({
 	// OnDemand. Options that will be permutated are browserName, version, platform, and platformVersion; any other
 	// capabilities options specified for an environment will be copied as-is
 	environments: [
-		// { browserName: "internet explorer", version: "11", platform: "Windows 8.1", name : "dapp" },
-		// { browserName: "internet explorer", version: "10", platform: "Windows 8", name : "dapp" },
-		// { browserName: "internet explorer", version: "9", platform: "Windows 7" },
-		// { browserName: "firefox", version: "28", platform: "Windows 7", name : "dapp" },
 		{ browserName: "chrome", version: "33", platform: "Windows 7", name : "dapp" },
 		{ browserName: "safari", version: "7", platform: "OS X 10.9", name : "dapp" },
+		//{ browserName: "firefox", version: "28", platform: "Windows 7", name : "dapp" },
+		//{ browserName: "internet explorer", version: "11", platform: "Windows 8.1", name : "dapp" },
+		//{ browserName: "internet explorer", version: "10", platform: "Windows 8", name : "dapp" },
+		//{ browserName: "internet explorer", version: "9", platform: "Windows 7" },
 
 		// Mobile
 		{ browserName: "iphone", platform: "OS X 10.9", version: "7", name : "dapp"}

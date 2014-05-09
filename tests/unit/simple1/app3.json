@@ -3,7 +3,7 @@
 	"name": "simple1App3",
 	"loaderConfig": {
 		"paths": {
-			"simple1App3": "dapp/tests/unit"
+			"simple1App3": "./dapp/tests/unit/simple1"
 		}
 	},
 	"modules": [
@@ -17,18 +17,17 @@
 
 	"dependencies": [
 		"deliteful/LinearLayout",
-		"deliteful/ViewStack",
-		"dapp/tests/unit/simple1/viewController1"
+		"deliteful/ViewStack"
 	],
 
 
 
 	"appLogging": {
-		"logAll": 1
+		"logAll": 0
 	},
 
 	"parseOnLoad": true,
-	"nls": "dapp/tests/unit/simple1/nls/app",
+	"nls": "simple1App3/nls/app",
 
 	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
 	"defaultView": "simple1App3Home1",
@@ -36,25 +35,23 @@
 		"simple1App3Home1": {
 			"constraint": "main",
 			"parentSelector": "#simple1App3dviewStack",
-			"nls": "dapp/tests/unit/simple1/nls/home",
-		// TODO, I could not use the loaderConfig path for simple1App3 here, not sure why it did not find the template
-		//	"template": "simple1App3/viewTemplate.html"
-			"controller": "dapp/tests/unit/simple1/viewController1.js",
-			"template": "dapp/tests/unit/simple1/viewTemplate.html"
+			"nls": "simple1App3/nls/home",
+			"controller": "simple1App3/viewController1.js",
+			"template": "simple1App3/viewTemplate.html"
 		},
 		"simple1App3Home2": {
 			"constraint": "main",
 			"parentSelector": "#simple1App3dviewStack",
-			"nls": "dapp/tests/unit/simple1/nls/home",
-			"controller": "dapp/tests/unit/simple1/viewController1.js",
-			"template": "dapp/tests/unit/simple1/viewTemplate.html"
+			"nls": "simple1App3/nls/home",
+			"controller": "simple1App3/viewController1.js",
+			"template": "simple1App3/viewTemplate.html"
 		},
 		"simple1App3Home3NoController": {
 			"constraint": "main",
 			"parentSelector": "#simple1App3dviewStack",
-			"nls": "dapp/tests/unit/simple1/nls/home",
-			"controller": "dapp/tests/unit/simple1/viewController1.js",
-			"template": "dapp/tests/unit/simple1/viewTemplate.html"
+			"nls": "simple1App3/nls/home",
+			"controller": "simple1App3/viewController1.js",
+			"template": "simple1App3/viewTemplate.html"
 		}
 
 	}

@@ -142,7 +142,7 @@ define([
 		},
 
 		// Currently showing P1_S1_V2 test transition to V7
-		"testApp.showOrHideView('V7')": function () {
+		"testApp.showOrHideViews('V7')": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -167,13 +167,13 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('V7', {
+			testApp.showOrHideViews('V7', {
 				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
-		"testApp.showOrHideView('P1') will show P1,S1,V1": function () {
+		"testApp.showOrHideViews('P1') will show P1,S1,V1": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 			displayDeferred.then(function (complete) {
@@ -196,7 +196,7 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('P1', {
+			testApp.showOrHideViews('P1', {
 				displayDeferred: displayDeferred
 			});
 		},

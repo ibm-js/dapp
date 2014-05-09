@@ -31,7 +31,7 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "delite/S
 				});
 			},
 
-			showOrHideView: function (viewPath, params) {
+			showOrHideViews: function (viewPath, params) {
 				// summary:
 				//		A convenience function to fire the dapp-display event to transition to a view,
 				// 		or a set of views.

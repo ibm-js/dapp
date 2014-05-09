@@ -65,8 +65,8 @@ define([
 				//Test NLS Strings for app and view
 				var testAppNlsLabelDom = document.getElementById("testAppNlsLabel");
 				var testViewNlsLabelDom = document.getElementById("testViewNlsLabel");
-				assert.deepEqual(testAppNlsLabelDom.innerText, "Label Zero", "testAppNlsLabel should be Label Zero");
-				assert.deepEqual(testViewNlsLabelDom.innerText, "Label One", "testViewNlsLabelDom should be Label One");
+				assert.deepEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
+				assert.deepEqual(testViewNlsLabelDom.innerHTML, "Label One", "testViewNlsLabelDom should be Label One");
 
 				setTimeout(function () { // try timeout to wait for afterAcivate...
 					d.resolve();
@@ -94,8 +94,8 @@ define([
 				//Test NLS Strings for app and view
 				var testAppNlsLabelDom = document.getElementById("testAppNlsLabel");
 				var testViewNlsLabelDom = document.getElementById("testViewNlsLabel");
-				assert.deepEqual(testAppNlsLabelDom.innerText, "Label Zero", "testAppNlsLabel should be Label Zero");
-				assert.deepEqual(testViewNlsLabelDom.innerText, "Label One", "testViewNlsLabelDom should be Label One");
+				assert.deepEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
+				assert.deepEqual(testViewNlsLabelDom.innerHTML, "Label One", "testViewNlsLabelDom should be Label One");
 
 				d.resolve();
 			});
@@ -103,7 +103,7 @@ define([
 		},
 
 		// Currently showing simple1App3Home3NoController test transition back to simple1App3Home1
-		"testApp.showOrHideView('simple1App3Home1', params) tests data passed to view": function () {
+		"testApp.showOrHideViews('simple1App3Home1', params) tests data passed to view": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
@@ -127,12 +127,12 @@ define([
 				viewData: "testData",
 				displayDeferred: displayDeferred
 			};
-			testApp.showOrHideView('simple1App3Home1', params);
+			testApp.showOrHideViews('simple1App3Home1', params);
 
 		},
 
 		// Currently showing simple1App3Home1 test transition back to simple1App3Home2
-		"testApp.showOrHideView('simple1App3Home2')": function () {
+		"testApp.showOrHideViews('simple1App3Home2')": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
@@ -151,12 +151,12 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('simple1App3Home2', {
+			testApp.showOrHideViews('simple1App3Home2', {
 				displayDeferred: displayDeferred
 			});
 		},
 		// Currently showing simple1App3Home2 test hide simple1App3Home2
-		"testApp.showOrHideView('-simple1App3Home2') Hide View": function () {
+		"testApp.showOrHideViews('-simple1App3Home2') Hide View": function () {
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
@@ -179,7 +179,7 @@ define([
 
 				d.resolve();
 			});
-			testApp.showOrHideView('-simple1App3Home2', {
+			testApp.showOrHideViews('-simple1App3Home2', {
 				displayDeferred: displayDeferred
 			});
 		},

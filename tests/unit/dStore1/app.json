@@ -1,0 +1,69 @@
+{
+	"id": "dStore1App",
+	"name": "dStore1App",
+	"loaderConfig": {
+		"paths": {
+			"dStore1App": "./dapp/tests/unit/dStore1"
+		}
+	},
+	"modules": [
+	],
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/Logger"
+	],
+
+	"dependencies": [
+		"deliteful/list/List",
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"deliteful/ScrollableContainer",
+		"dstore/Memory",
+		"dstore/Observable"
+	],
+
+	"stores": {
+       "list1Store":{
+           "type": "dstore/Memory",
+	      // "observable": true,
+           "params": {
+                "data": "dStore1App.list1Data"
+           }
+       },
+		"list2Store":{
+			"type": "dstore/Memory",
+			// "observable": true,
+			"params": {
+			"data": "dStore1App.list2Data"
+			}
+  		}
+	},
+
+	"parseOnLoad": true,
+
+
+	"appLogging": {
+		"logAll": 0,
+		"logTimeStamp": 0
+	},
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "dStore1AppHome1",
+	"views": {
+		"dStore1AppHome1": {
+			"constraint": "main",
+			"parentSelector": "#dStore1AppdviewStack",
+			"controller": "dStore1App/viewController.js",
+			"template": "dStore1App/viewTemplate.html"
+		},
+		"dStore1AppHome2": {
+			"constraint": "main",
+			"parentSelector": "#dStore1AppdviewStack",
+			"controller": "dStore1App/viewController2.js",
+			"template": "dStore1App/viewTemplate2.html"
+		}
+
+	}
+}

@@ -75,7 +75,7 @@ define([
 			return d;
 		},
 		teardown: function () {
-		//	testApp.unloadApp();
+			//	testApp.unloadApp();
 		}
 	};
 	registerSuite(sample2Suite1);
@@ -250,7 +250,7 @@ define([
 			var d = this.async(10000);
 			var displayDeferred = new Deferred();
 
-			testApp.showOrHideView('simple2App3Home2', {
+			testApp.showOrHideViews('simple2App3Home2', {
 				displayDeferred: displayDeferred
 			});
 			displayDeferred.then(function () {

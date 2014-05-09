@@ -13,8 +13,9 @@ module.exports = function (grunt) {
 				"utils/**/*.js",
 				"modules/**/*.js",
 				"widgets/**/*.js",
-				"[tests/**/*.js, , !tests/intern*.js]",
-				"samples/**/*.js"
+				"tests/**/*.js",
+				"!tests/intern.js",
+				"!tests/intern.local.js"
 			],
 			options: {
 				jshintrc: ".jshintrc"
@@ -29,12 +30,13 @@ module.exports = function (grunt) {
 		jsbeautifier: {
 			files: ["Gruntfile.js",
 				"*.js", // this will get things in dapp directory
-				"controllers/delite/*.js",
+				"controllers/**/*.js",
 				"utils/**/*.js",
 				"modules/**/*.js",
 				"widgets/**/*.js",
-				"[tests/**/*.js, , !tests/intern*.js]",
-				"samples/**/*.js"
+				"tests/**/*.js",
+				"!tests/intern.js",
+				"!tests/intern.local.js"
 			],
 			options: {
 				config: ".jshintrc",
