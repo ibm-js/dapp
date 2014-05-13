@@ -1,9 +1,9 @@
-define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/dom-class", "dojo/_base/declare",
+define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/dom-class",
 		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/viewUtils"
 	],
-	function (require, when, on, domAttr, domStyle, domClass, declare, lang, dcl, Deferred, viewUtils) {
+	function (require, when, on, domAttr, domStyle, domClass, lang, dcl, Deferred, viewUtils) {
 		var MODULE = "ViewBase:";
-		return declare(null, {
+		return dcl(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
 			attributes: {},
@@ -110,7 +110,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				} catch (e) {
 					throw new Error(type + " must be listed in the dependencies");
 				}
-				if (config.data && lang.isString(config.data)) {
+				if (config.data && typeof config.data === "string") {
 					//get the object specified by string value of data property
 					//cannot assign object literal or reference to data property
 					//because json.ref will generate __parent to point to its parent

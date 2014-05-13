@@ -1,4 +1,4 @@
-define(["dojo/_base/lang"], function (lang) {
+define(function () {
 
 	// module:
 	//		dapp/utils/hash
@@ -96,11 +96,11 @@ define(["dojo/_base/lang"], function (lang) {
 			for (var item in params) {
 				var value = params[item];
 				// add a check to see if the params includes a view name if so setup the hash
-				if (lang.isObject(value)) {
+				if (value !== undefined && typeof object === "object") {
 					hash = hashUtil.addViewParams(hash, item, value);
 				} else {
 					if (item && value != null) {
-						hash = hash + "&" + item + "=" + params[item];
+						hash = hash + "&" + item + "=" + value;
 					}
 				}
 			}

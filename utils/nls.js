@@ -11,7 +11,7 @@ define(["require", "dojo/Deferred"], function (require, Deferred) {
 		var path = config.nls;
 		if (path) {
 			var nlsDef = new Deferred();
-			require(["dojo/i18n!" + path], function (nls) {
+			require(["requirejs-dplugins/i18n!" + path], function (nls) {
 				nlsDef.resolve(nls);
 			});
 			return nlsDef;

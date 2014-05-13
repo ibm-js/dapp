@@ -1,4 +1,4 @@
-define(["dojo/_base/array"], function (arr) {
+define(function () {
 	var constraints = [];
 	var MODULE = "utils/viewUtils:";
 
@@ -393,7 +393,7 @@ define(["dojo/_base/array"], function (arr) {
 			var type = typeof (constraint);
 			if (!constraint.__hash && type !== "string" && type !== "number") {
 				var match = null;
-				arr.some(constraints, function (item) {
+				constraints.some(function (item) {
 					var ok = true;
 					for (var prop in item) {
 						if (prop.charAt(0) !== "_") { //skip the private properties

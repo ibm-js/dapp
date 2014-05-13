@@ -1,14 +1,14 @@
-define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "delite/Stateful",
+define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 		"dojo/_base/config", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
-		"./utils/nls", "dojo/topic", "./utils/hash", "./utils/viewUtils", "./utils/config", "dojo/_base/window"
+		"./utils/nls", "dojo/topic", "./utils/hash", "./utils/viewUtils", "./utils/config"
 	],
-	function (require, dcl, lang, declare, Stateful, dconfig, Evented, Deferred, when, has, on, domReady,
+	function (require, dcl, lang, Stateful, dconfig, Evented, Deferred, when, has, on, domReady,
 		nls, topic, hash, viewUtils, configUtils) {
 		var MODULE = "Main:";
 
 		has.add("app-log-api", (dconfig.app || {}).debugApp);
 
-		var Application = declare([Evented, Stateful], {
+		var Application = dcl([Evented, Stateful], {
 			lifecycle: {
 				UNKNOWN: 0, //unknown
 				STARTING: 1, //starting
@@ -74,7 +74,7 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "delite/S
 							} catch (e) {
 								throw new Error(type + " must be listed in the dependencies");
 							}
-							if (config.data && lang.isString(config.data)) {
+							if (config.data && typeof config.data === "string") {
 								//get the object specified by string value of data property
 								//cannot assign object literal or reference to data property
 								//because json.ref will generate __parent to point to its parent
@@ -259,16 +259,14 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "dojo/_base/declare", "delite/S
 					modules.push(arguments[i]);
 				}
 
-				var ext;
+				var ext = {};
 				if (config.template) {
 					ext = {
 						templateString: arguments[arguments.length - 1]
 					};
 				}
 				/*global App:true */
-				App = declare(modules, ext);
-				//	App = dcl(modules, ext);
-
+				App = dcl(modules, ext);
 
 				domReady(function () {
 					var app = new App(config, node || document.body);
