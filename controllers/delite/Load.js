@@ -1,8 +1,8 @@
 define(
-	["require", "dcl/dcl", "dojo/on", "dojo/_base/lang", "dojo/Deferred", "../../Controller",
+	["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../../Controller",
 		"../../utils/viewUtils"
 	],
-	function (require, dcl, on, lang, Deferred, Controller, viewUtils) {
+	function (require, dcl, on, Deferred, Controller, viewUtils) {
 		var MODULE = "controllers/delite/Load:";
 		var resolveView = function (event, newView, parentView) {
 			// in addition to arguments required by delite we pass our own needed arguments
@@ -319,7 +319,7 @@ define(
 				for (var i = subs.length - 1; i >= 0; i--) {
 					var v = subs[i];
 					this.app.log(MODULE, F + "in _handleBeforeDeactivateCalls in subs for v.id=[" + v.id + "]" +
-						" v.beforeDeactivate isFunction?=[" + lang.isFunction(v.beforeDeactivate) + "] v._active=[" +
+						" v.beforeDeactivate isFunction?=[" + (typeof v.beforeDeactivate === "function") + "] v._active=[" +
 						v._active + "]");
 					if (v && v.beforeDeactivate && v._active) {
 						this.app.log(MODULE, F + "beforeDeactivate for v.id=[" + v.id + "]");
@@ -386,7 +386,7 @@ define(
 				for (var i = startInt; i < subs.length; i++) {
 					var v = subs[i];
 					this.app.log(MODULE, F + "afterActivate for v.id=[" + v.id + "] and v.afterActivate isFunction=" +
-						lang.isFunction(v.afterActivate));
+						(typeof v.afterActivate === "function"));
 					if (v.afterActivate) {
 						this.app.log(MODULE, F + "afterActivate for v.id=[" + v.id + "] setting _active true");
 						v._active = true;
