@@ -319,8 +319,8 @@ define(
 				for (var i = subs.length - 1; i >= 0; i--) {
 					var v = subs[i];
 					this.app.log(MODULE, F + "in _handleBeforeDeactivateCalls in subs for v.id=[" + v.id + "]" +
-						" v.beforeDeactivate isFunction?=[" + (typeof v.beforeDeactivate === "function") + "] v._active=[" +
-						v._active + "]");
+						" v.beforeDeactivate isFunction?=[" +
+						(typeof v.beforeDeactivate === "function") + "] v._active=[" + v._active + "]");
 					if (v && v.beforeDeactivate && v._active) {
 						this.app.log(MODULE, F + "beforeDeactivate for v.id=[" + v.id + "]");
 						v.beforeDeactivate(next, data);
