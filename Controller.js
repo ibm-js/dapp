@@ -5,10 +5,10 @@ define(["dcl/dcl", "dojo/on"], function (dcl, on) {
 	//		Bind events on dapp application's dojo/Evented instance or document.
 
 	return dcl(null, {
-		constructor: function (app, events) {
+		constructor: function (app) {
 			// summary:
-			//		bind events on application dojo/Evented instance.
-			//		bind css selector events on document.
+			//		bind events on application
+			//		bind docEvents on document
 			//
 
 			// app:
@@ -16,7 +16,6 @@ define(["dcl/dcl", "dojo/on"], function (dcl, on) {
 			// events:
 			//		{event : handler}
 
-			this.events = this.events || events;
 			this._boundEvents = [];
 			this.app = app;
 			this.app.on("dapp-unload-app", this._unloadApp.bind(this));
@@ -46,6 +45,13 @@ define(["dcl/dcl", "dojo/on"], function (dcl, on) {
 						}
 					}
 				}
+				if (this.docEvents) {
+					for (var docitem in this.docEvents) {
+						if (docitem.charAt(0) !== "_") { //skip the private properties
+							this.bind(document, docitem, this.docEvents[docitem].bind(this));
+						}
+					}
+				}
 			} else {
 				var signal = on(evented, event, handler);
 				this._boundEvents.push({
@@ -70,7 +76,6 @@ define(["dcl/dcl", "dojo/on"], function (dcl, on) {
 			if (arguments.length === 0) {
 				for (var i = 0; i < len; i++) {
 					this._boundEvents[i].signal.remove();
-					//		this._boundEvents.splice(i, 1);
 				}
 				this._boundEvents = [];
 				return this;

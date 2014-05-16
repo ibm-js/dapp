@@ -1,0 +1,55 @@
+{
+	"id": "hideViewApp3",
+	"name": "hideViewApp3",
+	"loaderConfig": {
+		"paths": {
+			"hideViewApp3": "./dapp/tests/unit/hideView"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	"parseOnLoad": true,
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "hideViewApp3Home1",
+	"views": {
+		"hideViewApp3Home1": {
+			"constraint": "main",
+			"parentSelector": "#hideViewApp3dviewStack",
+			"controller": "hideViewApp3/viewController1.js",
+			"template": "hideViewApp3/viewTemplate.html"
+		},
+		"hideViewApp3Home2": {
+			"constraint": "main",
+			"parentSelector": "#hideViewApp3dviewStack",
+			"controller": "hideViewApp3/viewController1.js",
+			"template": "hideViewApp3/viewTemplate.html"
+		},
+		"hideViewApp3Home3NoController": {
+			"constraint": "main",
+			"parentSelector": "#hideViewApp3dviewStack",
+			"controller": "hideViewApp3/viewController1.js",
+			"template": "hideViewApp3/viewTemplate.html"
+		}
+
+	}
+}

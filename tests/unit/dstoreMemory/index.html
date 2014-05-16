@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/> 
+		<meta name="apple-mobile-web-app-capable" content="yes" /> 
+		<title>dstoreMemory Unit App Test</title>
+		<link rel="stylesheet" href="../../../delite/themes/defaultapp.css">
+
+		<link rel="stylesheet" href="../deliteApp/app.css">
+
+		<!-- for dojo -->
+		<!--
+		<script type="text/javascript" data-dojo-config="async: true" src="../../../dojo/dojo.js"></script>
+		-->
+
+		<!-- for requireJS -->
+		<!--  -->
+		<script src="../../../requirejs/require.js"></script>
+			<script>
+				require.config({
+					/* either us baseUrl and paths or packages
+						baseUrl: "../../../../",
+						paths: {
+		        			"App1": "dapp/tests/unit/dstoreMemory/App",
+							"config": "dapp/tests/unit/dstoreMemory/config"
+						},
+					*/
+						packages: [
+							{ name: "dapp", location : "../../../../dapp"},
+							{ name: "dcl", location : "../../../../dcl"},
+							{ name: "dojo", location : "../../../../dojo"},
+							{ name: "dpointer", location : "../../../../dpointer"},
+							{ name: "dstore", location : "../../../../dstore"},
+							{ name: "delite", location : "../../../../delite"},
+							{ name: "deliteful", location : "../../../../deliteful"},
+							{ name: "requirejs", location : "../../../../requirejs"},
+							{ name: "requirejs-text", location : "../../../../requirejs-text"},
+							{ name: "requirejs-dplugins", location : "../../../../requirejs-dplugins"}
+						],
+
+				    waitSeconds: 15
+				  });
+	        </script>
+		<!-- -->
+		<script>
+			require(["./App"]);
+        </script>
+	</head>
+	<body style="width:100%; height: 100%">
+	<d-view-stack id='dstoreMemoryAppdviewStack' style='width: 100%; height: 400px;'>
+	</d-view-stack>
+	</body>
+</html>

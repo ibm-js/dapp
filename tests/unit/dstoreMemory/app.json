@@ -1,0 +1,70 @@
+{
+	"id": "dstoreMemoryApp",
+	"name": "dstoreMemoryApp",
+	"loaderConfig": {
+		"paths": {
+			"dstoreMemoryApp": "./dapp/tests/unit/dstoreMemory"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/list/List",
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"deliteful/ScrollableContainer",
+		"dstore/Memory",
+		"dstore/Observable"
+	],
+
+	"stores": {
+       "list1Store":{
+           "type": "dstore/Memory",
+		   "observable": true,
+		   "params": {
+                "data": "dstoreMemoryApp.list1Data"
+           }
+  		}
+	},
+
+	"parseOnLoad": true,
+
+
+	"appLogging": {
+		"logAll": 0,
+		"logTimeStamp": 0
+	},
+
+	"defaultView": "dstoreMemoryAppHome1",
+	"views": {
+		"dstoreMemoryAppHome1": {
+			"constraint": "main",
+			"parentSelector": "#dstoreMemoryAppdviewStack",
+			"controller": "dstoreMemoryApp/viewController.js",
+			"template": "dstoreMemoryApp/viewTemplate.html"
+		},
+		"dstoreMemoryAppHome2": {
+			"constraint": "main",
+			"parentSelector": "#dstoreMemoryAppdviewStack",
+			"stores": {
+				"list2Store":{
+					"type": "dstore/Memory",
+					"params": {
+						"data": "dstoreMemoryApp.list2Data"
+					}
+		  		}
+			},
+			"controller": "dstoreMemoryApp/viewController2.js",
+			"template": "dstoreMemoryApp/viewTemplate2.html"
+		}
+
+	}
+}

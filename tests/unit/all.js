@@ -1,8 +1,12 @@
 // Listing of all the infrastructure unit tests
 define([
-	"./simple1/Test",
-	"./multinested1/Test",
-	"./nested1/Test",
-	"./simple2/Test",
-	"./dStore1/Test"
+	"./viewLayout/Test",
+	"./appStatus/Test",
+	"./transitionVisibility/Test",
+	"./nlsLabels/Test",
+	"./viewData/Test",
+	"./hideView/Test",
+	"./nestedViewsActivateCalls/Test",
+	"./multipleAndNestedViewsActivateCalls/Test",
+	"./dstoreMemory/Test"
 ]);

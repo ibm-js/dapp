@@ -8,11 +8,12 @@
 	},
 	"modules": [
 	],
+
 	"controllers": [
 		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
 		"dapp/controllers/delite/Load",
-		"dapp/controllers/delite/Transition",
-		"dapp/controllers/Logger"
+		"dapp/controllers/delite/Transition"
 	],
 
 	"dependencies": [

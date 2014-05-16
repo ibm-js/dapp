@@ -1,0 +1,59 @@
+{
+	"id": "nlsLabelsApp",
+	"name": "nlsLabelsApp",
+	"loaderConfig": {
+		"paths": {
+			"nlsLabelsApp": "./dapp/tests/unit/nlsLabels"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	"parseOnLoad": true,
+	"nls": "nlsLabelsApp/nls/app",
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "nlsLabelsAppHome1",
+	"views": {
+		"nlsLabelsAppHome1": {
+			"constraint": "main",
+			"parentSelector": "#nlsLabelsAppdviewStack",
+			"nls": "nlsLabelsApp/nls/home",
+			"controller": "nlsLabelsApp/viewController1.js",
+			"template": "nlsLabelsApp/viewTemplate.html"
+		},
+		"nlsLabelsAppHome2": {
+			"constraint": "main",
+			"parentSelector": "#nlsLabelsAppdviewStack",
+			"nls": "nlsLabelsApp/nls/home",
+			"controller": "nlsLabelsApp/viewController1.js",
+			"template": "nlsLabelsApp/viewTemplate.html"
+		},
+		"nlsLabelsAppHome3NoController": {
+			"constraint": "main",
+			"parentSelector": "#nlsLabelsAppdviewStack",
+			"nls": "nlsLabelsApp/nls/home",
+			"controller": "nlsLabelsApp/viewController1.js",
+			"template": "nlsLabelsApp/viewTemplate.html"
+		}
+
+	}
+}

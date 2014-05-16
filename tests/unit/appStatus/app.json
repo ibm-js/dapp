@@ -1,0 +1,54 @@
+{
+	"id": "appStatusApp1",
+	"name": "appStatusApp1",
+	"loaderConfig": {
+		"paths": {
+			"appStatusApp1": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"dapp/tests/unit/appStatus/viewController1"
+	],
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "appStatusApp1Home1+appStatusApp1Home2+appStatusApp1Home3NoController",
+	"views": {
+		"appStatusApp1Home1": {
+			"constraint": "main1",
+			"parentSelector": "#appStatusApp1dlayout",
+		// TODO, I could not use the loaderConfig path for appStatusApp1 here, not sure why it did not find the template
+		//	"template": "appStatusApp1/viewTemplate.html"
+			"controller": "dapp/tests/unit/appStatus/viewController1.js",
+			"template": "dapp/tests/unit/appStatus/viewTemplate.html"
+		},
+		"appStatusApp1Home2": {
+			"constraint": "main2",
+			"parentSelector": "#appStatusApp1dlayout",
+			"controller": "dapp/tests/unit/appStatus/viewController1.js",
+			"template": "dapp/tests/unit/appStatus/viewTemplate.html"
+		},
+		"appStatusApp1Home3NoController": {
+			"constraint": "main3",
+			"parentSelector": "#appStatusApp1dlayout",
+			"controller": "dapp/tests/unit/appStatus/viewController1.js",
+			"template": "dapp/tests/unit/appStatus/viewTemplate.html"
+		}
+
+	}
+}

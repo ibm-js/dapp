@@ -1,0 +1,71 @@
+{
+	"id": "nestedViewsActivateCallsApp1",
+	"name": "nestedViewsActivateCallsApp1",
+	"loaderConfig": {
+		"paths": {
+			"nestedViewsActivateCallsApp1": "./dapp/tests/unit/nestedViewsActivateCalls"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	"parseOnLoad": true,
+
+	"defaultView": "P1",
+	"views": {
+		"P1": {
+			"constraint": "main",
+			"parentSelector": "#nestedViewsActivateCallsApp1dviewStack",
+			"controller": "nestedViewsActivateCallsApp1/parentController1.js",
+			"template": "nestedViewsActivateCallsApp1/parentTemplate.html",
+			"defaultView": "S1",
+			"views": {
+				"S1": {
+					"constraint": "main2",
+					"controller": "nestedViewsActivateCallsApp1/parentController1.js",
+					"template": "nestedViewsActivateCallsApp1/subParentTemplate.html",
+					"defaultView": "V1",
+					"views": {
+						"V1": {
+							"constraint": "main3",
+							"controller": "nestedViewsActivateCallsApp1/viewController1.js",
+						//	"type": "nestedViewsActivateCallsApp1/viewController1",
+							"template": "nestedViewsActivateCallsApp1/viewTemplate.html"
+						},
+						"V2": {
+							"constraint": "main3",
+							"controller": "nestedViewsActivateCallsApp1/viewController1.js",
+						//	"type": "nestedViewsActivateCallsApp1/viewController1",
+							"template": "nestedViewsActivateCallsApp1/viewTemplate.html"
+						}
+					}
+				}
+			}
+		},
+		"V7": {
+			"constraint": "main",
+			"parentSelector": "#nestedViewsActivateCallsApp1dviewStack",
+			"controller": "nestedViewsActivateCallsApp1/viewController1.js",
+		//	"type": "nestedViewsActivateCallsApp1/viewController1",
+			"template": "nestedViewsActivateCallsApp1/viewTemplate.html"
+		}
+	}
+}

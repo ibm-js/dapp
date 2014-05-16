@@ -51,5 +51,5 @@ define({
 	functionalSuites: ["dapp/tests/functional/all"],
 
 	// A regular expression matching URLs to files that should not be included in code coverage analysis
-	excludeInstrumentation: /^(requirejs.*|dcl|dojo|dpointer|delite|deliteful\/|dapp\/tests|.*themes|.*transitions)/
+	excludeInstrumentation: /^(requirejs.*|dcl|dojo|dpointer|dstore|delite|deliteful\/|dapp\/tests|.*themes|.*transitions)/
 });
