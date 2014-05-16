@@ -3,7 +3,7 @@
 	<head>
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/> 
 		<meta name="apple-mobile-web-app-capable" content="yes" /> 
-		<title>Globalized App Test</title>
+		<title>Simple1 Functional App Test</title>
 		<link rel="stylesheet" href="../../../../delite/themes/defaultapp.css">
 
 		<link rel="stylesheet" href="../simple1/app.css">
@@ -18,23 +18,31 @@
 		<script src="../../../../requirejs/require.js"></script>
 			<script>
 				require.config({
-				//    baseUrl: "/another/path",
-				    paths: {
-				        "dapp": "../../../../dapp",
-						"dcl": "../../../../dcl",
-						"dojo": "../../../../dojo",
-						"dpointer": "../../../../dpointer",
-						"delite": "../../../../delite",
-						"deliteful": "../../../../deliteful",
-						"requirejs": "../../../../requirejs",
-						"requirejs-text": "../../../../requirejs-text"
-				    },
+					/* either us baseUrl and paths or packages
+						baseUrl: "../../../../",
+						paths: {
+		        			"App1": "dapp/tests/functional/simple1/App1",
+							"config": "dapp/tests/functional/simple1/config"
+						},
+					*/
+						packages: [
+							{ name: "dapp", location : "../../../../dapp"},
+							{ name: "dcl", location : "../../../../dcl"},
+							{ name: "dojo", location : "../../../../dojo"},
+							{ name: "dpointer", location : "../../../../dpointer"},
+							{ name: "delite", location : "../../../../delite"},
+							{ name: "deliteful", location : "../../../../deliteful"},
+							{ name: "requirejs", location : "../../../../requirejs"},
+							{ name: "requirejs-text", location : "../../../../requirejs-text"},
+							{ name: "requirejs-dplugins", location : "../../../../requirejs-dplugins"}
+						],
+
 				    waitSeconds: 15
 				  });
 	        </script>
 		<!-- -->
 		<script>
-			require(["./App1.js", "dojo/domReady!"], function(){
+			require(["./App1", "dojo/domReady!"], function(){
 				// Set global variable to signal that the test page is ready
 				console.log("in index.html inside dom ready");
 			//	ready = true; // moved ready = true into App1.js after the appDeferred is resolved.

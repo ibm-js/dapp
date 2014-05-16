@@ -1,0 +1,56 @@
+{
+	"id": "transitionVisibilityApp",
+	"name": "transitionVisibilityApp",
+	"loaderConfig": {
+		"paths": {
+			"transitionVisibilityApp": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"dapp/tests/unit/transitionVisibility/viewController1"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "transitionVisibilityAppHome1",
+	"views": {
+		"transitionVisibilityAppHome1": {
+			"constraint": "main",
+			"parentSelector": "#transitionVisibilityAppdviewStack",
+		// TODO, I could not use the loaderConfig path for transitionVisibilityApp here, not sure why it did not find the template
+		//	"template": "transitionVisibilityApp/viewTemplate.html"
+			"controller": "dapp/tests/unit/transitionVisibility/viewController1.js",
+			"template": "dapp/tests/unit/transitionVisibility/viewTemplate.html"
+		},
+		"transitionVisibilityAppHome3NoController": {
+			"constraint": "main",
+			"parentSelector": "#transitionVisibilityAppdviewStack",
+			"controller": "dapp/tests/unit/transitionVisibility/viewController1.js",
+			"template": "dapp/tests/unit/transitionVisibility/viewTemplate.html"
+		},
+		"transitionVisibilityAppHome2": {
+			"constraint": "main",
+			"parentSelector": "#transitionVisibilityAppdviewStack",
+			"controller": "dapp/tests/unit/transitionVisibility/viewController1.js",
+			"template": "dapp/tests/unit/transitionVisibility/viewTemplate.html"
+		}
+
+	}
+}

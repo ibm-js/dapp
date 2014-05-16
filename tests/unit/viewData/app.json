@@ -1,0 +1,55 @@
+{
+	"id": "viewDataApp",
+	"name": "viewDataApp",
+	"loaderConfig": {
+		"paths": {
+			"viewDataApp": "./dapp/tests/unit/viewData"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	"parseOnLoad": true,
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"defaultView": "viewDataAppHome1",
+	"views": {
+		"viewDataAppHome1": {
+			"constraint": "main",
+			"parentSelector": "#viewDataAppdviewStack",
+			"controller": "viewDataApp/viewController1.js",
+			"template": "viewDataApp/viewTemplate.html"
+		},
+		"viewDataAppHome2": {
+			"constraint": "main",
+			"parentSelector": "#viewDataAppdviewStack",
+			"controller": "viewDataApp/viewController1.js",
+			"template": "viewDataApp/viewTemplate.html"
+		},
+		"viewDataAppHome3NoController": {
+			"constraint": "main",
+			"parentSelector": "#viewDataAppdviewStack",
+			"controller": "viewDataApp/viewController1.js",
+			"template": "viewDataApp/viewTemplate.html"
+		}
+
+	}
+}

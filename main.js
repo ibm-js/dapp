@@ -1,12 +1,10 @@
 define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
-		"dojo/_base/config", "dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
-		"./utils/nls", "dojo/topic", "./utils/hash", "./utils/viewUtils", "./utils/config"
+		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
+		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config"
 	],
-	function (require, dcl, lang, Stateful, dconfig, Evented, Deferred, when, has, on, domReady,
-		nls, topic, hash, viewUtils, configUtils) {
+	function (require, dcl, lang, Stateful, Evented, Deferred, when, has, on, domReady,
+		nls, hash, viewUtils, configUtils) {
 		var MODULE = "Main:";
-
-		has.add("app-log-api", (dconfig.app || {}).debugApp);
 
 		var Application = dcl([Evented, Stateful], {
 			lifecycle: {
@@ -27,7 +25,10 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 				this.loadedControllers = [];
 				//TODO: do we need to save and remove this watch on unload?
 				this.watch("status", function (name, oldValue, value) {
-					topic.publish("/dapp/status", value, this.id);
+					on.emit(document, "dapp-status-change", {
+						status: value,
+						app: this
+					});
 				});
 			},
 
@@ -52,50 +53,6 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 						direction: "end"
 					});
 				on.emit(document, "dapp-display", opts);
-			},
-
-			// TODO: move to a Store controller?
-			_createDataStore: function () {
-				// summary:
-				//		Create data store instance
-				if (this.stores) {
-					//create stores in the configuration.
-					for (var item in this.stores) {
-						if (item.charAt(0) !== "_") { //skip the private properties
-							var type = this.stores[item].type ? this.stores[item].type : "dojo/store/Memory";
-							var config = {};
-							if (this.stores[item].params) {
-								dcl.mix(config, this.stores[item].params);
-							}
-							// we assume the store is here through dependencies
-							var StoreCtor;
-							try {
-								StoreCtor = require(type);
-							} catch (e) {
-								throw new Error(type + " must be listed in the dependencies");
-							}
-							if (config.data && typeof config.data === "string") {
-								//get the object specified by string value of data property
-								//cannot assign object literal or reference to data property
-								//because json.ref will generate __parent to point to its parent
-								//and will cause infinitive loop when creating StatefulModel.
-								config.data = lang.getObject(config.data);
-							}
-							if (this.stores[item].observable) {
-								var observableCtor;
-								try {
-									observableCtor = require("dojo/store/Observable");
-								} catch (e) {
-									throw new Error("dojo/store/Observable must be listed in the dependencies");
-								}
-								this.stores[item].store = observableCtor(new StoreCtor(config));
-							} else {
-								this.stores[item].store = new StoreCtor(config);
-							}
-							this.loadedStores[item] = this.stores[item].store;
-						}
-					}
-				}
 			},
 
 			createControllers: function (controllers) {
@@ -129,8 +86,6 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 				// summary:
 				// 		Make calls to setup the Stores, Controllers and nls for the application
 				//
-				//create application level data store
-				this._createDataStore();
 				//create application level controllers
 				this.setupControllers();
 				// if available load root NLS

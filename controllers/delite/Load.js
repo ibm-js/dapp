@@ -1,17 +1,9 @@
 define(
-	["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../../Controller",
-		"../../utils/viewUtils"
-	],
+	["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../../Controller", "../../utils/view"],
 	function (require, dcl, on, Deferred, Controller, viewUtils) {
-		var MODULE = "controllers/delite/Load:";
 		var resolveView = function (event, newView, parentView) {
 			// in addition to arguments required by delite we pass our own needed arguments
 			// to get them back in the transitionDeferred
-			var F = MODULE + "resolveView ";
-			if (newView && newView.app) {
-				newView.app.log(MODULE, F + "called with nextView.id=[" + newView.id +
-					"] " + "parentView.id=[" + (parentView ? parentView.id : "") + "]");
-			}
 			event.loadDeferred.resolve({
 				child: newView.domNode,
 				dapp: {
@@ -29,21 +21,18 @@ define(
 
 		return dcl(Controller, {
 			constructor: function () {
-				this.bind(document, "delite-display-load", this._loadHandler.bind(this));
+				this.docEvents = {
+					"delite-display-load": this._loadHandler
+				};
 				this.events = {
 					"dapp-unload-view": this.unloadView
 				};
 			},
 
 			_loadHandler: function (event) {
-				var F = MODULE + "_loadHandler ";
-				this.app.log(MODULE, F + "called for event.dest=[" + event.dest + "] event.hide=[" + event.hide +
-					"] this.app.id=" + this.app.id);
-				var self = this;
-				event.preventDefault();
+				event.preventDefault(); // to indicate that dapp will load the view
 
 				// load the actual view
-
 				//Need to handle calls directly from node.show or node.hide that did not come from transition
 				if (!event.dapp || !event.dapp.parentView) {
 					//This must be a direct call from .show or .hide, need to setup event.dapp with parentView etc.
@@ -65,7 +54,7 @@ define(
 
 				// if this is a hide for a view which is not loaded then do not process it
 				if (event.dapp.hide && !view) {
-					self.app.log(F + " called with hide true, but that view is not available to remove");
+					//console.log("Load._loadHandler called with hide true, but that view is not available to remove");
 					return; // trying to remove a view which is not showing
 				}
 
@@ -74,7 +63,6 @@ define(
 				var params = event.params || "";
 
 				if (view) {
-					self.app.log(MODULE, F + "view already loaded view.id=" + view.id);
 					// set params to new value before returning
 					view.params = params || null;
 					resolveView(event, view, event.dapp.parentView);
@@ -85,8 +73,6 @@ define(
 			},
 
 			_setupEventDapp: function (event) {
-				var F = MODULE + "_setupEventDapp ";
-				var self = this;
 				var dest = event.dest;
 				var viewId;
 				if (dest.indexOf("_") >= 0) { // if dest is already a view id.
@@ -102,14 +88,11 @@ define(
 
 				// if dest without defaults added is already nested call _handleShowFromDispContainer
 				if (dest.indexOf("+") >= 0 || dest.indexOf("-") >= 0 || dest.indexOf(",") >= 0) {
-					self.app.log(MODULE, F + "original dest contains +- or , need to handle special case dest=[" +
-						dest + "]");
 					if (event.hide) {
 						dest = "-" + dest;
 					}
 					event.dapp.callTransition = true;
 					event.dapp.dest = dest;
-					//	this._handleShowFromDispContainer(event, dest);
 					return event.dapp;
 				}
 				//	var viewPaths = this.app._getViewPaths(dest);
@@ -120,8 +103,6 @@ define(
 				}
 				// if viewPaths have multiple parts or dest and defaults is nested call _handleShowFromDispContainer
 				if (viewPaths.length > 1 || event.dest.indexOf(",") >= 0) {
-					self.app.log(MODULE, F + "dest contains multiple parts need to handle special case dest=[" +
-						dest + "]");
 					event.dapp.callTransition = true;
 					event.dapp.dest = dest;
 					//	this._handleShowFromDispContainer(event, dest);
@@ -131,8 +112,6 @@ define(
 				event.dapp.parentNode = event.target;
 				event.dapp.viewPath = viewPaths[0]; // viewPaths[0]
 				event.dapp.parentView = viewUtils.getParentViewFromViewName(this.app, dest, event.target);
-				this.app.log(MODULE, F + "in .show path after update event.dapp.parentView.id = " +
-					event.dapp.parentView.id);
 				event.dapp.isParent = false;
 				return event.dapp;
 			},
@@ -140,8 +119,6 @@ define(
 			_handleOnBeforeAndAfterShowHide: function (event) {
 				// After the loadDeferred is resolved, but before the view is displayed this event,
 				// delite-before-show will be fired.
-				//var onbeforeDisplayHandle = on(event.target, "delite-before-show", function (value) {
-				var F = MODULE + "_handleOnBeforeAndAfterShowHide ";
 				var self = this;
 				var onbeforeDisplayHandle = event.target.on("delite-before-show, delite-before-hide", function (value) {
 					// If the value.dest does not match the one we are expecting keep waiting
@@ -149,7 +126,6 @@ define(
 						return;
 					}
 					onbeforeDisplayHandle.remove(); // remove the handle when we match value.dest
-					self.app.log(MODULE, F + "in on delite-before-show or hide value.dest =[" + value.dest + "]");
 
 					var retval = {};
 
@@ -204,8 +180,6 @@ define(
 						retval.dapp.viewPath = value.dapp.viewPath;
 						retval.firstChildView = firstChildView;
 						retval.subIds = subIds;
-						self.app.log(MODULE, F + "retval.firstChildView.id = [" + retval.firstChildView.id +
-							"] retval.dapp.current.id = [" + "] retval.subIds = [" + retval.subIds + "]");
 
 						if (!value.hide) {
 							//call _handleBeforeActivateCalls to process calls to beforeActivate for this transition
@@ -221,12 +195,9 @@ define(
 					if (complete.dest !== event.dest) { // if this delite-after-show is not for this view return
 						return;
 					}
-					self.app.log(MODULE, F + "in on delite-after-show complete.dest =[" + complete.dest + "]");
 					onHandle.remove();
 
 					var next = complete.dapp.nextView;
-					//	self.app.log(MODULE, F + "delite-after-show fired for [" + next.id + "] with parent [" +
-					//		(complete.dapp.parentView ? complete.dapp.parentView.id : "") + "]");
 
 					if (complete.hide) {
 						var parentSelChild = viewUtils.getSelectedChild(next.parentView,
@@ -242,16 +213,12 @@ define(
 
 					// Call _handleAfterDeactivateCalls if !isParent (not parent part of a nested view)
 					if (!complete.dapp.isParent) {
-						self.app.log(MODULE, F + "calling _handleAfterDeactivateCalls next id=[" + next.id +
-							"] next.parentView.id=[" + next.parentView.id + "]");
 						self._handleAfterDeactivateCalls(complete.dapp.currentSubViewArray,
 							complete.dapp.nextLastSubChildMatch || next, complete.dapp.current, complete.viewData,
 							complete.subIds);
 					}
 
 					if (!complete.hide && complete.dapp.nextSubViewArray && next) {
-						self.app.log(MODULE, F + "calling _handleAfterActivateCalls next id=[" + next.id +
-							"] next.parentView.id=[" + next.parentView.id + "]");
 						self._handleAfterActivateCalls(complete.dapp.nextSubViewArray, /*removeView*/ false,
 							complete.dapp.currentLastSubChildMatch || complete.dapp.current, complete.viewData,
 							complete.subIds);
@@ -260,8 +227,6 @@ define(
 			},
 
 			_handleShowFromDispContainer: function (event, dest) {
-				//	var F = MODULE + "_handleShowFromDispContainer ";
-				//	adjusted dest contains + - or , so need to handle specialcase dest
 				var tempDisplaydeferred = new Deferred();
 				on.emit(document, "dapp-display", {
 					dest: dest,
@@ -282,9 +247,6 @@ define(
 			},
 
 			_createView: function (event, id, viewName, params, parentView, isParent, type, viewPath) {
-				var F = MODULE + "_createView ";
-				this.app.log(MODULE, F + "called for [" + id + "] with event.dapp.isParent=" +
-					(event.dapp ? event.dapp.isParent : ""));
 				var app = this.app;
 				require([type ? type : "../../View"], function (View) {
 					var params = {
@@ -313,16 +275,10 @@ define(
 			_handleBeforeDeactivateCalls: function (subs, next, current, data) {
 				// summary:
 				//		Call beforeDeactivate for each of the current views which are about to be deactivated
-				var F = MODULE + "_handleBeforeDeactivateCalls ";
-				//	if(current._active){
 				//now we need to loop backwards thru subs calling beforeDeactivate
 				for (var i = subs.length - 1; i >= 0; i--) {
 					var v = subs[i];
-					this.app.log(MODULE, F + "in _handleBeforeDeactivateCalls in subs for v.id=[" + v.id + "]" +
-						" v.beforeDeactivate isFunction?=[" +
-						(typeof v.beforeDeactivate === "function") + "] v._active=[" + v._active + "]");
 					if (v && v.beforeDeactivate && v._active) {
-						this.app.log(MODULE, F + "beforeDeactivate for v.id=[" + v.id + "]");
 						v.beforeDeactivate(next, data);
 					}
 				}
@@ -331,7 +287,6 @@ define(
 			_handleBeforeActivateCalls: function (subs, current, data /*, subIds*/ ) {
 				// summary:
 				//		Call beforeActivate for each of the next views about to be activated
-				var F = MODULE + "_handleBeforeActivateCalls ";
 				//now we need to loop backwards thru subs calling beforeActivate (ok since next matches current)
 				var p = this.app;
 				for (var i = subs.length - 1; i >= 0; i--) {
@@ -344,7 +299,6 @@ define(
 						v.init();
 					}
 					if (v && v.beforeActivate) {
-						this.app.log(MODULE, F + "beforeActivate for v.id=[" + v.id + "]");
 						v.beforeActivate(current, data);
 					}
 					if (p) {
@@ -357,15 +311,11 @@ define(
 			_handleAfterDeactivateCalls: function (subs, next, current, data /*, subIds*/ ) {
 				// summary:
 				//		Call afterDeactivate for each of the current views which have been deactivated
-				var F = MODULE + "_handleAfterDeactivateCalls ";
-				this.app.log(MODULE, F + "afterDeactivate called for subs=", subs);
 				if (subs) {
 					//now we need to loop forwards thru subs calling afterDeactivate
 					for (var i = 0; i < subs.length; i++) {
 						var v = subs[i];
-						this.app.log(MODULE, F + "afterDeactivate called with v.id=[" + v.id + "]");
-						if (v && v.beforeDeactivate && v._active) {
-							this.app.log(MODULE, F + "afterDeactivate for v.id=[" + v.id + "] setting _active false");
+						if (v && v.afterDeactivate && v._active) {
 							v._active = false;
 							v.afterDeactivate(next, data);
 						}
@@ -373,22 +323,17 @@ define(
 				}
 			},
 
-			_handleAfterActivateCalls: function (subs, removeView, current, data /*, subIds*/ ) {
+			_handleAfterActivateCalls: function (subs, removeView, current, data) {
 				// summary:
 				//		Call afterActivate for each of the next views which have been activated
-				var F = MODULE + "_handleAfterActivateCalls ";
 				//now we need to loop backwards thru subs calling beforeActivate (ok since next matches current)
-				this.app.log(MODULE, F + "in _handleAfterActivateCalls with subs =", subs);
 				var startInt = 0;
 				if (removeView && subs.length > 1) {
 					startInt = 1;
 				}
 				for (var i = startInt; i < subs.length; i++) {
 					var v = subs[i];
-					this.app.log(MODULE, F + "afterActivate for v.id=[" + v.id + "] and v.afterActivate isFunction=" +
-						(typeof v.afterActivate === "function"));
 					if (v.afterActivate) {
-						this.app.log(MODULE, F + "afterActivate for v.id=[" + v.id + "] setting _active true");
 						v._active = true;
 						v.afterActivate(current, data);
 					}
@@ -408,8 +353,6 @@ define(
 				//
 				// returns:
 				//		Array of views which will be transitioned to during this transition
-				var F = MODULE + "_getNextSubViewArray ";
-				this.app.log(MODULE, F + "in _getNextSubViewArray with subIds =", subIds);
 				var parts = [];
 				var p = firstChildView || parentView;
 				if (subIds) {
@@ -441,8 +384,6 @@ define(
 				//
 				// returns:
 				//		Array of views which will be deactivated during this transition
-				var F = MODULE + "_getCurrentSubViewArray ";
-				this.app.log(MODULE, F + "in _getNextSubViewArray with parentView.id =", parentView.id);
 				var currentSubViewArray = [];
 				var constraint, type, hash;
 				var p = parentView;
@@ -457,7 +398,6 @@ define(
 						constraint = v.constraint;
 					}
 
-					//constraint = nextSubViewArray[i].constraint || nextSubViewArray[i].parentView.id;
 					type = typeof (constraint);
 					hash = (type === "string" || type === "number") ? constraint : constraint.__hash;
 					// if there is a selected child for this constraint, and the child matches this view, push it.
@@ -517,12 +457,9 @@ define(
 				// event: Object
 				//		dapp-unload-view event parameter. It should be like this: {"view":view, "parent": parent
 				// 		"callback":function(){...}}
-				var F = MODULE + ":unloadView";
-
 				var view = event.view || {};
 				var parentView = event.parentView || view.parent || this.app;
 				var viewId = view.id;
-				this.app.log(MODULE, F + " dapp-unload-view called for [" + viewId + "]");
 
 				if (parentView && event.unloadApp) {
 					// need to clear out selectedChildren
@@ -551,11 +488,7 @@ define(
 				//		parentView of this view.
 				// viewToUnload: Object
 				//		the view to be unloaded.
-				var F = MODULE + ":unloadChild";
-				this.app.log(MODULE, F + " unloadChild called for [" + viewToUnload.id + "]");
-
 				for (var child in viewToUnload.children) {
-					this.app.log(MODULE, F + " calling unloadChild for for [" + child + "]");
 					// unload children then unload the view itself
 					this.unloadChild(viewToUnload, viewToUnload.children[child]);
 				}
@@ -564,7 +497,6 @@ define(
 				// controller does not have a destroy method
 				var viewId = viewToUnload.id;
 				if (viewToUnload.destroy) {
-					this.app.log(MODULE, F + " calling destroy for the view [" + viewId + "]");
 					viewToUnload.destroy(); // call destroy for the view.
 				}
 				viewToUnload = null;

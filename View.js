@@ -2,7 +2,6 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 		"delite/handlebars", "./ViewBase", "./utils/nls"
 	],
 	function (require, when, on, dcl, Deferred, Widget, register, handlebars, ViewBase, nls) {
-		var MODULE = "View:";
 		return dcl([ViewBase, Widget], {
 			// summary:
 			//		View class inheriting from ViewBase adding templating & globalization capabilities.
@@ -54,14 +53,10 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 				//		- parentView: parent view
 				//		- children: children views
 				//		- nls: nls definition module identifier
-				var F = MODULE + "constructor ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 			},
 
 			// _TemplatedMixin requires a connect method if data-dojo-attach-* are used
 			connect: function (obj, event, method) {
-				var F = MODULE + "connect ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				return this.own(on(obj, event, method.bind(this)))[0]; // handle
 			},
 
@@ -71,25 +66,17 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 				// tags:
 				//		private
 				//
-				var F = MODULE + "_loadTemplate ";
-				this.app.log(MODULE, F + "called for [" + this.id + "] this.templateString=[" + this.templateString +
-					"]");
-
 				if (this.templateString) {
 					return true;
 				} else {
 					var tpl = this.template;
-					this.app.log(MODULE, F + "called with this.template=[" + this.template + "]");
 					var deps = this.dependencies ? this.dependencies : [];
 					if (tpl) {
 						deps = deps.concat(["requirejs-text/text!" + tpl]);
 					}
 					var loadViewDeferred = new Deferred();
-					this.app.log(MODULE, F + "before require deps with deps = ", deps);
 					require(deps, function () {
 						this.templateString = this.template ? arguments[arguments.length - 1] : "<div></div>";
-						this.app.log(MODULE, F + "after require deps this.templateString=[" + this.templateString +
-							"]");
 						loadViewDeferred.resolve(this);
 					}.bind(this));
 					return loadViewDeferred;
@@ -99,8 +86,6 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 			// start view
 			load: dcl.superCall(function (sup) {
 				return function () {
-					var F = MODULE + "load ";
-					this.app.log(MODULE, F + "called for [" + this.id + "]");
 					var tplDef = new Deferred();
 					var defDef = sup.call(this);
 					var nlsDef = nls(this);
@@ -132,9 +117,6 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 					//		startup widgets in view template.
 					// tags:
 					//		private
-					var F = MODULE + "_startup ";
-					this.app.log(MODULE, F + "called for [" + this.id + "]");
-
 					this.attributes.nls = this.nls; // add nls strings to attributes
 					//var self = this;
 					var params = {
@@ -142,13 +124,13 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 						buildRendering: handlebars.compile(this.templateString)
 						/* leaving this in case it is helpful to debug things later
 						preCreate: function () {
-							self.app.log(MODULE, F + "in view preCreate for [" + self.id + "]");
+							console.log("View._startup in view preCreate for [" + self.id + "]");
 						},
 						postCreate: function () {
-							self.app.log(MODULE, F + "in view postCreate for [" + self.id + "]");
+							console.log("View._startup in view postCreate for [" + self.id + "]");
 						},
 						refreshRendering: dcl.after(function () {
-							self.app.log(MODULE, F + "in view refreshRendering for [" + self.id + "]");
+							console.log("View._startup in view refreshRendering for [" + self.id + "]");
 						})
 						*/
 					};

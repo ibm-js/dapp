@@ -1,8 +1,7 @@
 define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/dom-class",
-		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/viewUtils"
+		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/view"
 	],
 	function (require, when, on, domAttr, domStyle, domClass, lang, dcl, Deferred, viewUtils) {
-		var MODULE = "ViewBase:";
 		return dcl(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
@@ -19,7 +18,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		- parent: parent view
 				//		- controller: view controller module identifier
 				//		- children: children views
-				var F = MODULE + "constructor ";
 				this.id = "";
 				this.viewName = "";
 				this.children = {};
@@ -35,7 +33,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				if (p && p.views) {
 					dcl.mix(this, p.views[this.viewName]);
 				}
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 			},
 
 			// start view
@@ -43,8 +40,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				// summary:
 				//		start view object.
 				//		load view template, view controller implement and startup all widgets in view template.
-				var F = MODULE + "start ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				if (this._started) {
 					return this;
 				}
@@ -57,8 +52,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 			},
 
 			load: function () {
-				var F = MODULE + "load ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				var vcDef = this._loadViewController();
 				when(vcDef, function (controller) {
 					if (controller) {
@@ -74,61 +67,14 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//
 				// TODO: move this into a common place for use by main and ViewBase
 				//
-				var F = MODULE + "_createDataStores ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				if (this.parentView && this.parentView.loadedStores) {
 					dcl.mix(this.loadedStores, this.parentView.loadedStores);
 				}
 
 				if (this.stores) {
 					//create stores in the configuration.
-					for (var item in this.stores) {
-						if (item.charAt(0) !== "_") { //skip the private properties
-							var type = this.stores[item].type ? this.stores[item].type : "dojo/store/Memory";
-							var config = {};
-							if (this.stores[item].params) {
-								dcl.mix(config, this.stores[item].params);
-							}
-							this._createDataStore(item, type, config);
-						}
-
-					}
+					this.app.emit("dapp-setup-view-stores", this);
 				}
-			},
-
-			_createDataStore: function (item, type, config) {
-				// summary:
-				//		Create a data store instance for View specific store
-				//
-				// TODO: move this into a common place for use by main and ViewBase
-				//
-				var F = MODULE + "_createDataStore ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
-				var StoreCtor;
-				try {
-					StoreCtor = require(type);
-				} catch (e) {
-					throw new Error(type + " must be listed in the dependencies");
-				}
-				if (config.data && typeof config.data === "string") {
-					//get the object specified by string value of data property
-					//cannot assign object literal or reference to data property
-					//because json.ref will generate __parent to point to its parent
-					//and will cause infinitive loop when creating StatefulModel.
-					config.data = lang.getObject(config.data);
-				}
-				if (this.stores[item].observable) {
-					var observableCtor;
-					try {
-						observableCtor = require("dojo/store/Observable");
-					} catch (e) {
-						throw new Error("dojo/store/Observable must be listed in the dependencies");
-					}
-					this.stores[item].store = observableCtor(new StoreCtor(config));
-				} else {
-					this.stores[item].store = new StoreCtor(config);
-				}
-				this.loadedStores[item] = this.stores[item].store; // add store to loadedStores for the view
 			},
 
 			_startup: function () {
@@ -136,17 +82,12 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		startup widgets in view template.
 				// tags:
 				//		private
-				var F = MODULE + "_startup ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
-
 				this._initViewHidden();
 
 				this._startLayout();
 			},
 
 			_initViewHidden: function () {
-				var F = MODULE + "_initViewHidden ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				domStyle.set(this.domNode, "visibility", "hidden");
 			},
 
@@ -155,19 +96,11 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				//		startup widgets in view template.
 				// tags:
 				//		private
-				var F = MODULE + "_startLayout ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
-
-				this.app.log(MODULE, F + "  >  firing layout for name=[" + this.viewName +
-					"], parentView.viewName=[" + (this.parentView ? this.parentView.viewName : "") + "]");
-
 				if (!this.hasOwnProperty("constraint")) {
 					this.constraint = domAttr.get(this.domNode, "data-app-constraint") || "center";
 				}
 				viewUtils.register(this.constraint);
 
-				this.app.log("  > in app/ViewBase calling this.startup and resolve() id=[" + this.id + "], " +
-					"parentView.viewName=[" + (this.parentView ? this.parentView.viewName : "") + "]");
 				this._started = true;
 				if (this._startDef) {
 					this._startDef.resolve(this);
@@ -180,8 +113,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				// tags:
 				//		private
 				//
-				var F = MODULE + "_loadViewController ";
-				this.app.log(MODULE, F + "called for [" + this.id + "]");
 				var viewControllerDef = new Deferred();
 				var path;
 
@@ -191,8 +122,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 					this.controller = "dapp/ViewBase";
 				}
 				if (!this.controller) { // no longer using this.controller === "none", if we dont have one it means none
-					this.app.log(MODULE, F + "  > no controller set for view name=[" + this.viewName +
-						"], parentView.viewName=[" + this.parentView.viewName, "]");
 					viewControllerDef.resolve(true);
 					return viewControllerDef;
 				} else {

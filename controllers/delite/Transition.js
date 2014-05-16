@@ -1,6 +1,5 @@
-define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Controller", "../../utils/viewUtils"],
+define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Controller", "../../utils/view"],
 	function (dcl, when, Deferred, all, Controller, viewUtils) {
-		var MODULE = "controllers/delite/Transition:";
 
 		// summary:
 		//		A Transition controller to listen for "dapp-display" events and drive the transitions for those
@@ -17,11 +16,12 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 				// app:
 				//		dapp application instance.
 				this.app = app;
-				this.bind(document, "dapp-display", this._displayHandler.bind(this));
+				this.docEvents = {
+					"dapp-display": this._displayHandler
+				};
 			},
 
 			_getParentNode: function (subEvent) {
-				var F = MODULE + "_getParentNode ";
 				// subEvent.dapp.parentView is the view, the parentView.containerNode is the parentNode
 				var viewDef = subEvent.dapp.parentView.views[subEvent.dest];
 				var parentSelector = viewDef ? viewDef.parentSelector : null;
@@ -33,8 +33,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 							"] for parentView with id=[" + subEvent.dapp.parentView.id + "]");
 					}
 				}
-
-				this.app.log(MODULE, F + "parentSelector = [" + parentSelector + "] p.id=" + (p ? p.id : "") + "]");
 
 				return p;
 			},
@@ -49,8 +47,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 				//
 				// event: Object
 				//		"app-transition" event parameter. It should include dest, like: {"dest": viewId}
-				var F = MODULE + "_displayHandler ";
-				this.app.log(MODULE, F + "called **NEW** dapp-display event with event.dest=[" + event.dest + "]");
 				var dest = event.dest;
 				this._handleMultipleViewParts({
 					dest: dest,
@@ -62,33 +58,8 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 				});
 			},
 
-			_syncCallsToDisplayView: function (viewPaths, i, event, syncDef) {
-				var F = MODULE + "_loadViewsInOrder ";
-				var self = this;
-
-				this.app.log(MODULE, F + "called with event.dest=[" + event.dest + "] and event.viewData=[" +
-					event.viewData + "]");
-				var displayViewPromise = (viewPaths[i].remove) ?
-					this._hideView(viewPaths[i].dest, event, false, viewPaths[i]) :
-					this._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
-				i++;
-				if (i < viewPaths.length) { // need to wait before loading the next views.
-					when(displayViewPromise, function () {
-						displayViewPromise = self._syncCallsToDisplayView(viewPaths, i, event, syncDef);
-					});
-				} else {
-					when(displayViewPromise, function (value) {
-						syncDef.resolve(value);
-					});
-				}
-				return syncDef.promise;
-
-			},
 			_loadViewsInOrder: function (viewPaths, i, event, syncDef) {
-				var F = MODULE + "_loadViewsInOrder ";
 				var self = this;
-				this.app.log(MODULE, F + "called with event.dest=[" + event.dest + "] and event.viewData=[" +
-					event.viewData + "]");
 				var dispViewDef = (viewPaths[i].remove) ?
 					this._hideView(viewPaths[i].dest, event, false, viewPaths[i]) :
 					this._displayView(viewPaths[i].dest, event, false, viewPaths[i]);
@@ -107,9 +78,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 			},
 
 			_handleMultipleViewParts: function (event) {
-				var F = MODULE + "_handleMultipleViewParts ";
-				this.app.log(MODULE, F + "called with event.dest=[" + event.dest + "] and event.viewData=[" +
-					event.viewData + "]");
 				var defs = []; // list of deferreds that need to fire before I am complete
 
 				var syncDeferred;
@@ -142,7 +110,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 					}
 					// check for all defs being complete here, and resolve displayDeferred when all are resolved
 					all(defs).then(function (value) {
-						self.app.log(MODULE, F + "back from all(defs) for event.dest[" + event.dest + "]");
 						if (event.displayDeferred) {
 							event.displayDeferred.resolve(value);
 						}
@@ -152,9 +119,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 
 			// _hideView is called to hide a view
 			_hideView: function (viewTarget, event, isParent, viewPath) {
-				var F = MODULE + "_hideView ";
-				this.app.log(MODULE, F + "called for viewTarget [" + viewTarget + "] with event.dest = [" +
-					event.dest + "] ");
 				var deferred = new Deferred();
 				event.dapp.isParent = isParent;
 				event.dapp.hide = true;
@@ -177,8 +141,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 					deferred.resolve(event);
 				} else {
 					p.hide(event.dapp.viewPath.lastViewId, event).then(function (value) {
-						self.app.log(MODULE, F + "back from p.hide for event.dest[" +
-							event.dest + "] event.dapp.parentView.id[" + event.dapp.parentView.id + "]");
 						deferred.resolve(value);
 						return value;
 					});
@@ -188,9 +150,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 
 			// _displayView is called to show a view, it will handle nested views by calling _displayParents
 			_displayView: function (viewTarget, event, isParent, viewPath) {
-				var F = MODULE + "_displayView ";
-				this.app.log(MODULE, F + "called for viewTarget [" + viewTarget + "] with event.dest = [" +
-					event.dest + "] ");
 				var deferred = new Deferred();
 				var subEvent;
 				event.dapp.isParent = isParent;
@@ -199,14 +158,11 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 				// wait for parents to be displayed first
 				when(this._displayParents(viewTarget, event, isParent, viewPath),
 					function (value) {
-						self.app.log(MODULE, F + "after _displayParents value.dapp.nextView.id=[" +
-							(value.dapp.nextView ? value.dapp.nextView.id : "") + "]");
 						subEvent = Object.create(event);
 						subEvent.dest = viewTarget.split(",").pop();
 						subEvent.dapp.viewPath = viewPath;
 						subEvent.dapp.viewPath.dest = subEvent.dest;
 						subEvent.dapp.isParent = isParent;
-						self.app.log(MODULE, F + "subEvent.dest = [" + subEvent.dest + "]");
 
 						subEvent.dapp.parentView = value.dapp.nextView;
 						var p = self._getParentNode(subEvent);
@@ -218,8 +174,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 							return;
 						}
 						subEvent.dapp.parentNode = p;
-						self.app.log(MODULE, F + "before p.show with subEvent.dest = [" + subEvent.dest +
-							"] with p.id=[" + p.id + "]");
 
 						subEvent.target = p;
 						var viewId = self.app === subEvent.dapp.parentView ? subEvent.dest :
@@ -232,8 +186,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 							subEvent.transition = "none";
 						}
 						p.show(subEvent.dest, subEvent).then(function (value) {
-							self.app.log(MODULE, F + "back from parent.containerNode.show for subEvent.dest[" +
-								subEvent.dest + "] subEvent.dapp.parentView.id[" + subEvent.dapp.parentView.id + "]");
 							deferred.resolve(value);
 							return value;
 						});
@@ -243,8 +195,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 
 			// _displayParents is called to show parent views before showing the child view for nested views
 			_displayParents: function (viewTarget, ev, isParent, viewPath) {
-				var F = MODULE + "_displayParents ";
-				this.app.log(MODULE, F + "called for viewTarget=[" + viewTarget + "]");
 				// for now we consider the parents are listed in the display command (i.e. parent1,parent2,view)
 				// TODO: we might improve that later to avoid users have to specify this?
 				var parts = viewTarget ? viewTarget.split(",") : "";
@@ -252,7 +202,6 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 					parts.pop(); // process the parent first
 					var dest = parts.join(",");
 					viewPath.dest = dest;
-					this.app.log(MODULE, F + "calling return _displayView with dest=[", dest + "]");
 					return this._displayView(dest, ev, true, viewPath);
 				}
 				return {
