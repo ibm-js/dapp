@@ -4,7 +4,6 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 	],
 	function (require, dcl, lang, Stateful, Evented, Deferred, when, has, on, domReady,
 		nls, hash, viewUtils, configUtils) {
-		var MODULE = "Main:";
 
 		var Application = dcl([Evented, Stateful], {
 			lifecycle: {
@@ -101,7 +100,6 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 			setupControllers: function () {
 				// create application controller instance
 				// move set _startView operation from history module to application
-				//var F = MODULE + "setupControllers ";
 
 				var currentHash = window.location.hash;
 				this._startView = hash.getTarget(currentHash, this.defaultView);
@@ -131,7 +129,6 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 				// 		set the status for STOPPING during the unload and STOPPED when complete
 				// 		emit dapp-unload-view to have controllers stop, and delete the global app reference.
 				//
-				var F = MODULE + "unloadApp ";
 				var appStoppedDef = new Deferred();
 				this.status = this.lifecycle.STOPPING;
 
@@ -144,7 +141,6 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 					delete window[this.name]; // remove the global for the app
 					appStoppedDef.resolve();
 				}.bind(this);
-				this.log(MODULE, F + "emit dapp-unload-view for [" + this.id + "]");
 				this.emit("dapp-unload-view", params);
 
 				this.emit("dapp-unload-app", {}); // for controllers to cleanup

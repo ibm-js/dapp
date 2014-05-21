@@ -2,7 +2,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dapp/main",
+	"dapp/Application",
 	"dojo/json",
 	"dojo/on",
 	"dojo/dom-geometry",
@@ -12,7 +12,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/appStatus/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, json, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
 	appStatusConfig) {
 	// for appStatusSuite
 	var appStatusContainer1, appStatusNode1;
@@ -50,7 +50,7 @@ define([
 			});
 
 			// create the app from the config and wait for the deferred
-			var appStartedDef = main(json.parse(stripComments(appStatusConfig)), appStatusContainer1);
+			var appStartedDef = Application(json.parse(stripComments(appStatusConfig)), appStatusContainer1);
 			appStartedDef.then(function (appStatusTest) {
 				// we are ready to test
 				testApp = appStatusTest;

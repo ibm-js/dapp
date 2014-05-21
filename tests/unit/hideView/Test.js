@@ -2,7 +2,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dapp/main",
+	"dapp/Application",
 	"dapp/utils/view",
 	"dojo/json",
 	"dojo/topic",
@@ -14,7 +14,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/hideView/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
 	hideViewconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for hideViewSuite transition test
@@ -41,7 +41,7 @@ define([
 		"test initial view": function () {
 			var d = this.async(10000);
 
-			var appStartedDef3 = main(json.parse(stripComments(hideViewconfig)), hideViewContainer);
+			var appStartedDef3 = Application(json.parse(stripComments(hideViewconfig)), hideViewContainer);
 			appStartedDef3.then(function (app) {
 				// we are ready to test
 				testApp = app;

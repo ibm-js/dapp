@@ -2,7 +2,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dapp/main",
+	"dapp/Application",
 	"dojo/json",
 	"dojo/on",
 	"dojo/dom-geometry",
@@ -12,7 +12,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/transitionVisibility/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, json, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
 	transitionVisibilityconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for transitionVisibilitySuite
@@ -37,7 +37,7 @@ define([
 		"transitionVisibilitySuite dapp transitionVisibility test initial layout": function () {
 			var d = this.async(10000);
 
-			var appStartedDef = main(json.parse(stripComments(transitionVisibilityconfig)),
+			var appStartedDef = Application(json.parse(stripComments(transitionVisibilityconfig)),
 				transitionVisibilityContainer3);
 			appStartedDef.then(function (app) {
 				// we are ready to test

@@ -65,8 +65,6 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				// summary:
 				//		Create data store instances for View specific stores
 				//
-				// TODO: move this into a common place for use by main and ViewBase
-				//
 				if (this.parentView && this.parentView.loadedStores) {
 					dcl.mix(this.loadedStores, this.parentView.loadedStores);
 				}

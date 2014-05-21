@@ -2,7 +2,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dapp/main",
+	"dapp/Application",
 	"dojo/json",
 	"dojo/on",
 	"dojo/dom-geometry",
@@ -12,7 +12,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/viewLayout/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, json, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
 	viewLayoutconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for viewLayoutSuite
@@ -37,7 +37,7 @@ define([
 			var d = this.async(10000);
 
 			// create the app from the config and wait for the deferred
-			var appStartedDef = main(json.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2);
+			var appStartedDef = Application(json.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2);
 			appStartedDef.then(function (app) {
 				// we are ready to test
 				testApp = app;

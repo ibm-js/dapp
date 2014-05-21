@@ -1,5 +1,5 @@
 // jshint unused:false, undef:false, quotmark:false
-require(["dapp/main", "dojo/json", "requirejs-text/text!./config.json", "dojo/sniff"],
+require(["dapp/Application", "dojo/json", "requirejs-text/text!./config.json", "dojo/sniff"],
 	function (Application, json, config, has) {
 		has.add("requirejs", window.requirejs);
 		/* jshint nonew: false */

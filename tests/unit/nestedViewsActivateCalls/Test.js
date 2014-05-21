@@ -2,7 +2,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dapp/main",
+	"dapp/Application",
 	"dapp/utils/view",
 	"dojo/json",
 	"dojo/topic",
@@ -14,7 +14,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/nestedViewsActivateCalls/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, main, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
 	nestedViewsActivateCallsconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for nestedViewsActivateCallsSuite1 transition test
@@ -44,7 +44,7 @@ define([
 		"test initial view": function () {
 			var d = this.async(10000);
 
-			var appStartedDef1 = main(json.parse(stripComments(nestedViewsActivateCallsconfig1)),
+			var appStartedDef1 = Application(json.parse(stripComments(nestedViewsActivateCallsconfig1)),
 				nestedViewsActivateCallsContainer1);
 			appStartedDef1.then(function (app) {
 				// we are ready to test

@@ -54,7 +54,7 @@ define(
 			},
 
 			dappstatuschange: function (params) { // jshint maxcomplexity: 14
-				// Note app.status = app.lifecycle.STARTING is done in main.js on domReady, so this is too late for 1.
+				// Note app.status = app.lifecycle.STARTING is done in Application.js on domReady, so this is too late for 1.
 				var appId = params.app.id;
 				var status = params.status;
 				if (this.app.appLogging.logAll) {

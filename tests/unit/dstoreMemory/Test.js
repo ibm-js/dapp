@@ -3,7 +3,7 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dojo/_base/window",
-	"dapp/main",
+	"dapp/Application",
 	"dojo/json",
 	"dojo/topic",
 	"dojo/on",
@@ -16,7 +16,7 @@ define([
 	"deliteful/ViewStack",
 	"deliteful/list/List",
 	"dstore/Memory"
-], function (registerSuite, assert, win, main, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, win, Application, json, topic, on, domGeom, domClass, register, Deferred,
 	dstoreMemoryconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for dstoreMemorySuite1 transition test
@@ -71,7 +71,7 @@ define([
 		"test initial view": function () {
 			var d = this.async(10000);
 
-			var appStartedDef1 = main(json.parse(stripComments(dstoreMemoryconfig1)), dstoreMemoryContainer1);
+			var appStartedDef1 = Application(json.parse(stripComments(dstoreMemoryconfig1)), dstoreMemoryContainer1);
 			appStartedDef1.then(function (appx) {
 				// we are ready to test
 				testApp = appx;
