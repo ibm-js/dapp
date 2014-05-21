@@ -1,4 +1,20 @@
 language: node_js
-node_js: "0.10"
-install: "npm -g install jshint"
-script: "jshint --verbose ."
+node_js:
+  - "0.10"
+env:
+  global:
+    - secure: "HWuk1WhaQDUqDU26FoTs6mouG88LM5LgfS+5rPkHmMBqN00nMwscBlLK0oSmjVAgSsWcz9CA/vyD+L8alRnvsDbZOadI864IBdVOSFVeKF2yG2+Wb8P39lUUlqUveOhvBZ5m0P1EXhfAGGP9JdCGhfVdYPbbs9UYFa9QjmXX+8E="
+    - secure: "aZZ2ZznrprcC75d9Ihb/FaN219/rkCKZf0Zv6KqymUakZ2HfJu1cCWvKoQVDRidrGe0Z6A0agSnq67zZKeeGwQXBmEZiOj8lLCddM4Ju6QDNgnNIl9wUEKvt0gUcDGQU5RSfV27/pQSIADrHT41xAZ99GmRbq3J1it5XAaOQxLQ="
+
+install:
+   - npm install -g grunt-cli
+   - npm -g install bower
+   - npm install
+   - bower install
+
+notifications:
+  email:
+    on_failure : "change"
+
+script:
+   - grunt jshint test:remote
