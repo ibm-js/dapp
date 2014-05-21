@@ -4,7 +4,7 @@ node_js:
 env:
   global:
     - secure: "HWuk1WhaQDUqDU26FoTs6mouG88LM5LgfS+5rPkHmMBqN00nMwscBlLK0oSmjVAgSsWcz9CA/vyD+L8alRnvsDbZOadI864IBdVOSFVeKF2yG2+Wb8P39lUUlqUveOhvBZ5m0P1EXhfAGGP9JdCGhfVdYPbbs9UYFa9QjmXX+8E="
-    - secure: "aZZ2ZznrprcC75d9Ihb/FaN219/rkCKZf0Zv6KqymUakZ2HfJu1cCWvKoQVDRidrGe0Z6A0agSnq67zZKeeGwQXBmEZiOj8lLCddM4Ju6QDNgnNIl9wUEKvt0gUcDGQU5RSfV27/pQSIADrHT41xAZ99GmRbq3J1it5XAaOQxLQ="
+    - secure: "D6xNCeM9X6e36Xsaz0LCTgKv7ZUyL6yM8p/RKCS4qF5Hfkn96BdzNYKYziZUw1sPbkh84LcfvpBg8Y3p7886/RjCiFvL2AcleyrXBH0IfmILNl+mEbileEougMRi1oJMCy7T3SmokeWVJO/SuFoRXyi+Xzxg3hcwHG5XQ3F6Zns="
 
 install:
    - npm install -g grunt-cli
