@@ -71,7 +71,8 @@ define([
 		"test initial view": function () {
 			var d = this.async(10000);
 
-			var appStartedDef1 = Application(json.parse(stripComments(dstoreMemoryconfig1)), dstoreMemoryContainer1);
+			var appStartedDef1 = new Application(json.parse(stripComments(dstoreMemoryconfig1)),
+				dstoreMemoryContainer1);
 			appStartedDef1.then(function (appx) {
 				// we are ready to test
 				testApp = appx;

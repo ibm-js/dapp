@@ -37,7 +37,7 @@ define([
 		"transitionVisibilitySuite dapp transitionVisibility test initial layout": function () {
 			var d = this.async(10000);
 
-			var appStartedDef = Application(json.parse(stripComments(transitionVisibilityconfig)),
+			var appStartedDef = new Application(json.parse(stripComments(transitionVisibilityconfig)),
 				transitionVisibilityContainer3);
 			appStartedDef.then(function (app) {
 				// we are ready to test

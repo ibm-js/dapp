@@ -50,7 +50,7 @@ define([
 			});
 
 			// create the app from the config and wait for the deferred
-			var appStartedDef = Application(json.parse(stripComments(appStatusConfig)), appStatusContainer1);
+			var appStartedDef = new Application(json.parse(stripComments(appStatusConfig)), appStatusContainer1);
 			appStartedDef.then(function (appStatusTest) {
 				// we are ready to test
 				testApp = appStatusTest;

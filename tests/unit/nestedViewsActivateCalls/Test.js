@@ -44,7 +44,7 @@ define([
 		"test initial view": function () {
 			var d = this.async(10000);
 
-			var appStartedDef1 = Application(json.parse(stripComments(nestedViewsActivateCallsconfig1)),
+			var appStartedDef1 = new Application(json.parse(stripComments(nestedViewsActivateCallsconfig1)),
 				nestedViewsActivateCallsContainer1);
 			appStartedDef1.then(function (app) {
 				// we are ready to test

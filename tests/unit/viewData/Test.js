@@ -41,7 +41,7 @@ define([
 		"test initial view": function () {
 			var d = this.async(10000);
 
-			var appStartedDef3 = Application(json.parse(stripComments(viewDataconfig3)), viewDataContainer3);
+			var appStartedDef3 = new Application(json.parse(stripComments(viewDataconfig3)), viewDataContainer3);
 			appStartedDef3.then(function (app) {
 				// we are ready to test
 				testApp = app;

@@ -37,7 +37,7 @@ define([
 			var d = this.async(10000);
 
 			// create the app from the config and wait for the deferred
-			var appStartedDef = Application(json.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2);
+			var appStartedDef = new Application(json.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2);
 			appStartedDef.then(function (app) {
 				// we are ready to test
 				testApp = app;
