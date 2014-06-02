@@ -1,7 +1,7 @@
-define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "dojo/dom-class",
-		"dojo/_base/lang", "dcl/dcl", "dojo/Deferred", "./utils/view"
+define(["require", "dojo/when", "dojo/on", "dojo/dom-style", "dojo/dom-class",
+		"dcl/dcl", "dojo/Deferred", "./utils/view"
 	],
-	function (require, when, on, domAttr, domStyle, domClass, lang, dcl, Deferred, viewUtils) {
+	function (require, when, on, domStyle, domClass, dcl, Deferred, viewUtils) {
 		return dcl(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
@@ -95,7 +95,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "d
 				// tags:
 				//		private
 				if (!this.hasOwnProperty("constraint")) {
-					this.constraint = domAttr.get(this.domNode, "data-app-constraint") || "center";
+					this.constraint = this.domNode.getAttribute("data-app-constraint") || "center";
 				}
 				viewUtils.register(this.constraint);
 
