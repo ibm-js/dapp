@@ -67,7 +67,7 @@ define(
 					view.params = params || null;
 					resolveView(event, view, event.dapp.parentView);
 				} else {
-					this._createView(event, viewId, event.dest, params, event.dapp.parentView,
+					this._createView(event, viewId, event.dest, params, event.dapp.parentView, event.dapp.parentNode,
 						event.dapp.isParent, event.dapp.parentView.views[event.dest].type, event.dapp.viewPath);
 				}
 			},
@@ -111,7 +111,7 @@ define(
 				// Can process this direct call to .show or .hide since it is not multipart or nested
 				event.dapp.parentNode = event.target;
 				event.dapp.viewPath = viewPaths[0]; // viewPaths[0]
-				event.dapp.parentView = viewUtils.getParentViewFromViewName(this.app, dest, event.target);
+				event.dapp.parentView = viewUtils.getParentViewFromViewName(this.app, event.dest, event.target);
 				event.dapp.isParent = false;
 				return event.dapp;
 			},
@@ -246,7 +246,7 @@ define(
 
 			},
 
-			_createView: function (event, id, viewName, params, parentView, isParent, type, viewPath) {
+			_createView: function (event, id, viewName, params, parentView, parentNode, isParent, type, viewPath) {
 				var app = this.app;
 				require([type ? type : "../../View"], function (View) {
 					var params = {
@@ -254,7 +254,7 @@ define(
 						"id": id,
 						"viewName": viewName,
 						"parentView": parentView,
-						"parentNode": event.dapp.parentNode,
+						"parentNode": parentNode,
 						"isParent": isParent,
 						"viewPath": viewPath
 					};
@@ -429,7 +429,7 @@ define(
 
 				}
 				// Here since they had the constraint but it was not the same I need to deactivate all children of p
-				if (removeView) {
+				if (removeView && currentSubViewArray.length > 0) { // if we found one to remove also remove children
 					currentSubViewArray = currentSubViewArray.concat(viewUtils.getAllSelectedChildren(p));
 				}
 				//	for (var i = 0; i <= currentSubViewArray.length - 1; i++) {

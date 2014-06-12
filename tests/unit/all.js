@@ -8,5 +8,6 @@ define([
 	"./hideView/Test",
 	"./nestedViewsActivateCalls/Test",
 	"./multipleAndNestedViewsActivateCalls/Test",
+	"./sidePaneViewsActivateCalls/Test",
 	"./dstoreMemory/Test"
 ]);
