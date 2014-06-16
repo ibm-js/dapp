@@ -34,21 +34,18 @@
 	"defaultView": "nlsLabelsAppHome1",
 	"views": {
 		"nlsLabelsAppHome1": {
-			"constraint": "main",
 			"parentSelector": "#nlsLabelsAppdviewStack",
 			"nls": "nlsLabelsApp/nls/home",
 			"controller": "nlsLabelsApp/viewController1.js",
 			"template": "nlsLabelsApp/viewTemplate.html"
 		},
 		"nlsLabelsAppHome2": {
-			"constraint": "main",
 			"parentSelector": "#nlsLabelsAppdviewStack",
 			"nls": "nlsLabelsApp/nls/home",
 			"controller": "nlsLabelsApp/viewController1.js",
 			"template": "nlsLabelsApp/viewTemplate.html"
 		},
 		"nlsLabelsAppHome3NoController": {
-			"constraint": "main",
 			"parentSelector": "#nlsLabelsAppdviewStack",
 			"nls": "nlsLabelsApp/nls/home",
 			"controller": "nlsLabelsApp/viewController1.js",

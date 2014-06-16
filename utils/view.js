@@ -105,6 +105,26 @@ define(function () {
 				view.selectedChildren[hash] : null;
 		},
 
+		getDefaultConstraint: function (viewId, parentNode) {
+			// summary:
+			//		get the default constraint based upon the parentNode, if it is a ViewStack (has
+			// 		selectedChildId) the default constraint will be "center" otherwise it will be the viewId
+			//
+			// viewId: String
+			//		the viewId of the view to get the default constraint for
+			//
+			// parentNode: domNode
+			//		the parentNode of the view to get the default constraint for, if the parentNode has a
+			// 		selectedChildId defined then the default constraint is "center" otherwise it is the viewId.
+			//
+			// returns:
+			//		the default constraint for this view
+			if (parentNode && parentNode.selectedChildId !== undefined) {
+				return parentNode.id;
+			}
+			return viewId ? viewId : parentNode ? parentNode.id : "center";
+		},
+
 		getConstraintForViewTarget: function (viewTarget, app) {
 			// summary:
 			//		get current selected child according to the constraint

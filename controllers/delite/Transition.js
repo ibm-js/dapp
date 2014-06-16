@@ -179,7 +179,8 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 						var viewId = self.app === subEvent.dapp.parentView ? subEvent.dest :
 							viewUtils.getViewIdFromEvent(self.app, subEvent);
 						var viewdef = viewUtils.getViewDefFromViewId(self.app, viewId);
-						var constraint = viewdef && viewdef.constraint ? viewdef.constraint : "center";
+						var constraint = viewdef && viewdef.constraint ? viewdef.constraint :
+							viewUtils.getDefaultConstraint(viewId, p);
 						var selView = viewUtils.getSelectedChild(subEvent.dapp.parentView, constraint);
 						// if viewId is already the selected view set transition to none.
 						if (selView && selView.id === viewId) {

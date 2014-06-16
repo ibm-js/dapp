@@ -158,7 +158,8 @@ define(
 						// because in a nested case where isParent is true we replace the event.target._visibleChild
 						// before we are ready to use it.  We wait for !isParent and then process the views.
 						var current = viewUtils.getSelectedChild(appView, (firstChildView &&
-							firstChildView.constraint ? firstChildView.constraint : "center"));
+							firstChildView.constraint ? firstChildView.constraint :
+							viewUtils.getDefaultConstraint(firstChildView.id, firstChildView.parentNode)));
 
 						// use the nextSubViewArray to get the currentSubViewArray and current and next last child
 						// matches.
@@ -302,7 +303,8 @@ define(
 						v.beforeActivate(current, data);
 					}
 					if (p) {
-						viewUtils.setSelectedChild(p, (v ? v.constraint : "center"), v, this.app);
+						viewUtils.setSelectedChild(p, (v ? v.constraint :
+							viewUtils.getDefaultConstraint(v.id, v.parentNode)), v, this.app);
 					}
 					p = v;
 				}

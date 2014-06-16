@@ -32,13 +32,9 @@
 
 	"parseOnLoad": true,
 
-	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
-	//"defaultView": "P1,S1,V1",
 	"defaultView": "header1+center1+footer1",
-//	"defaultView": "header1",
 	"views": {
 		"header1": {
-			"constraint": "header",
 			"parentSelector": "#headerViewStack",
 			"controller": "dapp/tests/functional/simple1/headerController1.js",
 			"nls": "dapp/tests/functional/simple1/nls/home",
@@ -46,32 +42,27 @@
 			"template": "dapp/tests/functional/simple1/headerTemplate1.html"
 		},
 		"header2": {
-			"constraint": "header",
 			"parentSelector": "#headerViewStack",
 			"controller": "dapp/tests/functional/simple1/headerController1.js",
 			"template": "dapp/tests/functional/simple1/headerTemplate2.html"
 		},
 		"center1": {
-			"constraint": "center",
 			"parentSelector": "#centerViewStack",
 			"controller": "dapp/tests/functional/simple1/centerController1.js",
 			"template": "dapp/tests/functional/simple1/centerTemplate1.html"
 		},
 		"center2": {
-			"constraint": "center",
 			"parentSelector": "#centerViewStack",
 			"controller": "dapp/tests/functional/simple1/centerController1.js",
 			"template": "dapp/tests/functional/simple1/centerTemplate1.html"
 		},
 		"footer1": {
-			"constraint": "footer",
 			"parentSelector": "#footerViewStack",
 			"controller": "dapp/tests/functional/simple1/footerController1.js",
 		//	"nls": "dapp/tests/functional/simple1/nls/home",
 			"template": "dapp/tests/functional/simple1/footerTemplate1.html"
 		},
 		"footer2": {
-			"constraint": "footer",
 			"parentSelector": "#footerViewStack",
 			"controller": "dapp/tests/functional/simple1/footerController1.js",
 			"template": "dapp/tests/functional/simple1/footerTemplate2.html"

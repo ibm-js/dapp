@@ -1,5 +1,4 @@
-// jshint unused:false, undef:false, quotmark:false
-define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) {
+define([], function () {
 	return {
 		attributes: {
 			name: ""
@@ -9,27 +8,18 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 		afterActivateCallCount: 0,
 		afterDeactivateCallCount: 0,
 		init: function () {
-			//console.log("app-view:", "init called for [" + this.viewName + "]");
 			this.domNode.name = this.id;
 		},
-		beforeActivate: function (previousView, viewData) {
-			//console.log("app-view:", "beforeActivate called for [" + this.viewName + "] with previousView.id =[" +
-			//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
+		beforeActivate: function () {
 			this.beforeActivateCallCount++;
 		},
-		beforeDeactivate: function (nextView, viewData) {
-			//console.log("app-view:", "beforeDeactivate called for [" + this.viewName + "] with previousView.id =[" +
-			//	(nextView ? nextView.id : "") + "]");
+		beforeDeactivate: function () {
 			this.beforeDeactivateCallCount++;
 		},
-		afterActivate: function (previousView, viewData) {
-			//console.log("app-view:", "afterActivate called for [" + this.viewName + "] with previousView.id =[" +
-			//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
+		afterActivate: function () {
 			this.afterActivateCallCount++;
 		},
-		afterDeactivate: function (nextView, viewData) {
-			//console.log("app-view:", "afterDeactivate called for [" + this.viewName + "] with previousView.id =[" +
-			//	(nextView ? nextView.id : "") + "]");
+		afterDeactivate: function () {
 			this.afterDeactivateCallCount++;
 		},
 		destroy: function () {

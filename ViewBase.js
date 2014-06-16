@@ -1,7 +1,5 @@
-define(["require", "dojo/when", "dojo/on", "dojo/dom-style", "dojo/dom-class",
-		"dcl/dcl", "dojo/Deferred", "./utils/view"
-	],
-	function (require, when, on, domStyle, domClass, dcl, Deferred, viewUtils) {
+define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/view"],
+	function (require, when, on, dcl, Deferred, viewUtils) {
 		return dcl(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
@@ -86,7 +84,7 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-style", "dojo/dom-class",
 			},
 
 			_initViewHidden: function () {
-				domStyle.set(this.domNode, "visibility", "hidden");
+				this.domNode.style.visibility = "hidden";
 			},
 
 			_startLayout: function () {
@@ -95,7 +93,8 @@ define(["require", "dojo/when", "dojo/on", "dojo/dom-style", "dojo/dom-class",
 				// tags:
 				//		private
 				if (!this.hasOwnProperty("constraint")) {
-					this.constraint = this.domNode.getAttribute("data-app-constraint") || "center";
+					this.constraint = this.domNode.getAttribute("data-app-constraint") ||
+						viewUtils.getDefaultConstraint(this.id, this.parentNode);
 				}
 				viewUtils.register(this.constraint);
 

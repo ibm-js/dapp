@@ -31,26 +31,22 @@
 	"defaultView": "sp1header1+sp1centerParent+sp1center1+sp1right1+sp1footer1",
 	"views": {
 		"sp1header1": {
-			"constraint": "header",
 			"parentSelector": "#sp1headerViewStack",
 			"controller": "sidePaneViewsActivateCallsApp1/headerController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/headerTemplate1.html"
 		},
 		"sp1leftParent": {
-			"constraint": "centerParent",
 			"parentSelector": "#sp1leftPane",
 			"controller": "sidePaneViewsActivateCallsApp1/parentController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/leftSubParentTemplate.html",
 			"defaultView": "left1",
 			"views": {
 				"sp1left1": {
-					"constraint": "left",
 					"parentSelector": "#sp1leftViewStack",
 					"controller": "sidePaneViewsActivateCallsApp1/leftController1.js",
 					"template": "sidePaneViewsActivateCallsApp1/leftTemplate1.html"
 				},
 				"sp1left2": {
-					"constraint": "left",
 					"parentSelector": "#sp1leftViewStack",
 					"controller": "sidePaneViewsActivateCallsApp1/leftController1.js",
 					"template": "sidePaneViewsActivateCallsApp1/leftTemplate1.html"
@@ -58,32 +54,27 @@
 			}
 		},
 		"sp1centerParent": {
-			"constraint": "centerParent",
 			"loadViewsInOrder": true,
 			"parentSelector": "#sp1centerLinearLayout",
 			"controller": "sidePaneViewsActivateCallsApp1/parentController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/subParentTemplate.html"
 		},
 		"sp1center1": {
-			"constraint": "center",
 			"parentSelector": "#sp1centerViewStack",
 			"controller": "sidePaneViewsActivateCallsApp1/centerController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/centerTemplate1.html"
 		},
 		"sp1right1": {
-			"constraint": "right",
 			"parentSelector": "#sp1rightPane",
 			"controller": "sidePaneViewsActivateCallsApp1/rightController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/rightTemplate1.html"
 		},
 		"sp1right2": {
-			"constraint": "right",
 			"parentSelector": "#sp1rightPane",
 			"controller": "sidePaneViewsActivateCallsApp1/rightController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/rightTemplate1.html"
 		},
 		"sp1footer1": {
-			"constraint": "footer",
 			"parentSelector": "#sp1footerViewStack",
 			"controller": "sidePaneViewsActivateCallsApp1/footerController1.js",
 			"template": "sidePaneViewsActivateCallsApp1/footerTemplate1.html"

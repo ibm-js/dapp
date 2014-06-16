@@ -33,19 +33,16 @@
 	"defaultView": "viewDataAppHome1",
 	"views": {
 		"viewDataAppHome1": {
-			"constraint": "main",
 			"parentSelector": "#viewDataAppdviewStack",
 			"controller": "viewDataApp/viewController1.js",
 			"template": "viewDataApp/viewTemplate.html"
 		},
 		"viewDataAppHome2": {
-			"constraint": "main",
 			"parentSelector": "#viewDataAppdviewStack",
 			"controller": "viewDataApp/viewController1.js",
 			"template": "viewDataApp/viewTemplate.html"
 		},
 		"viewDataAppHome3NoController": {
-			"constraint": "main",
 			"parentSelector": "#viewDataAppdviewStack",
 			"controller": "viewDataApp/viewController1.js",
 			"template": "viewDataApp/viewTemplate.html"

@@ -129,9 +129,10 @@ define([
 			assert.deepEqual(view.afterActivateCallCount, count,
 				view.id + " afterActivateCallCount should be " + count);
 
-			//also test for selectedChildren being set correctly with constraint main
-			var selectedChildId = testApp.selectedChildren.main.id;
-			assert.deepEqual(view.id, selectedChildId, view.id + " should be in testApp.selectedChildren.main. ");
+			//also test for selectedChildren being set correctly with constraint view.parentNode.id
+			var selectedChildId = testApp.selectedChildren[view.parentNode.id].id;
+			assert.deepEqual(view.id, selectedChildId, view.id +
+				" should be in testApp.selectedChildren[view.parentNode.id]. ");
 
 			//also test for view._active being set correctly to true
 			assert.isTrue(view._active, "view_active should be true for " + view.id);

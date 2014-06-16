@@ -135,7 +135,7 @@ define([
 				.end()
 				.execute("return simple1App1.children.header2._active")
 				.then(function (value) {
-					assert.isTrue(value);
+					assert.isTrue(value, "simple1App1.children.header2._active should be true");
 				})
 				.end()
 				.execute("return simple1App1.children.center2.initialized")
@@ -145,7 +145,7 @@ define([
 				.end()
 				.execute("return simple1App1.children.center2._active")
 				.then(function (value) {
-					assert.isTrue(value);
+					assert.isTrue(value, "simple1App1.children.center2._active should be true");
 				})
 				.end()
 				.execute("return simple1App1.children.footer2.initialized")
@@ -155,7 +155,7 @@ define([
 				.end()
 				.execute("return simple1App1.children.footer2._active")
 				.then(function (value) {
-					assert.isTrue(value);
+					assert.isTrue(value, "simple1App1.children.footer2._active should be true");
 				})
 				.end();
 		},
@@ -164,17 +164,17 @@ define([
 			return this.remote
 				.execute("return simple1App1.children.header1._active")
 				.then(function (value) {
-					assert.isFalse(value);
+					assert.isFalse(value, "simple1App1.children.header1._active should be false");
 				})
 				.end()
 				.execute("return simple1App1.children.center1._active")
 				.then(function (value) {
-					assert.isFalse(value);
+					assert.isFalse(value, "simple1App1.children.center1._active should be false");
 				})
 				.end()
 				.execute("return simple1App1.children.footer1._active")
 				.then(function (value) {
-					assert.isFalse(value);
+					assert.isFalse(value, "simple1App1.children.footer1._active should be false");
 				})
 				.end();
 		},
