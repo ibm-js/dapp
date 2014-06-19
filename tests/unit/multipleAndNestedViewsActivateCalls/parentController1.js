@@ -1,26 +1,24 @@
 define([], function () {
 	return {
-		attributes: {
-			name: ""
-		},
-		beforeActivateCallCount: 0,
-		beforeDeactivateCallCount: 0,
-		afterActivateCallCount: 0,
-		afterDeactivateCallCount: 0,
+		name: "",
+		_beforeActivateCallCount: 0,
+		_beforeDeactivateCallCount: 0,
+		_afterActivateCallCount: 0,
+		_afterDeactivateCallCount: 0,
 		init: function () {
 			this.domNode.name = this.id;
 		},
 		beforeActivate: function () {
-			this.beforeActivateCallCount++;
+			this._beforeActivateCallCount++;
 		},
 		beforeDeactivate: function () {
-			this.beforeDeactivateCallCount++;
+			this._beforeDeactivateCallCount++;
 		},
 		afterActivate: function () {
-			this.afterActivateCallCount++;
+			this._afterActivateCallCount++;
 		},
 		afterDeactivate: function () {
-			this.afterDeactivateCallCount++;
+			this._afterDeactivateCallCount++;
 		},
 		destroy: function () {
 			//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");

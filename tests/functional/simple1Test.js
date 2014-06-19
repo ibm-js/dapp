@@ -63,7 +63,7 @@ define([
 
 		"test defaultView sel111 activate calls": function () {
 			return this.remote
-				.execute("return simple1App1.children.header1.beforeActivateCallCount")
+				.execute("return simple1App1.children.header1._beforeActivateCallCount")
 				.then(function (value) {
 					assert.equal(1, value);
 				})
@@ -251,7 +251,7 @@ define([
 
 		"test sel222 activate calls": function () {
 			return this.remote
-				.execute("return simple1App1.children.header2.beforeActivateCallCount")
+				.execute("return simple1App1.children.header2._beforeActivateCallCount")
 				.then(function (value) {
 					assert.equal(1, value);
 				})
