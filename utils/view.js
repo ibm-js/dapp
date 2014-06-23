@@ -120,7 +120,7 @@ define(function () {
 			// returns:
 			//		the default constraint for this view
 			if (parentNode && parentNode.selectedChildId !== undefined) {
-				return parentNode.id || "center";
+				return parentNode.id;
 			}
 			return viewId ? viewId : parentNode ? parentNode.id : "center";
 		},

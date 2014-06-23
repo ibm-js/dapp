@@ -42,9 +42,9 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/
 					return this;
 				}
 				this._startDef = new Deferred();
-				when(this.load(), function () {
+				when(this.load(), function (controller) {
 					this._createDataStores();
-					this._startup();
+					this._startup(controller);
 				}.bind(this));
 				return this._startDef;
 			},
@@ -53,21 +53,8 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/
 				var vcDef = this._loadViewController();
 				when(vcDef, function (controller) {
 					if (controller) {
-						// Here we need to setup the attributes for the view from the properties on the controller.
-						// loop thru controller properties and add to _viewAttributeNames if not private or a function
-						// then when creating the widget mix them into the widget as attributes with the names from
-						// _viewAttributeNames, and the value from the view.
-						var list = [];
-						Object.keys(controller).forEach(function (prop) {
-							if (!/^_/.test(prop)) {
-								if (typeof controller[prop] !== "function") {
-									list.push(prop);
-								}
-							}
-						});
-						controller._viewAttributeNames = list;
-
 						dcl.mix(this, controller);
+						return controller;
 					}
 				}.bind(this));
 				return vcDef;
