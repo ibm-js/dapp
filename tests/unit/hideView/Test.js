@@ -57,8 +57,8 @@ define([
 				// check the DOM state to see if we are in the expected state
 				assert.isNotNull(hideViewNode, "root hideViewNode must be here");
 				assert.isNotNull(hideViewApp3Home1, "hideViewApp3Home1 view must be here");
-				assert.deepEqual(hideViewApp3Home1View.beforeActivateCallCount, 1,
-					"hideViewApp3Home1View.beforeActivateCallCount should be 1");
+				assert.deepEqual(hideViewApp3Home1View._beforeActivateCallCount, 1,
+					"hideViewApp3Home1View._beforeActivateCallCount should be 1");
 
 				checkNodeVisibility(hideViewNode, hideViewApp3Home1);
 
@@ -118,10 +118,10 @@ define([
 				// Now hideViewApp3Home2View ActivateCallCounts should be 1
 				var view = hideViewApp3Home2View;
 				var count = 1;
-				assert.deepEqual(view.beforeActivateCallCount, count,
-					view.id + " beforeActivateCallCount should be " + count);
-				assert.deepEqual(view.afterActivateCallCount, count,
-					view.id + " afterActivateCallCount should be " + count);
+				assert.deepEqual(view._beforeActivateCallCount, count,
+					view.id + " _beforeActivateCallCount should be " + count);
+				assert.deepEqual(view._afterActivateCallCount, count,
+					view.id + " _afterActivateCallCount should be " + count);
 
 				// Now hideViewApp3Home3NoControllerView DeactivateCallCounts should be 2
 				checkDeactivateCallCount(hideViewApp3Home2View, 1);
@@ -171,10 +171,10 @@ define([
 
 	function checkActivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view.beforeActivateCallCount, count,
-				view.id + " beforeActivateCallCount should be " + count);
-			assert.deepEqual(view.afterActivateCallCount, count,
-				view.id + " afterActivateCallCount should be " + count);
+			assert.deepEqual(view._beforeActivateCallCount, count,
+				view.id + " _beforeActivateCallCount should be " + count);
+			assert.deepEqual(view._afterActivateCallCount, count,
+				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for selectedChildren being set correctly with constraint main
 			var selectedChildId = testApp.selectedChildren.main.id;
@@ -187,10 +187,10 @@ define([
 
 	function checkDeactivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view.beforeDeactivateCallCount, count,
-				view.id + " beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view.afterDeactivateCallCount, count,
-				view.id + " afterDeactivateCallCount should be " + count);
+			assert.deepEqual(view._beforeDeactivateCallCount, count,
+				view.id + " _beforeDeactivateCallCount should be " + count);
+			assert.deepEqual(view._afterDeactivateCallCount, count,
+				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false
 			assert.isFalse(view._active, "view_active should be false for " + view.id);

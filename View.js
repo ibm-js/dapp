@@ -86,11 +86,13 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 			// start view
 			load: dcl.superCall(function (sup) {
 				return function () {
+					var _controller = null;
 					var tplDef = new Deferred();
 					var defDef = sup.call(this);
 					var nlsDef = nls(this);
 					// when parentView loading is done (controller), proceed with template
-					defDef.then(function () {
+					defDef.then(function (controller) {
+						_controller = controller;
 						when(nlsDef, function (nls) {
 							// we inherit from the parentView NLS
 							this.nls = {};
@@ -101,8 +103,8 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 								// make sure template can access nls doing {{nls.myprop}}
 								dcl.mix(this.nls, nls);
 							}
-							when(this._loadTemplate(), function (value) {
-								tplDef.resolve(value);
+							when(this._loadTemplate(), function () {
+								tplDef.resolve(_controller);
 							});
 						}.bind(this));
 					}.bind(this));
@@ -112,13 +114,11 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 
 			// in another place it was mentioned that may want to change from startup --> enteredViewCallback.
 			_startup: dcl.superCall(function (sup) {
-				return function () {
+				return function (controller) {
 					// summary:
 					//		startup widgets in view template.
 					// tags:
 					//		private
-					this.attributes.nls = this.nls; // add nls strings to attributes
-					//var self = this;
 					var params = {
 						baseClass: "d-" + this.id,
 						buildRendering: handlebars.compile(this.templateString)
@@ -134,7 +134,20 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 						})
 						*/
 					};
-					dcl.mix(params, this.attributes);
+					var viewAttributes = {};
+					if (controller) {
+						// Here we need to setup the attributes for the view from the properties on the controller.
+						// loop thru controller properties and add to viewAttributes if not private or a function
+						Object.keys(controller).forEach(function (prop) {
+							if (!/^_/.test(prop)) {
+								if (typeof controller[prop] !== "function") {
+									viewAttributes[prop] = this[prop];
+								}
+							}
+						});
+					}
+					viewAttributes.nls = this.nls; // add nls strings to viewAttributes
+					dcl.mix(params, viewAttributes);
 
 					var tag = "dapp-view-" + this.id.toLowerCase();
 					register(tag, [HTMLElement, Widget], params);

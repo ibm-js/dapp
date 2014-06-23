@@ -57,8 +57,8 @@ define([
 				// check the DOM state to see if we are in the expected state
 				assert.isNotNull(viewDataNode3, "root viewDataNode3 must be here");
 				assert.isNotNull(viewDataAppHome1, "viewDataAppHome1 view must be here");
-				assert.deepEqual(viewDataAppHome1View.beforeActivateCallCount, 1,
-					"viewDataAppHome1View.beforeActivateCallCount should be 1");
+				assert.deepEqual(viewDataAppHome1View._beforeActivateCallCount, 1,
+					"viewDataAppHome1View._beforeActivateCallCount should be 1");
 
 				checkNodeVisibility(viewDataNode3, viewDataAppHome1);
 
@@ -137,10 +137,10 @@ define([
 
 	function checkActivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view.beforeActivateCallCount, count,
-				view.id + " beforeActivateCallCount should be " + count);
-			assert.deepEqual(view.afterActivateCallCount, count,
-				view.id + " afterActivateCallCount should be " + count);
+			assert.deepEqual(view._beforeActivateCallCount, count,
+				view.id + " _beforeActivateCallCount should be " + count);
+			assert.deepEqual(view._afterActivateCallCount, count,
+				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for selectedChildren being set correctly with constraint view.parentNode.id
 			var selectedChildId = testApp.selectedChildren[view.parentNode.id].id;
@@ -154,10 +154,10 @@ define([
 
 	function checkDeactivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view.beforeDeactivateCallCount, count,
-				view.id + " beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view.afterDeactivateCallCount, count,
-				view.id + " afterDeactivateCallCount should be " + count);
+			assert.deepEqual(view._beforeDeactivateCallCount, count,
+				view.id + " _beforeDeactivateCallCount should be " + count);
+			assert.deepEqual(view._afterDeactivateCallCount, count,
+				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false
 			assert.isFalse(view._active, "view_active should be false for " + view.id);

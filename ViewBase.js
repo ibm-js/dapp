@@ -42,9 +42,9 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/
 					return this;
 				}
 				this._startDef = new Deferred();
-				when(this.load(), function () {
+				when(this.load(), function (controller) {
 					this._createDataStores();
-					this._startup();
+					this._startup(controller);
 				}.bind(this));
 				return this._startDef;
 			},
@@ -54,6 +54,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/
 				when(vcDef, function (controller) {
 					if (controller) {
 						dcl.mix(this, controller);
+						return controller;
 					}
 				}.bind(this));
 				return vcDef;

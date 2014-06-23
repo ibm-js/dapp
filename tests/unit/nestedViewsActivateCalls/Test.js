@@ -69,8 +69,8 @@ define([
 				// check the DOM state to see if we are in the expected state
 				assert.isNotNull(nestedViewsActivateCallsNode1, "root nestedViewsActivateCallsNode1 must be here");
 				assert.isNotNull(nestedViewsActivateCallsApp1P1, "nestedViewsActivateCallsApp1Home1 view must exist");
-				assert.deepEqual(nestedViewsActivateCallsApp1P1View.beforeActivateCallCount, 1,
-					"nestedViewsActivateCallsApp1P1View.beforeActivateCallCount should be 1");
+				assert.deepEqual(nestedViewsActivateCallsApp1P1View._beforeActivateCallCount, 1,
+					"nestedViewsActivateCallsApp1P1View._beforeActivateCallCount should be 1");
 
 				checkNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1P1);
 				setTimeout(function () { // try timeout to wait for afterAcivate...
@@ -237,10 +237,10 @@ define([
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view.beforeActivateCallCount, count,
-				view.id + " beforeActivateCallCount should be " + count);
-			assert.deepEqual(view.afterActivateCallCount, count,
-				view.id + " afterActivateCallCount should be " + count);
+			assert.deepEqual(view._beforeActivateCallCount, count,
+				view.id + " _beforeActivateCallCount should be " + count);
+			assert.deepEqual(view._afterActivateCallCount, count,
+				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to true
 			if (!skipActiveCheck) {
@@ -251,10 +251,10 @@ define([
 
 	function checkDeactivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view.beforeDeactivateCallCount, count,
-				view.id + " beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view.afterDeactivateCallCount, count,
-				view.id + " afterDeactivateCallCount should be " + count);
+			assert.deepEqual(view._beforeDeactivateCallCount, count,
+				view.id + " _beforeDeactivateCallCount should be " + count);
+			assert.deepEqual(view._afterDeactivateCallCount, count,
+				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false
 			if (!skipActiveCheck) {
