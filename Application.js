@@ -1,8 +1,10 @@
-define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
-		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/on", "dojo/domReady",
-		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config"
+define(["require", "dcl/dcl", "delite/Stateful",
+		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/on",
+		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config",
+		"dojo/domReady" // unit tests fail if I do not pull in dojo/domReady even though only using
+		// requirejs-domready/domReady!
 	],
-	function (require, dcl, lang, Stateful, Evented, Deferred, when, has, on, domReady,
+	function (require, dcl, Stateful, Evented, Deferred, when, on,
 		nls, hash, viewUtils, configUtils) {
 
 		var Application = dcl([Evented, Stateful], {
@@ -219,7 +221,7 @@ define(["require", "dcl/dcl", "dojo/_base/lang", "delite/Stateful",
 				/*global App:true */
 				App = dcl(modules, ext);
 
-				domReady(function () {
+				require(["requirejs-domready/domReady!"], function () {
 					var app = new App(config, node || document.body);
 					app.status = app.lifecycle.STARTING;
 					// Create global namespace for application.

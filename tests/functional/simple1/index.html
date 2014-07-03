@@ -34,15 +34,16 @@
 							{ name: "deliteful", location : "../../../../deliteful"},
 							{ name: "requirejs", location : "../../../../requirejs"},
 							{ name: "requirejs-text", location : "../../../../requirejs-text"},
-							{ name: "requirejs-dplugins", location : "../../../../requirejs-dplugins"}
+							{ name: "requirejs-dplugins", location : "../../../../requirejs-dplugins"},
+							{ name: "requirejs-domready", location : "../../../../requirejs-domready"}
 						],
 
-				    waitSeconds: 15
+				    waitSeconds: 20
 				  });
 	        </script>
 		<!-- -->
 		<script>
-			require(["./App1", "dojo/domReady!"], function(){
+			require(["./App1", "requirejs-domready/domReady!"], function(){
 				// Set global variable to signal that the test page is ready
 				console.log("in index.html inside dom ready");
 			//	ready = true; // moved ready = true into App1.js after the appDeferred is resolved.

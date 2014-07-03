@@ -5,8 +5,6 @@ env:
   global:
     - secure: "HWuk1WhaQDUqDU26FoTs6mouG88LM5LgfS+5rPkHmMBqN00nMwscBlLK0oSmjVAgSsWcz9CA/vyD+L8alRnvsDbZOadI864IBdVOSFVeKF2yG2+Wb8P39lUUlqUveOhvBZ5m0P1EXhfAGGP9JdCGhfVdYPbbs9UYFa9QjmXX+8E="
     - secure: "D6xNCeM9X6e36Xsaz0LCTgKv7ZUyL6yM8p/RKCS4qF5Hfkn96BdzNYKYziZUw1sPbkh84LcfvpBg8Y3p7886/RjCiFvL2AcleyrXBH0IfmILNl+mEbileEougMRi1oJMCy7T3SmokeWVJO/SuFoRXyi+Xzxg3hcwHG5XQ3F6Zns="
-  	- secure: "JU+2ISUR6RtpsPTm6kZPYhrfIRHq025tqptkV/SE4ef9taQI2nX6yN+nkRz01XsOJ3GLj9NTRmijaRka6YHp7I78/Y+fuf9d4YafwkyM42mnyI3FlXmOsFv59v7NtHNyIKqwKTfxwNl0LVI+Mdoer+XmGGWjZ07Pv0Vz7D+uKPY="
-  	- secure: "dJlovCtGaj16zOKgCAF13EF3DnMyzqCuvGMXDA17IzOyG3bP6iTzOUMbXc7T2zkEP9DTCAUesg5ulhVt9BM2hC18cg5z8cgbomvsV1SdXvSngb5qgdaK4BTztC9iw01wH3i+D9hpxTIygVOpaEX+gnXr2MJn4ON9P8SZLZWhvuU="
 install:
    - npm install -g grunt-cli
    - npm -g install bower
