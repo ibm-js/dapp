@@ -6,28 +6,16 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 		_beforeDeactivateCallCount: 0,
 		_afterActivateCallCount: 0,
 		_afterDeactivateCallCount: 0,
-		constructor: function (params) { // jshint unused:false
-			//TODO: why is this not being hit?
-			//console.log("app-view:", " in [" + this.viewName + "] constructor called for [" + this.id + "]");
-			var tempName = "";
-			if (this.id === "viewDataApp1Home2") {
-				setTimeout(function () {
-					for (var i = 0; i < 500; i++) {
-						tempName = this.id + i;
-					}
-				}, 500);
-			}
-		},
 		init: function () {
 			this.domNode.name = this.id;
 			// attempt to slow down the creation of this widget to see if Home3 would be placed before it
-			if (this.id === "viewDataApp1Home2") {
+			if (this.id === "viewDataAndParamsApp1Home2") {
 				setTimeout(function () {
 					for (var i = 0; i < 500; i++) {
 						tempName = this.id + i;
 					}
 				}, 500);
-				//	viewDataApp.showOrHideViews('simp1Home3', {});
+				//	viewDataAndParamsApp.showOrHideViews('simp1Home3', {});
 			}
 		},
 		beforeActivate: function (previousView, viewData) {

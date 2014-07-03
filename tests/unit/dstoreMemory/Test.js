@@ -144,7 +144,9 @@ define([
 			});
 			var label = dstoreMemorylist1Elements[0].innerHTML || "";
 			testApp.showOrHideViews("dstoreMemoryAppHome2", {
-				viewData: label,
+				viewData: {
+					label: label
+				},
 				displayDeferred: displayDeferred
 			});
 		},
@@ -188,7 +190,9 @@ define([
 			});
 			var label = dstoreMemorylist2Elements[4].innerHTML || "";
 			testApp.showOrHideViews("dstoreMemoryAppHome1", {
-				viewData: label,
+				viewData: {
+					label: label
+				},
 				displayDeferred: displayDeferred
 			});
 		},

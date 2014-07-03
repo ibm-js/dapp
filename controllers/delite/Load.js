@@ -60,15 +60,16 @@ define(
 
 				this._handleOnBeforeAndAfterShowHide(event);
 
-				var params = event.params || "";
+				var viewParams = viewUtils.getParamsForView(this.app, event);
 
 				if (view) {
-					// set params to new value before returning
-					view.params = params || null;
+					// set viewParams to new value before returning
+					view.viewParams = viewParams || null;
 					resolveView(event, view, event.dapp.parentView);
 				} else {
-					this._createView(event, viewId, event.dest, params, event.dapp.parentView, event.dapp.parentNode,
-						event.dapp.isParent, event.dapp.parentView.views[event.dest].type, event.dapp.viewPath);
+					this._createView(event, viewId, event.dest, viewParams, event.dapp.parentView,
+						event.dapp.parentNode, event.dapp.isParent, event.dapp.parentView.views[event.dest].type,
+						event.dapp.viewPath);
 				}
 			},
 
@@ -149,10 +150,7 @@ define(
 
 						var firstChildView = appView.children[firstChildId];
 
-						var nextSubViewArray = [firstChildView || appView];
-						if (subIds) {
-							nextSubViewArray = self._getNextSubViewArray(subIds, firstChildView, appView);
-						}
+						var nextSubViewArray = self._getNextSubViewArray(subIds, firstChildView, appView);
 
 						// Need to use viewUtils.getSelectedChild instead of event.target._visibleChild
 						// because in a nested case where isParent is true we replace the event.target._visibleChild
@@ -247,7 +245,7 @@ define(
 
 			},
 
-			_createView: function (event, id, viewName, params, parentView, parentNode, isParent, type, viewPath) {
+			_createView: function (event, id, viewName, viewParams, parentView, parentNode, isParent, type, viewPath) {
 				var app = this.app;
 				require([type ? type : "../../View"], function (View) {
 					var params = {
@@ -257,11 +255,9 @@ define(
 						"parentView": parentView,
 						"parentNode": parentNode,
 						"isParent": isParent,
-						"viewPath": viewPath
+						"viewPath": viewPath,
+						"viewParams": viewParams
 					};
-					dcl.mix(params, {
-						"params": params
-					});
 					new View(params).start().then(function (newView) {
 						parentView.children[id] = newView;
 						event.dapp.parentView = parentView;
@@ -280,7 +276,8 @@ define(
 				for (var i = subs.length - 1; i >= 0; i--) {
 					var v = subs[i];
 					if (v && v.beforeDeactivate && v._active) {
-						v.beforeDeactivate(next, data);
+						var vdata = viewUtils.getDataForView(this.app, v.id, v.parentView, data);
+						v.beforeDeactivate(next, vdata);
 					}
 				}
 			},
@@ -300,7 +297,9 @@ define(
 						v.init();
 					}
 					if (v && v.beforeActivate) {
-						v.beforeActivate(current, data);
+						//setup view data
+						var vdata = viewUtils.getDataForView(this.app, v.id, v.parentView, data);
+						v.beforeActivate(current, vdata);
 					}
 					if (p) {
 						viewUtils.setSelectedChild(p, (v ? v.constraint :
@@ -319,7 +318,8 @@ define(
 						var v = subs[i];
 						if (v && v.afterDeactivate && v._active) {
 							v._active = false;
-							v.afterDeactivate(next, data);
+							var vdata = viewUtils.getDataForView(this.app, v.id, v.parentView, data);
+							v.afterDeactivate(next, vdata);
 						}
 					}
 				}
@@ -337,7 +337,8 @@ define(
 					var v = subs[i];
 					if (v.afterActivate) {
 						v._active = true;
-						v.afterActivate(current, data);
+						var vdata = viewUtils.getDataForView(this.app, v.id, v.parentView, data);
+						v.afterActivate(current, vdata);
 					}
 				}
 			},
@@ -357,10 +358,12 @@ define(
 				//		Array of views which will be transitioned to during this transition
 				var parts = [];
 				var p = firstChildView || parentView;
+				var nextSubViewArray = [p];
 				if (subIds) {
 					parts = subIds.split(",");
+				} else {
+					return nextSubViewArray;
 				}
-				var nextSubViewArray = [p];
 				var prevViewId = firstChildView.id;
 				//now we need to loop forwards thru subIds calling beforeActivate
 				for (var i = 0; i < parts.length; i++) {

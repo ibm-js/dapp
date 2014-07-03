@@ -33,7 +33,7 @@ define(["require", "dcl/dcl", "delite/Stateful",
 				});
 			},
 
-			showOrHideViews: function (viewPath, params) {
+			showOrHideViews: function (viewPath, viewParams) {
 				// summary:
 				//		A convenience function to fire the dapp-display event to transition to a view,
 				// 		or a set of views.
@@ -41,15 +41,15 @@ define(["require", "dcl/dcl", "delite/Stateful",
 				// viewPath:
 				//		The viewPath to use as the dest for the event, it can be multiple views separated by "+" or
 				//		"-" to hide a view, or it can be a nested view with parent,child for example "H1+P1,S1,V1+F1"
-				// params:
-				//		Contains the params for the event which can include transition and direction.
+				// viewParams:
+				//		Contains the viewParams for the event which can include transition and direction.
 				var opts = {
 					bubbles: true,
 					cancelable: true,
 					dest: viewPath
 				};
 				dcl.mix(opts,
-					params ? params : {
+					viewParams ? viewParams : {
 						transition: "slide",
 						direction: "end"
 					});
@@ -105,7 +105,7 @@ define(["require", "dcl/dcl", "delite/Stateful",
 
 				var currentHash = window.location.hash;
 				this._startView = hash.getTarget(currentHash, this.defaultView);
-				this._startParams = hash.getParams(currentHash);
+				this._startParams = hash.getViewParams(currentHash);
 			},
 
 			startup: function () {

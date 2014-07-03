@@ -1,4 +1,4 @@
-define(function () {
+define(["dcl/dcl"], function (dcl) {
 	var constraints = [];
 
 	function getViewDefFromDest(app, viewPath) {
@@ -374,6 +374,77 @@ define(function () {
 				return view;
 			}
 			return null;
+		},
+
+		getParamsForView: function (app, event) {
+			// summary:
+			//		Get view's params only include view specific params if they are for this view.
+			//
+			// app: Application
+			//		the Application
+			// event: Object
+			//		the event for the transition
+			//
+			// returns:
+			//		params Object for this view
+			var viewId = event.dapp.id || this.getViewIdFromEvent(app, event);
+			var parentView = event.dapp.parentView;
+			var params = event.viewParams || "";
+			var retParams = {};
+			if (parentView && parentView !== app && parentView.viewParams) {
+				dcl.mix(retParams, parentView.viewParams);
+			}
+			if (!params || !params.views && !retParams) { // do not modify params unless it has views specified
+				return params;
+			}
+
+			var viewParams = this.getDataForView(app, viewId, parentView, params);
+			dcl.mix(retParams, viewParams);
+			return retParams;
+		},
+
+		getDataForView: function (app, viewId, parentView, data) {
+			// summary:
+			//		Get view's data only include view specific data if they are for this view.
+			//
+			// app: Application
+			//		the Application
+			// viewId: String
+			//		the view's id
+			// data: Object
+			//		the data object which can contain views with view specific data
+			//
+			// returns:
+			//		data Object for this view
+			var retData = {};
+			if (!data || !data.views) { // do not modify data unless it has views specified
+				return data;
+			}
+
+			if (data) {
+				if (data.views) {
+					for (var item in data) {
+						if (item !== "views") { // it is for specific views
+							var value = data[item];
+							// need to add these data for the view
+							retData[item] = value;
+						} else {
+							for (var item2 in data.views) {
+								var value2 = data.views[item2];
+								var testId = viewId.replace(/_/g, ",");
+								if (item2 === testId) { // it is for this view
+									// need to add these data for the view
+									dcl.mix(retData, value2);
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					dcl.mix(retData, data);
+				}
+			}
+			return retData;
 		},
 
 		register: function (constraint) {

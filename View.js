@@ -5,7 +5,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 		return dcl([ViewBase, Widget], {
 			// summary:
 			//		View class inheriting from ViewBase adding templating & globalization capabilities.
-			constructor: function (params) { // jshint unused:false
+			constructor: function (viewParams) { // jshint unused:false
 				// summary:
 				//		Constructs a View instance either from a configuration or programmatically.
 				//
@@ -41,7 +41,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 				//		|	});
 				//		|	viewObj.start(); // start view
 				//
-				// params:
+				// viewParams:
 				//		view parameters, include:
 				//
 				//		- app: the app
@@ -117,7 +117,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 					//		startup widgets in view template.
 					// tags:
 					//		private
-					var params = {
+					var viewParams = {
 						baseClass: "d-" + this.id,
 						buildRendering: handlebars.compile(this.templateString)
 						/* leaving this in case it is helpful to debug things later
@@ -145,10 +145,10 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 						});
 					}
 					viewAttributes.nls = this.nls; // add nls strings to viewAttributes
-					dcl.mix(params, viewAttributes);
+					dcl.mix(viewParams, viewAttributes);
 
 					var tag = "dapp-view-" + this.id.toLowerCase();
-					register(tag, [HTMLElement, Widget], params);
+					register(tag, [HTMLElement, Widget], viewParams);
 
 					this.domNode = register.createElement(tag);
 					this.own(this.domNode);

@@ -4,10 +4,10 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
 			attributes: {},
-			constructor: function (params) {
+			constructor: function (viewParams) {
 				// summary:
 				//		Constructs a ViewBase instance.
-				// params:
+				// viewParams:
 				//		view parameters, include:
 				//
 				//		- app: the app
@@ -25,7 +25,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/
 
 				// private
 				this._started = false;
-				dcl.mix(this, params);
+				dcl.mix(this, viewParams);
 				var p = this.parentView;
 				// mixin views configuration to current view instance.
 				if (p && p.views) {

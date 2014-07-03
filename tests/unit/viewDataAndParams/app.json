@@ -1,0 +1,69 @@
+{
+	"id": "viewDataAndParamsApp",
+	"name": "viewDataAndParamsApp",
+	"loaderConfig": {
+		"paths": {
+			"viewDataAndParamsApp": "./dapp/tests/unit/viewDataAndParams"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack"
+	],
+
+
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	"parseOnLoad": true,
+
+	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
+	"defaultView": "viewDataAndParamsAppHome1",
+	"views": {
+		"viewDataAndParamsAppHome1": {
+			"parentSelector": "#viewDataAndParamsAppdviewStack",
+			"controller": "viewDataAndParamsApp/viewController1.js",
+			"template": "viewDataAndParamsApp/viewTemplate.html"
+		},
+		"viewDataAndParamsAppHome2": {
+			"parentSelector": "#viewDataAndParamsAppdviewStack",
+			"controller": "viewDataAndParamsApp/viewController1.js",
+			"template": "viewDataAndParamsApp/viewTemplate.html"
+		},
+		"viewDataAndParamsAppHome3": {
+			"parentSelector": "#viewDataAndParamsAppdviewStack",
+			"controller": "viewDataAndParamsApp/viewController1.js",
+			"template": "viewDataAndParamsApp/viewTemplate.html"
+		},
+		"parentV1": {
+			"parentSelector": "#viewDataAndParamsAppdviewStack",
+			"controller": "viewDataAndParamsApp/parentController1.js",
+			"template": "viewDataAndParamsApp/ParentTemplate.html",
+			"defaultView": "s1",
+			"views": {
+				"s1": {
+					"controller": "viewDataAndParamsApp/viewController1.js",
+					"template": "viewDataAndParamsApp/viewTemplate.html"
+				},
+				"s2": {
+					"controller": "viewDataAndParamsApp/viewController1.js",
+					"template": "viewDataAndParamsApp/viewTemplate.html"
+				}
+			}
+		}
+
+	}
+}

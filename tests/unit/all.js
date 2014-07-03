@@ -4,7 +4,7 @@ define([
 	"./appStatus/Test",
 	"./transitionVisibility/Test",
 	"./nlsLabels/Test",
-	"./viewData/Test",
+	"./viewDataAndParams/Test",
 	"./hideView/Test",
 	"./nestedViewsActivateCalls/Test",
 	"./multipleAndNestedViewsActivateCalls/Test",

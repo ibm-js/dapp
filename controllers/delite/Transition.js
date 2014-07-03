@@ -54,6 +54,7 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 					reverse: event.reverse,
 					transition: event.transition,
 					displayDeferred: event.displayDeferred,
+					viewParams: event.viewParams,
 					dapp: {}
 				});
 			},

@@ -8,11 +8,6 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 			_beforeDeactivateCallCount: 0,
 			_afterActivateCallCount: 0,
 			_afterDeactivateCallCount: 0,
-			constructor: function (params) { // jshint unused:false
-				//TODO: why is this not being hit?
-				//console.log("app-view:", " in [" + this.viewName + "] constructor called for [" + this.id + "]");
-				var tempName = "";
-			},
 			init: function () {
 				this.domNode.name = this.id;
 				var list = this.domNode.ownerDocument.getElementById("list2");
@@ -43,7 +38,7 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 				//console.log("app-view:", "beforeActivate called for [" + this.viewName +
 				// "] with previousView.id =[" + (previousView ? previousView.id : "") + "] with viewData=", viewData);
 				this._beforeActivateCallCount++;
-				this.domNode.lastSelection = viewData || "";
+				this.domNode.lastSelection = viewData ? viewData.label : "";
 			},
 			beforeDeactivate: function (nextView, viewData) {
 				//console.log("app-view:", "beforeDeactivate called for [" + this.viewName +
