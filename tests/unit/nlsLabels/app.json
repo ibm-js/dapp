@@ -30,7 +30,7 @@
 	"parseOnLoad": true,
 	"nls": "nlsLabelsApp/nls/app",
 
-	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
 	"defaultView": "nlsLabelsAppHome1",
 	"views": {
 		"nlsLabelsAppHome1": {

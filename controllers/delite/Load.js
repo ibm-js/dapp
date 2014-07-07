@@ -37,10 +37,8 @@ define(
 				if (!event.dapp || !event.dapp.parentView) {
 					//This must be a direct call from .show or .hide, need to setup event.dapp with parentView etc.
 					event.dapp = this._setupEventDapp(event);
-					if (event.dapp.callTransition) {
-						this._handleShowFromDispContainer(event, event.dapp.dest);
-						return;
-					}
+					this._handleShowFromDispContainer(event, event.dapp.dest);
+					return;
 				}
 
 				var viewId = event.dapp.parentView !== this.app ?
@@ -87,33 +85,13 @@ define(
 				dest = viewId.replace(/_/g, ",");
 				event.dapp = {};
 
-				// if dest without defaults added is already nested call _handleShowFromDispContainer
-				if (dest.indexOf("+") >= 0 || dest.indexOf("-") >= 0 || dest.indexOf(",") >= 0) {
-					if (event.hide) {
-						dest = "-" + dest;
-					}
-					event.dapp.callTransition = true;
-					event.dapp.dest = dest;
-					return event.dapp;
-				}
-				//	var viewPaths = this.app._getViewPaths(dest);
-				var viewPaths = viewUtils._getViewPaths(this.app, dest);
-				event.dest = viewPaths[0].dest;
+				// Note at one point this code would not set callTransition = true for a single view but in that
+				// case the history controller would not be notified of the transition, so it was changed to always
+				// call Transition so the flag is no longer needed.
 				if (event.hide) {
 					dest = "-" + dest;
 				}
-				// if viewPaths have multiple parts or dest and defaults is nested call _handleShowFromDispContainer
-				if (viewPaths.length > 1 || event.dest.indexOf(",") >= 0) {
-					event.dapp.callTransition = true;
-					event.dapp.dest = dest;
-					//	this._handleShowFromDispContainer(event, dest);
-					return event.dapp;
-				}
-				// Can process this direct call to .show or .hide since it is not multipart or nested
-				event.dapp.parentNode = event.target;
-				event.dapp.viewPath = viewPaths[0]; // viewPaths[0]
-				event.dapp.parentView = viewUtils.getParentViewFromViewName(this.app, event.dest, event.target);
-				event.dapp.isParent = false;
+				event.dapp.dest = dest;
 				return event.dapp;
 			},
 

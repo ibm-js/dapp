@@ -29,7 +29,7 @@
 
 	"parseOnLoad": true,
 
-	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
 	"defaultView": "hideViewApp3Home1",
 	"views": {
 		"hideViewApp3Home1": {

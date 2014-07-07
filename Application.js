@@ -33,7 +33,7 @@ define(["require", "dcl/dcl", "delite/Stateful",
 				});
 			},
 
-			showOrHideViews: function (viewPath, viewParams) {
+			showOrHideViews: function (viewPath, viewParams, hash) {
 				// summary:
 				//		A convenience function to fire the dapp-display event to transition to a view,
 				// 		or a set of views.
@@ -46,7 +46,8 @@ define(["require", "dcl/dcl", "delite/Stateful",
 				var opts = {
 					bubbles: true,
 					cancelable: true,
-					dest: viewPath
+					dest: viewPath,
+					hash: hash
 				};
 				dcl.mix(opts,
 					viewParams ? viewParams : {

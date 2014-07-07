@@ -27,6 +27,7 @@
 
 	"parseOnLoad": true,
 
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
 	"defaultView": "H1Cons+contentCons,P1",
 	"views": {
 		"H1Cons": {

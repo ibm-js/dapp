@@ -1,5 +1,5 @@
-define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Controller", "../../utils/view"],
-	function (dcl, when, Deferred, all, Controller, viewUtils) {
+define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "dojo/on", "../../Controller", "../../utils/view"],
+	function (dcl, when, Deferred, all, on, Controller, viewUtils) {
 
 		// summary:
 		//		A Transition controller to listen for "dapp-display" events and drive the transitions for those
@@ -48,12 +48,15 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 				// event: Object
 				//		"app-transition" event parameter. It should include dest, like: {"dest": viewId}
 				var dest = event.dest;
+				var hash = event.hash;
 				this._handleMultipleViewParts({
 					dest: dest,
+					hash: hash,
 					viewData: event.viewData,
 					reverse: event.reverse,
 					transition: event.transition,
 					displayDeferred: event.displayDeferred,
+					doingPopState: event.doingPopState,
 					viewParams: event.viewParams,
 					dapp: {}
 				});
@@ -111,6 +114,14 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 					}
 					// check for all defs being complete here, and resolve displayDeferred when all are resolved
 					all(defs).then(function (value) {
+						//	event.detail = {
+						//		"dest": event.dest,
+						//		"hash": event.hash,
+						//		"viewData": event.viewData,
+						//		"viewParams": event.viewParams,
+						//		"transition": event.transition
+						//	};
+						on.emit(document, "dapp-finished-transition", event);
 						if (event.displayDeferred) {
 							event.displayDeferred.resolve(value);
 						}

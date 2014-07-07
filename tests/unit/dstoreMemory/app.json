@@ -43,6 +43,7 @@
 		"logTimeStamp": 0
 	},
 
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
 	"defaultView": "dstoreMemoryAppHome1",
 	"views": {
 		"dstoreMemoryAppHome1": {

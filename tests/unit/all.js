@@ -10,5 +10,6 @@ define([
 	"./multipleAndNestedViewsActivateCalls/Test",
 	"./multipleAndNestedViewsActivateCalls/TestConstraints",
 	"./sidePaneViewsActivateCalls/Test",
+	"./historyController/Test",
 	"./dstoreMemory/Test"
 ]);

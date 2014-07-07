@@ -27,6 +27,7 @@
 	},
 
 	//TODO: There is a problem with using duplicate view names across tests, getting duplicate view error!!!
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
 	"defaultView": "appStatusApp1Home1+appStatusApp1Home2+appStatusApp1Home3NoController",
 	"views": {
 		"appStatusApp1Home1": {

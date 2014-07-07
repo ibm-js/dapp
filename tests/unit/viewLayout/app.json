@@ -13,7 +13,8 @@
 		"dapp/controllers/delite/Init",
 		"dapp/controllers/Logger",
 		"dapp/controllers/delite/Load",
-		"dapp/controllers/delite/Transition"
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/History"
 	],
 
 	"dependencies": [
@@ -26,6 +27,7 @@
 		"logAll": 0
 	},
 
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
 	"defaultView": "viewLayoutAppHome1+viewLayoutAppHome2+viewLayoutAppHome3NoController",
 	"views": {
 		"viewLayoutAppHome1": {

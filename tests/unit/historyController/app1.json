@@ -1,0 +1,95 @@
+{
+	"id": "historyControllerApp1",
+	"name": "historyControllerApp1",
+	"loaderConfig": {
+		"paths": {
+			"historyControllerApp1": "./dapp/tests/unit/historyController"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/History"
+	],
+
+	"dependencies": [
+		"deliteful/LinearLayout",
+		"deliteful/ViewStack",
+		"deliteful/SidePane"
+	],
+
+	"appLogging": {
+		"logAll": 0
+	},
+
+	"parseOnLoad": true,
+
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
+	"defaultView": "hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1",
+	"views": {
+		"hc1header1": {
+			"parentSelector": "#hc1headerViewStack",
+			"controller": "historyControllerApp1/headerController1.js",
+			"template": "historyControllerApp1/headerTemplate1.html"
+		},
+		"hc1leftParent": {
+			"parentSelector": "#hc1leftPane",
+			"controller": "historyControllerApp1/parentController1.js",
+			"template": "historyControllerApp1/leftSubParentTemplate.html",
+			"defaultView": "left1",
+			"views": {
+				"hc1left1": {
+					"parentSelector": "#hc1leftViewStack",
+					"controller": "historyControllerApp1/leftController1.js",
+					"template": "historyControllerApp1/leftTemplate1.html"
+				},
+				"hc1left2": {
+					"parentSelector": "#hc1leftViewStack",
+					"controller": "historyControllerApp1/leftController1.js",
+					"template": "historyControllerApp1/leftTemplate1.html"
+				}
+			}
+		},
+		"hc1centerParent": {
+			"loadViewsInOrder": true,
+			"parentSelector": "#hc1centerLinearLayout",
+			"controller": "historyControllerApp1/parentController1.js",
+			"template": "historyControllerApp1/subParentTemplate.html"
+		},
+		"hc1center1": {
+			"parentSelector": "#hc1centerViewStack",
+			"controller": "historyControllerApp1/centerController1.js",
+			"template": "historyControllerApp1/centerTemplate1.html"
+		},
+		"hc1center2": {
+			"parentSelector": "#hc1centerViewStack",
+			"controller": "historyControllerApp1/centerController1.js",
+			"template": "historyControllerApp1/centerTemplate1.html"
+		},
+		"hc1center3": {
+			"parentSelector": "#hc1centerViewStack",
+			"controller": "historyControllerApp1/centerController1.js",
+			"template": "historyControllerApp1/centerTemplate1.html"
+		},
+		"hc1right1": {
+			"parentSelector": "#hc1rightPane",
+			"controller": "historyControllerApp1/rightController1.js",
+			"template": "historyControllerApp1/rightTemplate1.html"
+		},
+		"hc1right2": {
+			"parentSelector": "#hc1rightPane",
+			"controller": "historyControllerApp1/rightController1.js",
+			"template": "historyControllerApp1/rightTemplate1.html"
+		},
+		"hc1footer1": {
+			"parentSelector": "#hc1footerViewStack",
+			"controller": "historyControllerApp1/footerController1.js",
+			"template": "historyControllerApp1/footerTemplate1.html"
+		}
+	}
+}

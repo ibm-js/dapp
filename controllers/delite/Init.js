@@ -109,14 +109,16 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "dojo/_base/lang",
 				// fire the event on the container to load the main view
 				var displayDeferred = new Deferred();
 				// let's display default view
+				var initialView = this.app.alwaysUseDefaultView ? this.app.defaultView : this.app._startView;
+				var initialParams = this.app.alwaysUseDefaultView ? this.app.defaultParams : this.app._startParams;
 				on.emit(document, "dapp-display", {
 					// TODO is that really defaultView a good name? Shouldn't it be defaultTarget or defaultView_s_?
-					dest: this.app.defaultView,
+					dest: initialView,
+					viewParams: initialParams,
 					displayDeferred: displayDeferred,
 					bubbles: true,
 					cancelable: true
 				});
-				// TODO views in the hash MUST be handled by history controller?
 				if (this.app) {
 					displayDeferred.then(function () {
 						this.app.status = this.app.lifecycle.STARTED;
