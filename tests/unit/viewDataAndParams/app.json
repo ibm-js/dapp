@@ -51,7 +51,7 @@
 		"parentV1": {
 			"parentSelector": "#viewDataAndParamsAppdviewStack",
 			"controller": "viewDataAndParamsApp/parentController1.js",
-			"template": "viewDataAndParamsApp/ParentTemplate.html",
+			"template": "viewDataAndParamsApp/parentTemplate.html",
 			"defaultView": "s1",
 			"views": {
 				"s1": {
