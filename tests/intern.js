@@ -36,7 +36,8 @@ define({
 		port: 4444
 	},
 	loader: {
-		baseUrl: ".."
+		baseUrl: "..",
+		waitSeconds: 15
 	},
 
 	useLoader: {

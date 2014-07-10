@@ -1,4 +1,4 @@
-// jshint unused:false, undef:false, quotmark:false
+// jshint quotmark:false
 define([
 	"intern!object",
 	"intern/chai!assert",
@@ -20,17 +20,25 @@ define([
 	dstoreMemoryconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for dstoreMemorySuite1 transition test
-	var dstoreMemoryContainer1, dstoreMemoryNode1;
+	var dstoreMemoryContainer1,
+		testApp,
+		dstoreMemorylist1Elements,
+		dstoreMemorylist2Elements,
+		dstoreMemoryAppHome1Node,
+		dstoreMemoryAppHome2Node,
+		dstoreMemoryNode1;
+
 	var dstoreMemoryHtmlContent1 =
 		"<d-view-stack id='dstoreMemoryAppdviewStack' style='width: 100%; height: 100%;'>" +
 		"</d-view-stack>";
+
 
 	win.global.dstoreMemoryApp = {};
 	win.global.dstoreMemoryApp.list1Data = {
 		identifier: "id",
 		'items': []
 	};
-	for (i = 1; i < 6; i++) {
+	for (var i = 1; i < 6; i++) {
 		win.global.dstoreMemoryApp.list1Data.items.push({
 			label: "Selection " + i,
 			id: i
@@ -52,24 +60,14 @@ define([
 	var dstoreMemorySuite1 = {
 		name: "dstoreMemorySuite1: test app transitions",
 		setup: function () {
-			appName = "dstoreMemoryApp1"; // this is from the config
 			dstoreMemoryContainer1 = document.createElement("div");
 			document.body.appendChild(dstoreMemoryContainer1);
 			dstoreMemoryContainer1.innerHTML = dstoreMemoryHtmlContent1;
 			//	register.parse(dstoreMemoryContainer1); // no need to call parse here config has "parseOnLoad": true
-			dstoreMemoryNode1 = null;
-			testApp = null;
-			dstoreMemorylist1Elements = null;
-			dstoreMemorylist2Elements = null;
-			dstoreMemoryAppHome1Node = null;
-			dstoreMemoryAppHome2Node = null;
-			dstoreMemoryApp1S1View = null;
-			dstoreMemoryApp1V1View = null;
-			dstoreMemoryApp1V7View = null;
-
 		},
 		"test initial view": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
+			var d = new Deferred();
 
 			var appStartedDef1 = new Application(json.parse(stripComments(dstoreMemoryconfig1)),
 				dstoreMemoryContainer1);
@@ -108,9 +106,10 @@ define([
 
 		// Currently showing dstoreMemoryAppHome1 test transition to dstoreMemoryAppHome2
 		"testApp.showOrHideViews('dstoreMemoryAppHome2')": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
+			var d = new Deferred();
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function (complete) {
+			displayDeferred.then(function () {
 				var dstoreMemoryList2 = document.getElementById("list2");
 				var dstoreMemoryAppHome2 = document.getElementById("dstoreMemoryAppHome2");
 				var header = dstoreMemoryAppHome2.getElementsByTagName("h2");
@@ -149,14 +148,23 @@ define([
 				},
 				displayDeferred: displayDeferred
 			});
+			return d;
 		},
 
 
 		// Currently showing dstoreMemoryAppHome2 test transition to dstoreMemoryAppHome1
 		"testApp.showOrHideViews('dstoreMemoryAppHome1')": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
+			var d = new Deferred();
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function (complete) {
+			var label = dstoreMemorylist2Elements[4].innerHTML || "";
+			testApp.showOrHideViews("dstoreMemoryAppHome1", {
+				viewData: {
+					label: label
+				},
+				displayDeferred: displayDeferred
+			});
+			displayDeferred.then(function () {
 				var dstoreMemoryList1 = document.getElementById("list2");
 				var dstoreMemoryAppHome1 = document.getElementById("dstoreMemoryAppHome1");
 				var header = dstoreMemoryAppHome1.getElementsByTagName("h2");
@@ -188,13 +196,7 @@ define([
 					d.resolve();
 				}, 10);
 			});
-			var label = dstoreMemorylist2Elements[4].innerHTML || "";
-			testApp.showOrHideViews("dstoreMemoryAppHome1", {
-				viewData: {
-					label: label
-				},
-				displayDeferred: displayDeferred
-			});
+			return d;
 		},
 		teardown: function () {
 			// call unloadApp to cleanup and end the test
@@ -211,15 +213,6 @@ define([
 				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
 					(vs.children[i] !== target && vs.children[i].style.display === "none")),
 				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
-		}
-	}
-
-	function checkNestedNodeVisibility(vs, target) {
-		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				(target.style.display !== "none"),
-				"checkNestedNodeVisibility FAILED for target.id=" + (target ? target.id : "")
 			);
 		}
 	}

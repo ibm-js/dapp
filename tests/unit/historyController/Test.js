@@ -57,8 +57,7 @@ define([
 
 		},
 		"historyController test initial view": function () {
-			//	var d = this.async(10000);
-			this.timeout = 10000;
+			this.timeout = 20000;
 			return new Application(json.parse(stripComments(historyControllerconfig1)),
 				historyControllerContainer1).then(function (app) {
 				// we are ready to test
@@ -98,7 +97,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1 test
 		// showOrHideViews('hc1center2'
 		"show hc1center2 with testApp.showOrHideViews('hc1center2')": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			testApp.showOrHideViews('hc1center2', {
 				displayDeferred: displayDeferred
@@ -117,7 +116,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1 test
 		// showOrHideViews('hc1center3' with viewParams for hclcenter3
 		"show hc1center3 with testApp.showOrHideViews('hc1center3', viewParams for hclcenter3)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				displayDeferred: displayDeferred,
@@ -145,7 +144,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center3+hc1right1+hc1footer1 test
 		// history.back()
 		"test history.back() to get back to hc1center2)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.back();
@@ -163,7 +162,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1 test
 		// history.back()
 		"test history.back() to get back to hc1center1)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.back();
@@ -181,7 +180,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1 test
 		// history.forward()
 		"test history.forward() to get to hc1center2)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.forward();
@@ -218,7 +217,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center3+hc1right1+hc1footer1 test
 		// showOrHideViews('-hc1right1'
 		"Hide hc1right1 with testApp.showOrHideViews('-hc1right1')": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			testApp.showOrHideViews('-hc1right1', {
 				displayDeferred: displayDeferred
@@ -233,7 +232,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1 test
 		// history.back()
 		"test history.back() to get back to hc1right1)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.back();
@@ -252,7 +251,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+(hc1center3&pTestVal1=value1)+hc1right1+hc1footer1 test
 		// history.forward()
 		"test history.forward() to hide hc1right1)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.forward();
@@ -270,7 +269,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1 test
 		// showOrHideViews('leftParent,left1'
 		"show hc1left1 with testApp.showOrHideViews('hc1leftParent,hc1left1')": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var viewParams = {
 				displayDeferred: displayDeferred,
@@ -299,7 +298,7 @@ define([
 		// test showOrHideViews('-hc1leftParent') when I used showOrHideViews('-hc1leftParent-hc1leftParent,left1') it
 		// got a warning because hc1leftParent was not found as the parent of left1
 		"Hide hc1left1 with testApp.showOrHideViews('-hc1leftParent')": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			testApp.showOrHideViews('-hc1leftParent', {
 				displayDeferred: displayDeferred
@@ -316,7 +315,7 @@ define([
 		// Currently showing hc1header1+hc1centerParent+hc1center1+hc1footer1 test
 		// hc1rightPaneElem.show('hc1right2')
 		"show hc1right2 with hc1rightPaneElem.show('hc1right2')": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var hc1rightPaneElem = document.getElementById("hc1rightPane");
 			//Note: at one point calls to .show or .hide did not update the url hash unless the view has a +, - or ,
 			//but that was changed so that the history controller could handle those cases too.
@@ -331,7 +330,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1right2 test
 		// hc1rightPaneElem.hide('hc1right2')
 		"hide hc1right2 with hc1rightPaneElem.hide('hc1right2')": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var hc1rightPaneElem = document.getElementById("hc1rightPane");
 			return hc1rightPaneElem.hide('hc1right2').then(function () {
 				var hc1right2View = viewUtils.getViewFromViewId(testApp, "hc1right2");
@@ -346,7 +345,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1 test
 		// showOrHideViews('leftParent,left2'
 		"show hc1left2 - testApp.showOrHideViews('hc1leftParent,hc1left2' with parent and child params)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				displayDeferred: displayDeferred,
@@ -396,7 +395,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2" test
 		// showOrHideViews('leftParent,left1'
 		"show hc1left1 with testApp.showOrHideViews('hc1leftParent,hc1left1' with hideUrlHash true)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				displayDeferred: displayDeferred,
@@ -436,7 +435,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// history.back()
 		"test history.back() to get back to hc1leftParent,hc1left2)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.back();
@@ -463,7 +462,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// history.forward()
 		"test history.forward() to get back to hc1leftParent,hc1left1 with parent and child params)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.forward();
@@ -488,7 +487,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// showOrHideViews('leftParent,left2' with viewData
 		"show hc1left2 testApp.showOrHideViews('hc1leftParent,hc1left2' with parent and child viewData)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				displayDeferred: displayDeferred,
@@ -526,7 +525,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2" test
 		// showOrHideViews('leftParent,left1'
 		"show hc1left1 with testApp.showOrHideViews('hc1leftParent,hc1left1' with viewData)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				displayDeferred: displayDeferred,
@@ -563,7 +562,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// history.back()
 		"test history.back() to get back to hc1leftParent,hc1left2 with viewData)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.back();
@@ -587,7 +586,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// history.forward()
 		"test history.forward() to get back to hc1leftParent,hc1left1 with viewData)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.forward();
@@ -611,7 +610,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// showOrHideViews('leftParent,left2' with viewData
 		"show hc1left2 with testApp.showOrHideViews('hc1leftParent,hc1left2' hash set)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				hash: "testHash1",
@@ -631,7 +630,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2" test
 		// showOrHideViews('leftParent,left1'
 		"show hc1left1 with testApp.showOrHideViews('hc1leftParent,hc1left1' with hash set)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			var params = {
 				hash: "testHash2",
@@ -657,7 +656,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// history.back()
 		"test history.back() to get back to hc1leftParent,hc1left2 with hash set)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.back();
@@ -674,7 +673,7 @@ define([
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
 		// history.forward()
 		"test history.forward() to get back to hc1leftParent,hc1left1 with hash set)": function () {
-			this.timeout = 10000;
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 			setupOnOnce(displayDeferred);
 			history.forward();

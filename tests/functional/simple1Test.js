@@ -1,4 +1,4 @@
-// jshint unused:false, undef:false, quotmark:false
+// jshint undef:false, quotmark:false
 define([
 	"intern!object",
 	"intern/chai!assert",

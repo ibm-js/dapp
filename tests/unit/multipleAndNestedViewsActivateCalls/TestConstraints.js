@@ -46,14 +46,13 @@ define([
 
 		},
 		"test initial view": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 
 			var appStartedDef1 = new Application(json.parse(stripComments(multipleAndNestedViewsActivateCallsconfig1)),
 				multipleAndNestedViewsActivateCallsContainer1);
-			appStartedDef1.then(function (app) {
+			return appStartedDef1.then(function (app) {
 				// we are ready to test
 				testApp = app;
-				console.log("appStartedDef1.then called ");
 
 				var multipleAndNestedViewsActivateCallsApp1P1 = document.getElementById("contentCons_P1");
 				var multipleAndNestedViewsActivateCallsApp1ContentView =
@@ -69,18 +68,13 @@ define([
 					"root multipleAndNestedViewsActivateCallsNode1 must be here");
 				assert.isNotNull(multipleAndNestedViewsActivateCallsApp1P1,
 					"multipleAndNestedViewsActivateCallsApp1Home1 view must be here");
-
-				setTimeout(function () { // try timeout to wait for afterAcivate...
-					d.resolve();
-				}, 300);
 			});
-			return d;
 		},
 
 		// Currently showing P1_S1_V1 test transition to V7
 		"multipleAndNestedViewsActivateCallsApp1Content.show(V7)": function () {
-			var d = this.async(25000);
-			multipleAndNestedViewsActivateCallsApp1Content.show("V7").then(function () {
+			this.timeout = 20000;
+			return multipleAndNestedViewsActivateCallsApp1Content.show("V7").then(function () {
 				//temp test works on IE but does not help on FF
 				//var displayDeferred = new Deferred();
 				//displayDeferred.then(function () {
@@ -106,8 +100,6 @@ define([
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V1View, 1);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 1);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 1);
-
-				d.resolve();
 			});
 			// temp test works on IE but does not help on FF
 			//testApp.showOrHideViews('content,V7', {
@@ -117,8 +109,8 @@ define([
 
 		// Currently showing V7 test transition to P1_S1_V1
 		"multipleAndNestedViewsActivateCallsApp1Content.show(P1) will show P1,S1,V": function () {
-			var d = this.async(20000);
-			multipleAndNestedViewsActivateCallsApp1Content.show("P1").then(function () {
+			this.timeout = 20000;
+			return multipleAndNestedViewsActivateCallsApp1Content.show("P1").then(function () {
 				var multipleAndNestedViewsActivateCallsApp1V1 = document.getElementById("contentCons_P1_S1_V1");
 				checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					multipleAndNestedViewsActivateCallsApp1V1);
@@ -130,15 +122,13 @@ define([
 
 				// Now multipleAndNestedViewsActivateCallsApp1V1View DeactivateCallCounts should be 1
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V7View, 1);
-
-				d.resolve();
 			});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P1_S1_V2
 		"multipleAndNestedViewsActivateCallsApp1S1View.containerNode.show('V2') will show P1,S1,V2": function () {
-			var d = this.async(10000);
-			multipleAndNestedViewsActivateCallsApp1S1View.containerNode.show('V2').then(function () {
+			this.timeout = 20000;
+			return multipleAndNestedViewsActivateCallsApp1S1View.containerNode.show('V2').then(function () {
 				var multipleAndNestedViewsActivateCallsApp1V2 = document.getElementById("contentCons_P1_S1_V2");
 				checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					multipleAndNestedViewsActivateCallsApp1V2);
@@ -157,16 +147,17 @@ define([
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V1View, 2);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 2, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 2, true);
-
-				d.resolve();
 			});
 		},
 
 		// Currently showing P1_S1_V2 test transition to V7
 		"testApp.showOrHideViews('contentCons,V7')": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function () {
+			testApp.showOrHideViews('contentCons,V7', {
+				displayDeferred: displayDeferred
+			});
+			return displayDeferred.then(function () {
 				var multipleAndNestedViewsActivateCallsApp1V7 = document.getElementById("contentCons_V7");
 
 				checkNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
@@ -187,19 +178,17 @@ define([
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 3);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 3);
-
-				d.resolve();
-			});
-			testApp.showOrHideViews('contentCons,V7', {
-				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
 		"testApp.showOrHideViews('contentCons,P1') will show P1,S1,V1": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function () {
+			testApp.showOrHideViews('contentCons,P1', {
+				displayDeferred: displayDeferred
+			});
+			return displayDeferred.then(function () {
 				var multipleAndNestedViewsActivateCallsApp1V1 = document.getElementById("contentCons_P1_S1_V1");
 				checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					multipleAndNestedViewsActivateCallsApp1V1);
@@ -217,19 +206,13 @@ define([
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 3, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 3, true);
-
-
-				d.resolve();
-			});
-			testApp.showOrHideViews('contentCons,P1', {
-				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
 		"multipleAndNestedViewsActivateCallsApp1Content.show('P2') will show P2,P2S1,P2V1": function () {
-			var d = this.async(10000);
-			multipleAndNestedViewsActivateCallsApp1Content.show('P2').then(function () {
+			this.timeout = 20000;
+			return multipleAndNestedViewsActivateCallsApp1Content.show('P2').then(function () {
 				var multipleAndNestedViewsActivateCallsApp1P2V1 = document.getElementById("contentCons_P2_P2S1_P2V1");
 				checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					multipleAndNestedViewsActivateCallsApp1P2V1);
@@ -251,16 +234,14 @@ define([
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 4, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
-
-				d.resolve();
 			});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
 		"testApp.showOrHideViews('-contentCons') will hide P2,P2S1,P2V1": function () {
-			var d = this.async(10000);
-			document.getElementById("contentCons").parentNode.hide(document.getElementById("contentCons").id).then(
-				function () {
+			this.timeout = 20000;
+			return document.getElementById("contentCons").parentNode.hide(document.getElementById("contentCons").id)
+				.then(function () {
 					var multipleAndNestedViewsActivateCallsApp1P2V2 =
 						document.getElementById("contentCons_P2_P2S1_P2V2");
 					multipleAndNestedViewsActivateCallsApp1P2V2View = viewUtils.getViewFromViewId(testApp,
@@ -288,16 +269,17 @@ define([
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 4, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
-
-					d.resolve();
 				});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V2
 		"testApp.showOrHideViews('contentCons,P2,P2S1,P2V2') will show P2,P2S1,P2V2": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function () {
+			testApp.showOrHideViews('contentCons,P2,P2S1,P2V2', {
+				displayDeferred: displayDeferred
+			});
+			return displayDeferred.then(function () {
 				var multipleAndNestedViewsActivateCallsApp1P2V2 = document.getElementById("contentCons_P2_P2S1_P2V2");
 				checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					multipleAndNestedViewsActivateCallsApp1P2V2);
@@ -319,20 +301,15 @@ define([
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 4, true);
 				checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
-
-				d.resolve();
-			});
-			testApp.showOrHideViews('contentCons,P2,P2S1,P2V2', {
-				displayDeferred: displayDeferred
 			});
 		},
 
 		//TODO: NOTE problem w/ -contentCons,P2!!! it hides P2,P2S1,P2V2
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
 		"testApp.showOrHideViews('-contentCons,P2,P2S1')": function () {
-			var d = this.async(10000);
-			document.getElementById("contentCons_P2_P2S1").parentNode.hide(
-				document.getElementById("contentCons_P2_P2S1").id)
+			this.timeout = 20000;
+			return document.getElementById("contentCons_P2_P2S1").parentNode.hide(
+					document.getElementById("contentCons_P2_P2S1").id)
 				.then(function () {
 					var multipleAndNestedViewsActivateCallsApp1P2V2 =
 						document.getElementById("contentCons_P2_P2S1_P2V2");
@@ -363,8 +340,6 @@ define([
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1S1View, 4, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
-
-					d.resolve();
 				});
 		},
 

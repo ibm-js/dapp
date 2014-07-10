@@ -1,6 +1,6 @@
-// jshint unused:false, undef:false, quotmark:false
-define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Observable"],
-	function (dom, on, register, MemoryStore, Observable) {
+// jshint quotmark:false
+define(["dojo/dom", "dojo/on"],
+	function (dom, on) {
 		return {
 			name: "",
 			lastSelection: "",
@@ -11,6 +11,7 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 			init: function () {
 				this.domNode.name = this.id;
 				var list = this.domNode.ownerDocument.getElementById("list2");
+				var dstoreMemoryApp = this.app;
 
 				// Different options for creating the store, 1. MemoryStore, add data below
 				//list.store = new MemoryStore();
@@ -40,12 +41,12 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 				this._beforeActivateCallCount++;
 				this.domNode.lastSelection = viewData ? viewData.label : "";
 			},
-			beforeDeactivate: function (nextView, viewData) {
+			beforeDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "beforeDeactivate called for [" + this.viewName +
 				//	"] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this._beforeDeactivateCallCount++;
 			},
-			afterActivate: function (previousView, viewData) {
+			afterActivate: function ( /*previousView, viewData*/ ) {
 				//console.log("app-view:", "afterActivate called for [" + this.viewName + "] with previousView.id =[" +
 				//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
 				this._afterActivateCallCount++;
@@ -53,7 +54,7 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 				//		view: this
 				//	});
 			},
-			afterDeactivate: function (nextView, viewData) {
+			afterDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "afterDeactivate called for [" + this.viewName +
 				// "] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this._afterDeactivateCallCount++;

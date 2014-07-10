@@ -1,4 +1,4 @@
-// jshint unused:false, undef:false, quotmark:false
+// jshint quotmark:false
 require(["dojo/_base/window", "dapp/Application", "dojo/json", "requirejs-text/text!./app.json", "dojo/sniff"],
 	function (win, Application, json, config, has) {
 		win.global.dstoreMemoryApp = {};
@@ -6,7 +6,7 @@ require(["dojo/_base/window", "dapp/Application", "dojo/json", "requirejs-text/t
 			identifier: "id",
 			'items': []
 		};
-		for (i = 1; i < 6; i++) {
+		for (var i = 1; i < 6; i++) {
 			win.global.dstoreMemoryApp.list1Data.items.push({
 				label: "Selection " + i,
 				id: i

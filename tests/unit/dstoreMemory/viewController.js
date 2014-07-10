@@ -1,6 +1,6 @@
-// jshint unused:false, undef:false, quotmark:false
-define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Observable"],
-	function (dom, on, register, MemoryStore, Observable) {
+// jshint quotmark:false
+define(["dojo/dom", "dojo/on"],
+	function (dom, on) {
 		return {
 			name: "",
 			lastSelection: "",
@@ -22,6 +22,7 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 				//}
 				// Different options for creating the store, 3. Use loadedStores from the config loadedStores.list1Store
 				list.store = this.loadedStores.list1Store;
+				var dstoreMemoryApp = this.app;
 
 				// When the list is clicked, transition to dstoreMemoryAppHome2, pass the label of the selected item.
 				on(this.domNode.ownerDocument.getElementById("list1"), "click",
@@ -42,17 +43,17 @@ define(["dojo/dom", "dojo/on", "delite/register", "dstore/Memory", "dstore/Obser
 				this._beforeActivateCallCount++;
 				this.domNode.lastSelection = viewData ? viewData.label : "";
 			},
-			beforeDeactivate: function (nextView, viewData) {
+			beforeDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "beforeDeactivate called for [" + this.viewName +
 				//	"] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this._beforeDeactivateCallCount++;
 			},
-			afterActivate: function (previousView, viewData) {
+			afterActivate: function ( /*previousView, viewData*/ ) {
 				//console.log("app-view:", "afterActivate called for [" + this.viewName + "] with previousView.id =[" +
 				//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
 				this._afterActivateCallCount++;
 			},
-			afterDeactivate: function (nextView, viewData) {
+			afterDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "afterDeactivate called for [" + this.viewName +
 				// "] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this._afterDeactivateCallCount++;

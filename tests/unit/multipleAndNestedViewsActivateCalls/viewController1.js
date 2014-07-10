@@ -8,14 +8,6 @@ define([], function () {
 		tempName: "",
 		init: function () {
 			this.domNode.name = this.id;
-			// attempt to slow down the creation of this widget to see if Home3 would be placed before it
-			if (this.id === "multipleAndNestedViewsActivateCallsApp1Home2") {
-				setTimeout(function () {
-					for (var i = 0; i < 500; i++) {
-						this.tempName = this.id + i;
-					}
-				}, 500);
-			}
 		},
 		beforeActivate: function () {
 			this._beforeActivateCallCount++;

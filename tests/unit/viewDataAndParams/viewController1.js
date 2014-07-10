@@ -1,5 +1,5 @@
-// jshint unused:false, undef:false, quotmark:false
-define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) {
+// jshint quotmark:false
+define([], function () {
 	return {
 		name: "",
 		_beforeActivateCallCount: 0,
@@ -8,15 +8,6 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 		_afterDeactivateCallCount: 0,
 		init: function () {
 			this.domNode.name = this.id;
-			// attempt to slow down the creation of this widget to see if Home3 would be placed before it
-			if (this.id === "viewDataAndParamsApp1Home2") {
-				setTimeout(function () {
-					for (var i = 0; i < 500; i++) {
-						tempName = this.id + i;
-					}
-				}, 500);
-				//	viewDataAndParamsApp.showOrHideViews('simp1Home3', {});
-			}
 		},
 		beforeActivate: function (previousView, viewData) {
 			//console.log("app-view:", "beforeActivate called for [" + this.viewName + "] with previousView.id =[" +
@@ -24,17 +15,17 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 			this._beforeActivateCallCount++;
 			this.viewData = viewData;
 		},
-		beforeDeactivate: function (nextView, viewData) {
+		beforeDeactivate: function ( /*nextView, viewData*/ ) {
 			//console.log("app-view:", "beforeDeactivate called for [" + this.viewName + "] with previousView.id =[" +
 			//	(nextView ? nextView.id : "") + "]");
 			this._beforeDeactivateCallCount++;
 		},
-		afterActivate: function (previousView, viewData) {
+		afterActivate: function ( /*previousView, viewData*/ ) {
 			//console.log("app-view:", "afterActivate called for [" + this.viewName + "] with previousView.id =[" +
 			//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
 			this._afterActivateCallCount++;
 		},
-		afterDeactivate: function (nextView, viewData) {
+		afterDeactivate: function ( /*nextView, viewData*/ ) {
 			//console.log("app-view:", "afterDeactivate called for [" + this.viewName + "] with previousView.id =[" +
 			//	(nextView ? nextView.id : "") + "]");
 			this._afterDeactivateCallCount++;

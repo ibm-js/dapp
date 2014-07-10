@@ -1,4 +1,4 @@
-// jshint unused:false, undef:false, quotmark:false
+// jshint quotmark:false
 define([
 	"intern!object",
 	"intern/chai!assert",
@@ -18,7 +18,15 @@ define([
 	nestedViewsActivateCallsconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for nestedViewsActivateCallsSuite1 transition test
-	var nestedViewsActivateCallsContainer1, nestedViewsActivateCallsNode1;
+	var nestedViewsActivateCallsContainer1,
+		nestedViewsActivateCallsApp1V2View,
+		testApp,
+		nestedViewsActivateCallsApp1P1View,
+		nestedViewsActivateCallsApp1S1View,
+		nestedViewsActivateCallsApp1V1View,
+		nestedViewsActivateCallsApp1V7View,
+		nestedViewsActivateCallsNode1;
+
 	var nestedViewsActivateCallsHtmlContent1 =
 		"<d-view-stack id='nestedViewsActivateCallsApp1dviewStack' " +
 		"style='width: 100%; height: 100%; position: absolute !important'>" +
@@ -27,26 +35,20 @@ define([
 	var nestedViewsActivateCallsSuite1 = {
 		name: "nestedViewsActivateCallsSuite1: test app transitions",
 		setup: function () {
-			appName = "nestedViewsActivateCallsApp1"; // this is from the config
 			nestedViewsActivateCallsContainer1 = document.createElement("div");
 			document.body.appendChild(nestedViewsActivateCallsContainer1);
 			nestedViewsActivateCallsContainer1.innerHTML = nestedViewsActivateCallsHtmlContent1;
 			//	register.parse(nestedViewsActivateCallsContainer1); // no need to call parse here since
 			// 															config has "parseOnLoad": true
 			nestedViewsActivateCallsNode1 = document.getElementById("nestedViewsActivateCallsApp1dviewStack");
-			testApp = null;
-			nestedViewsActivateCallsApp1P1View = null;
-			nestedViewsActivateCallsApp1S1View = null;
-			nestedViewsActivateCallsApp1V1View = null;
-			nestedViewsActivateCallsApp1V7View = null;
 
 		},
 		"test initial view": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 
 			var appStartedDef1 = new Application(json.parse(stripComments(nestedViewsActivateCallsconfig1)),
 				nestedViewsActivateCallsContainer1);
-			appStartedDef1.then(function (app) {
+			return appStartedDef1.then(function (app) {
 				// we are ready to test
 				testApp = app;
 
@@ -73,17 +75,13 @@ define([
 					"nestedViewsActivateCallsApp1P1View._beforeActivateCallCount should be 1");
 
 				checkNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1P1);
-				setTimeout(function () { // try timeout to wait for afterAcivate...
-					d.resolve();
-				}, 300);
 			});
-			return d;
 		},
 
 		// Currently showing P1_S1_V1 test transition to V7
 		"nestedViewsActivateCallsNode1.show(V7)": function () {
-			var d = this.async(10000);
-			nestedViewsActivateCallsNode1.show("V7").then(function (complete) {
+			this.timeout = 20000;
+			return nestedViewsActivateCallsNode1.show("V7").then(function () {
 				var nestedViewsActivateCallsApp1V7 = document.getElementById("V7");
 				checkNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1V7);
 
@@ -98,15 +96,13 @@ define([
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1V1View, 1);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1S1View, 1);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1P1View, 1);
-
-				d.resolve();
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
 		"nestedViewsActivateCallsNode1.show(P1) will show P1,S1,V1": function () {
-			var d = this.async(10000);
-			nestedViewsActivateCallsNode1.show("P1").then(function (complete) {
+			this.timeout = 20000;
+			return nestedViewsActivateCallsNode1.show("P1").then(function () {
 				var nestedViewsActivateCallsApp1V1 = document.getElementById("P1_S1_V1");
 				checkNestedNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1V1);
 
@@ -117,15 +113,13 @@ define([
 
 				// Now nestedViewsActivateCallsApp1V1View DeactivateCallCounts should be 1
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1V7View, 1);
-
-				d.resolve();
 			});
 		},
 
 		// Currently showing P1,S1,V1 test transition to P1_S1_V2
 		"nestedViewsActivateCallsApp1S1View.containerNode.show('V2') will show P1,S1,V2": function () {
-			var d = this.async(10000);
-			nestedViewsActivateCallsApp1S1View.containerNode.show('V2').then(function (complete) {
+			this.timeout = 20000;
+			return nestedViewsActivateCallsApp1S1View.containerNode.show('V2').then(function () {
 				var nestedViewsActivateCallsApp1V2 = document.getElementById("P1_S1_V2");
 				checkNestedNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1V2);
 
@@ -142,16 +136,17 @@ define([
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1V1View, 2);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1S1View, 2, true);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1P1View, 2, true);
-
-				d.resolve();
 			});
 		},
 
 		// Currently showing P1_S1_V2 test transition to V7
 		"testApp.showOrHideViews('V7')": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function (complete) {
+			testApp.showOrHideViews('V7', {
+				displayDeferred: displayDeferred
+			});
+			return displayDeferred.then(function () {
 				var nestedViewsActivateCallsApp1V7 = document.getElementById("V7");
 				checkNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1V7);
 
@@ -170,19 +165,17 @@ define([
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1V2View, 1);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1S1View, 3);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1P1View, 3);
-
-				d.resolve();
-			});
-			testApp.showOrHideViews('V7', {
-				displayDeferred: displayDeferred
 			});
 		},
 
 		// Currently showing V7 test transition to P1_S1_V1
 		"testApp.showOrHideViews('P1') will show P1,S1,V1": function () {
-			var d = this.async(10000);
+			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function (complete) {
+			testApp.showOrHideViews('P1', {
+				displayDeferred: displayDeferred
+			});
+			return displayDeferred.then(function () {
 				var nestedViewsActivateCallsApp1V1 = document.getElementById("P1_S1_V1");
 				checkNestedNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1V1);
 
@@ -199,11 +192,6 @@ define([
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1V2View, 1, true);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1S1View, 3, true);
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1P1View, 3, true);
-
-				d.resolve();
-			});
-			testApp.showOrHideViews('P1', {
-				displayDeferred: displayDeferred
 			});
 		},
 
