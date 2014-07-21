@@ -1,4 +1,4 @@
-define(["require", "dcl/dcl", "delite/Stateful",
+define(["require", "dcl/dcl", "decor/Stateful",
 		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/on",
 		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config",
 		"dojo/domReady" // unit tests fail if I do not pull in dojo/domReady even though only using
@@ -25,7 +25,7 @@ define(["require", "dcl/dcl", "delite/Stateful",
 				this.loadedStores = {};
 				this.loadedControllers = [];
 				//TODO: do we need to save and remove this watch on unload?
-				this.watch("status", function (name, oldValue, value) {
+				this.observe("status", function (name, oldValue, value) {
 					on.emit(document, "dapp-status-change", {
 						status: value,
 						app: this

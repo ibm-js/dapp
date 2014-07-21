@@ -119,7 +119,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 					//		private
 					var viewParams = {
 						baseClass: "d-" + this.id,
-						buildRendering: handlebars.compile(this.templateString)
+						template: handlebars.compile(this.templateString)
 						/* leaving this in case it is helpful to debug things later
 						preCreate: function () {
 							console.log("View._startup in view preCreate for [" + self.id + "]");
