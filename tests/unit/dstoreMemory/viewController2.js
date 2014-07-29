@@ -1,6 +1,6 @@
 // jshint quotmark:false
-define(["dojo/dom"],
-	function (dom) {
+define([],
+	function () {
 		return {
 			name: "",
 			lastSelection: "",

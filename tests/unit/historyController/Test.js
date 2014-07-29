@@ -704,7 +704,7 @@ define([
 	}
 
 	function checkNodeVisibile(target) {
-		assert.isTrue(target.style.display !== "none", target.id+" should be visible, but it is not");
+		assert.isTrue(target.style.display !== "none", target.id + " should be visible, but it is not");
 	}
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {
