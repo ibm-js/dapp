@@ -5,16 +5,11 @@ define([
 	"dapp/Application",
 	"dapp/utils/view",
 	"dojo/json",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
-	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/viewDataAndParams/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, json, Deferred,
 	viewDataconfig3) {
 	// -------------------------------------------------------------------------------------- //
 	// for viewDataSuite transition test
@@ -34,7 +29,6 @@ define([
 			viewDataContainer3 = document.createElement("div");
 			document.body.appendChild(viewDataContainer3);
 			viewDataContainer3.innerHTML = viewDataHtmlContent3;
-			//	register.parse(viewDataContainer3);
 			viewDataNode3 = document.getElementById("viewDataAndParamsAppdviewStack");
 		},
 		"test initial view": function () {

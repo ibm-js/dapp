@@ -1,6 +1,8 @@
 define(
-	["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../../Controller", "../../utils/view"],
-	function (require, dcl, on, Deferred, Controller, viewUtils) {
+	["require", "dcl/dcl", "dojo/Deferred", "../../Controller", "../../utils/view"],
+	function (require, dcl, Deferred, Controller, viewUtils) {
+		var app; // need app in closure for loadMapper
+		var mapHandler;
 		var resolveView = function (event, newView, parentView) {
 			// in addition to arguments required by delite we pass our own needed arguments
 			// to get them back in the transitionDeferred
@@ -20,18 +22,32 @@ define(
 		};
 
 		return dcl(Controller, {
-			constructor: function () {
-				this.docEvents = {
-					"delite-display-load": this._loadHandler
-				};
+			constructor: function (newapp) {
+				app = newapp;
 				this.events = {
-					"dapp-unload-view": this.unloadView
+					"delite-display-load": this._loadHandler.bind(this),
+					"dapp-unload-view": this.unloadView.bind(this)
 				};
+				mapHandler = this.loadMapper.bind(this);
+				this.mapEvents = [{
+					evented: document,
+					event: "delite-display-load",
+					handler: mapHandler
+				}];
+				//document.addEventListener("delite-display-load", mapHandler, false);
+				//document.addEventListener("delite-display-load", this._loadHandler.bind(this), false);
+			},
+
+			loadMapper: function (event) {
+				if (this.app.id !== app.id) {
+					//TODO: rmove this warn
+					console.warn("TEMP msg - mapping *** Wrong appId app.id=" + app.id + " this.app.id=" + this.app.id);
+				}
+				app.emit("delite-display-load", event);
 			},
 
 			_loadHandler: function (event) {
 				event.preventDefault(); // to indicate that dapp will load the view
-
 				// load the actual view
 				//Need to handle calls directly from node.show or node.hide that did not come from transition
 				if (!event.dapp || !event.dapp.parentView) {
@@ -102,6 +118,11 @@ define(
 				if (!event.dapp.hide) {
 					var onbeforeShowDisplayHandle = event.target.on("delite-before-show", function (value) {
 						// If the value.dest does not match the one we are expecting keep waiting
+						if (app !== self.app) { // if wrong app ignore the load request
+							console.warn("onbeforeShowDisplayHandle called for the wrong application self.app.id=" +
+								self.app.id + " value.dest=" + value.dest);
+							return;
+						}
 						if (value.dest !== event.dest) { // if this delite-after-show is not for this view return
 							return;
 						}
@@ -174,7 +195,7 @@ define(
 
 						var next = complete.dapp.nextView;
 
-						// Add call to handleAfterDeactivate and handleAfterActivate here!
+						// Add call to handleAfterDeactivate and _handleAfterActivateCalls here!
 
 						// Call _handleAfterDeactivateCalls if !isParent (not parent part of a nested view)
 						if (!complete.dapp.isParent) {
@@ -193,7 +214,7 @@ define(
 				if (event.dapp.hide) {
 					var onbeforeHideDisplayHandle = event.target.on("delite-before-hide", function (value) {
 						// If the value.dest does not match the one we are expecting keep waiting
-						if (value.dest !== event.dest) { // if this delite-after-show is not for this view return
+						if (value.dest !== event.dest) { // if this delite-before-hide is not for this view return
 							return;
 						}
 						onbeforeHideDisplayHandle.remove(); // remove the handle when we match value.dest
@@ -208,21 +229,17 @@ define(
 							retval.dapp = value.dapp;
 
 							firstChildId = value.dapp.id;
-							console.log("in .on(delite-before-hide firstChildId=" + firstChildId);
 							subIds = null;
 
 							var viewTarget = value.dapp.nextView.id.replace(/_/g, ",");
-							console.log("in .on(delite-before-hide viewTarget=" + viewTarget);
-							if (viewTarget && value.dapp.viewPath.lineage.length > 0) {
+							if (viewTarget) {
 								var parts = value.dapp.viewPath.lineage;
 								firstChildId = parts.shift();
 								subIds = parts.join(",");
 							}
-							console.log("in .on(delite-before-hide firstChildId=" + firstChildId);
 							var appView = self.app;
 
 							var firstChildView = appView.children[firstChildId];
-							console.log("in .on(delite-before-hide firstChildView=", firstChildView);
 
 							var nextSubViewArray = self._getNextSubViewArray(subIds, firstChildView, appView);
 
@@ -256,9 +273,9 @@ define(
 						}
 						return retval;
 					});
-					// on delite-after-show we will be ready to call afterDeactivate and afterActivate
+					// on delite-after-hide we will be ready to call afterDeactivate and afterActivate
 					var onafterHideDisplayHandle = event.target.on("delite-after-hide", function (complete) {
-						if (complete.dest !== event.dest) { // if this delite-after-show is not for this view return
+						if (complete.dest !== event.dest) { // if this delite-after-hide is not for this view return
 							return;
 						}
 						onafterHideDisplayHandle.remove();
@@ -273,7 +290,7 @@ define(
 								next.constraint, null, self.app); // remove from selectedChildren
 						}
 
-						// Add call to handleAfterDeactivate and handleAfterActivate here!
+						// Add call to handleAfterDeactivate here!
 
 						// Call _handleAfterDeactivateCalls if !isParent (not parent part of a nested view)
 						if (!complete.dapp.isParent) {
@@ -287,7 +304,7 @@ define(
 
 			_handleShowFromDispContainer: function (event, dest) {
 				var tempDisplaydeferred = new Deferred();
-				on.emit(document, "dapp-display", {
+				this.app.emit("dapp-display", {
 					dest: dest,
 					displayDeferred: tempDisplaydeferred,
 					bubbles: true,

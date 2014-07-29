@@ -1,10 +1,10 @@
 {
 	"name": "dapp",
-	"version": "0.1.0-dev",
+	"version": "0.1.1-dev",
 	"dependencies": {
 		"dcl": "1.1.x",
-		"decor": "0.1.0-dev",
-		"delite": "#master",
+		"decor": "0.2.0-beta",
+		"delite": "0.2.0-beta",
 		"deliteful": "#master",
 		"dojo": ">=1.9.1",
 		"dpointer": ">=0.1.0-dev",

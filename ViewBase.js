@@ -1,5 +1,5 @@
-define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "./utils/view"],
-	function (require, when, on, dcl, Deferred, viewUtils) {
+define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "./utils/view"],
+	function (require, when, dcl, Deferred, viewUtils) {
 		return dcl(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.

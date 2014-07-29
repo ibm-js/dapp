@@ -5,16 +5,11 @@ define([
 	"dapp/Application",
 	"dapp/utils/view",
 	"dojo/json",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
-	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/nlsLabels/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, json, Deferred,
 	nlsLabelsconfig3) {
 	// -------------------------------------------------------------------------------------- //
 	// TODO: should add a nested nls test with strings at the parent view available to the child view.
@@ -35,7 +30,6 @@ define([
 			nlsLabelsContainer3 = document.createElement("div");
 			document.body.appendChild(nlsLabelsContainer3);
 			nlsLabelsContainer3.innerHTML = nlsLabelsHtmlContent3;
-			//	register.parse(nlsLabelsContainer3);
 			nlsLabelsNode3 = document.getElementById("nlsLabelsAppdviewStack");
 		},
 		"test initial view and nls labels": function () {

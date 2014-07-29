@@ -1,7 +1,9 @@
-define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../utils/view",
+define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
 		"../utils/hash", "../Controller"
 	],
-	function (require, dcl, on, Deferred, viewUtils, hash, Controller) {
+	function (require, dcl, Deferred, viewUtils, hash, Controller) {
+		var app;
+		var mapperHandle;
 		return dcl(Controller, {
 			// _currentPosition:     Integer
 			//              Persistent variable which indicates the current position/index in the history
@@ -13,11 +15,22 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../utils/view",
 			//              Current state
 			currentState: {},
 
-			constructor: function () {
-				this.docEvents = {
-					"dapp-finished-transition": this.finishedTransition
+			constructor: function (newapp) {
+				app = newapp;
+				this.events = {
+					"popstate": this.onPopState.bind(this),
+					"dapp-finished-transition": this.finishedTransition.bind(this)
 				};
-				this.bind(window, "popstate", this.onPopState.bind(this));
+				mapperHandle = this.popstateMapper.bind(this);
+				this.mapEvents = [{
+					evented: window,
+					event: "popstate",
+					handler: mapperHandle
+				}];
+			},
+
+			popstateMapper: function (event) {
+				app.emit("popstate", event);
 			},
 
 			finishedTransition: function (evt) {
@@ -73,7 +86,7 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../utils/view",
 				this.currentState = Object.create(evtdetail);
 
 				// Finally: Publish pushState topic
-				on.emit(document, "dapp-pushState", evtdetail);
+				this.app.emit("dapp-pushState", evtdetail);
 			},
 
 			onPopState: function (evt) {
@@ -86,7 +99,7 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../utils/view",
 				// Clean browser's cache and refresh the current page will trigger popState event,
 				// but in this situation the application has not started and throws an error.
 				// So we need to check application status, if application not STARTED, do nothing.
-				if ((this.app.status !== this.app.lifecycle.STARTED) || !evt.state) {
+				if ((this.app.status !== this.app.STARTED) || !evt.state) {
 					return;
 				}
 
@@ -131,10 +144,10 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "../utils/view",
 					transition: "slide",
 					direction: "end"
 				});
-				on.emit(document, "dapp-display", opts);
+				this.app.emit("dapp-display", opts);
 
 				// Finally: Publish popState topic
-				on.emit(document, "dapp-popState", opts);
+				this.app.emit("dapp-popState", opts);
 			},
 
 			//TODO: question about removing the parent and the child view for example +leftParent,left1 when added adds

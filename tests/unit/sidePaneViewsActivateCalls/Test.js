@@ -6,16 +6,12 @@ define([
 	"dapp/Application",
 	"dapp/utils/view",
 	"dojo/json",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/sidePaneViewsActivateCalls/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, json, register, Deferred,
 	sidePaneViewsActivateCallsconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for sidePaneViewsActivateCallsSuite1 transition test
@@ -174,7 +170,7 @@ define([
 	registerSuite(sidePaneViewsActivateCallsSuite1);
 
 	function checkNodeVisibile(target) {
-		assert.isTrue(target.style.display !== "none");
+		assert.isTrue(target.style.display !== "none", target.id+" should be visible, but it is not");
 	}
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {

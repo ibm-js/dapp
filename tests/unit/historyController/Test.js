@@ -7,16 +7,12 @@ define([
 	"dapp/utils/view",
 	"dapp/utils/hash",
 	"dojo/json",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/historyController/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, hash, json, topic, on, domGeom, domClass, register,
+], function (registerSuite, assert, Application, viewUtils, hash, json, register,
 	Deferred, historyControllerconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for historyControllerSuite1 transition test
@@ -146,14 +142,13 @@ define([
 		"test history.back() to get back to hc1center2)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1center2content = document.getElementById("hc1center2");
 				var hc1center2View = viewUtils.getViewFromViewId(testApp, "hc1center2");
 				checkNodeVisibile(hc1center2content);
 				checkActivateCallCount(hc1center2View, 2, true);
-			}).then(function () {
 				var currentHash = window.location.hash;
 				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1");
@@ -164,14 +159,14 @@ define([
 		"test history.back() to get back to hc1center1)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1center1content = document.getElementById("hc1center1");
 				var hc1center1View = viewUtils.getViewFromViewId(testApp, "hc1center1");
-				checkNodeVisibile(hc1center1content);
+				//checkNodeVisibile(hc1center1content);
+				assert.isTrue(hc1center1content.style.display !== "none", "hc1center1content should be visible");
 				checkActivateCallCount(hc1center1View, 2, true);
-			}).then(function () {
 				var currentHash = window.location.hash;
 				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1");
@@ -182,7 +177,7 @@ define([
 		"test history.forward() to get to hc1center2)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1center2content = document.getElementById("hc1center2");
@@ -200,7 +195,7 @@ define([
 		"test history.forward() to get to hc1center3)": function () {
 			this.timeout = 11000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1center3content = document.getElementById("hc1center3");
@@ -234,7 +229,7 @@ define([
 		"test history.back() to get back to hc1right1)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1rightPane = document.getElementById("hc1rightPane");
@@ -253,7 +248,7 @@ define([
 		"test history.forward() to hide hc1right1)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1rightPane = document.getElementById("hc1rightPane");
@@ -437,7 +432,7 @@ define([
 		"test history.back() to get back to hc1leftParent,hc1left2)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1left2content = document.getElementById("hc1leftParent_hc1left2");
@@ -464,7 +459,7 @@ define([
 		"test history.forward() to get back to hc1leftParent,hc1left1 with parent and child params)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1left1content = document.getElementById("hc1leftParent_hc1left1");
@@ -564,7 +559,7 @@ define([
 		"test history.back() to get back to hc1leftParent,hc1left2 with viewData)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1left2content = document.getElementById("hc1leftParent_hc1left2");
@@ -588,7 +583,7 @@ define([
 		"test history.forward() to get back to hc1leftParent,hc1left1 with viewData)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1left1content = document.getElementById("hc1leftParent_hc1left1");
@@ -658,7 +653,7 @@ define([
 		"test history.back() to get back to hc1leftParent,hc1left2 with hash set)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1left2content = document.getElementById("hc1leftParent_hc1left2");
@@ -675,7 +670,7 @@ define([
 		"test history.forward() to get back to hc1leftParent,hc1left1 with hash set)": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			setupOnOnce(displayDeferred);
+			setupOnOnce(testApp, displayDeferred);
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1left1content = document.getElementById("hc1leftParent_hc1left1");
@@ -701,14 +696,15 @@ define([
 
 	registerSuite(historyControllerSuite1);
 
-	function setupOnOnce(displayDeferred) {
-		on.once(document, "dapp-finished-transition", function () {
+	function setupOnOnce(testApp, displayDeferred) {
+		var signal = testApp.on("dapp-finished-transition", function () {
 			displayDeferred.resolve();
+			signal.unadvise();
 		});
 	}
 
 	function checkNodeVisibile(target) {
-		assert.isTrue(target.style.display !== "none");
+		assert.isTrue(target.style.display !== "none", target.id+" should be visible, but it is not");
 	}
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {

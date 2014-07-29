@@ -1,5 +1,5 @@
-define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "dojo/on", "../../Controller", "../../utils/view"],
-	function (dcl, when, Deferred, all, on, Controller, viewUtils) {
+define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Controller", "../../utils/view"],
+	function (dcl, when, Deferred, all, Controller, viewUtils) {
 
 		// summary:
 		//		A Transition controller to listen for "dapp-display" events and drive the transitions for those
@@ -16,8 +16,8 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "dojo/on", 
 				// app:
 				//		dapp application instance.
 				this.app = app;
-				this.docEvents = {
-					"dapp-display": this._displayHandler
+				this.events = {
+					"dapp-display": this._displayHandler.bind(this)
 				};
 			},
 
@@ -121,7 +121,7 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "dojo/on", 
 						//		"viewParams": event.viewParams,
 						//		"transition": event.transition
 						//	};
-						on.emit(document, "dapp-finished-transition", event);
+						self.app.emit("dapp-finished-transition", event);
 						if (event.displayDeferred) {
 							event.displayDeferred.resolve(value);
 						}

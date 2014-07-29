@@ -2,21 +2,15 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dojo/_base/window",
 	"dapp/Application",
 	"dojo/json",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
-	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/dstoreMemory/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack",
 	"deliteful/list/List",
 	"dstore/Memory"
-], function (registerSuite, assert, win, Application, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, Deferred,
 	dstoreMemoryconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for dstoreMemorySuite1 transition test
@@ -33,25 +27,25 @@ define([
 		"</d-view-stack>";
 
 
-	win.global.dstoreMemoryApp = {};
-	win.global.dstoreMemoryApp.list1Data = {
+	window.dstoreMemoryApp = {};
+	window.dstoreMemoryApp.list1Data = {
 		identifier: "id",
 		'items': []
 	};
 	for (var i = 1; i < 6; i++) {
-		win.global.dstoreMemoryApp.list1Data.items.push({
+		window.dstoreMemoryApp.list1Data.items.push({
 			label: "Selection " + i,
 			id: i
 		});
 	}
 
 
-	win.global.dstoreMemoryApp.list2Data = {
+	window.dstoreMemoryApp.list2Data = {
 		identifier: "id",
 		'items': []
 	};
 	for (i = 6; i < 11; i++) {
-		win.global.dstoreMemoryApp.list2Data.items.push({
+		window.dstoreMemoryApp.list2Data.items.push({
 			label: "Selection " + i,
 			id: i
 		});
@@ -63,7 +57,6 @@ define([
 			dstoreMemoryContainer1 = document.createElement("div");
 			document.body.appendChild(dstoreMemoryContainer1);
 			dstoreMemoryContainer1.innerHTML = dstoreMemoryHtmlContent1;
-			//	register.parse(dstoreMemoryContainer1); // no need to call parse here config has "parseOnLoad": true
 		},
 		"test initial view": function () {
 			this.timeout = 20000;

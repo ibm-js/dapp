@@ -4,15 +4,12 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"dojo/json",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/transitionVisibility/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, register, Deferred,
 	transitionVisibilityconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for transitionVisibilitySuite
@@ -58,8 +55,9 @@ define([
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 
-			on.once(transitionVisibilityNode3, "delite-after-show", function () {
+			var sig = transitionVisibilityNode3.on("delite-after-show", function () {
 				displayDeferred.resolve();
+				sig.remove();
 			});
 			transitionVisibilityNode3.show("transitionVisibilityAppHome3NoController");
 

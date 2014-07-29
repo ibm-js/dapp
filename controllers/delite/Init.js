@@ -1,12 +1,32 @@
-define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "dojo/_base/lang",
+/** @module dapp/controllers/delite/Init */
+define(["require", "dcl/dcl", "dojo/Deferred",
 		"../../utils/hash", "../../Controller", "dojo/_base/declare"
 	],
-	function (require, dcl, on, Deferred, lang, hash, Controller, declare) {
+	function (require, dcl, Deferred, hash, Controller, declare) {
+		/**
+		 * An Init controller for a dapp application using delite.
+		 *
+		 * @class module:dapp/controllers/delite/Init
+		 * @augments module:dapp/Controller
+		 */
+		/**
+		 * Get a property from a dot-separated string, such as "A.B.C".
+		 */
+		function getObject(name) {
+			try {
+				return name.split(".").reduce(function (context, part) {
+					return context[part];
+				}, this); // "this" is the global object (i.e. window on browsers)
+			} catch (e) {
+				// Return undefined to indicate that object doesn't exist.
+			}
+		}
+
 		return dcl(Controller, {
 			constructor: function () {
 				this.events = {
-					"dapp-init": this._initHandler,
-					"dapp-setup-view-stores": this._createDataStore
+					"dapp-init": this._initHandler.bind(this),
+					"dapp-setup-view-stores": this._createDataStore.bind(this)
 				};
 			},
 			_initHandler: function () {
@@ -47,7 +67,7 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "dojo/_base/lang",
 								//cannot assign object literal or reference to data property
 								//because json.ref will generate __parent to point to its parent
 								//and will cause infinitive loop when creating StatefulModel.
-								config.data = lang.getObject(config.data);
+								config.data = getObject(config.data);
 							}
 							if (appOrView.stores[item].observable) {
 								var observableCtor;
@@ -111,7 +131,7 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "dojo/_base/lang",
 				// let's display default view
 				var initialView = this.app.alwaysUseDefaultView ? this.app.defaultView : this.app._startView;
 				var initialParams = this.app.alwaysUseDefaultView ? this.app.defaultParams : this.app._startParams;
-				on.emit(document, "dapp-display", {
+				this.app.emit("dapp-display", {
 					// TODO is that really defaultView a good name? Shouldn't it be defaultTarget or defaultView_s_?
 					dest: initialView,
 					viewParams: initialParams,
@@ -121,7 +141,7 @@ define(["require", "dcl/dcl", "dojo/on", "dojo/Deferred", "dojo/_base/lang",
 				});
 				if (this.app) {
 					displayDeferred.then(function () {
-						this.app.status = this.app.lifecycle.STARTED;
+						this.app.setStatus(this.app.STARTED);
 						this.app.appStartedDef.resolve(this.app); // resolve the deferred from new Application
 					}.bind(this));
 				}

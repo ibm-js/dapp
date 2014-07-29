@@ -5,16 +5,11 @@ define([
 	"dapp/Application",
 	"dapp/utils/view",
 	"dojo/json",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
-	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/hideView/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, topic, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, json, Deferred,
 	hideViewconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for hideViewSuite transition test
@@ -34,7 +29,6 @@ define([
 			hideViewContainer = document.createElement("div");
 			document.body.appendChild(hideViewContainer);
 			hideViewContainer.innerHTML = hideViewHtmlContent3;
-			//	register.parse(hideViewContainer);
 			hideViewNode = document.getElementById("hideViewApp3dviewStack");
 
 		},

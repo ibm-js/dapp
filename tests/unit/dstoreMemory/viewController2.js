@@ -1,6 +1,6 @@
 // jshint quotmark:false
-define(["dojo/dom", "dojo/on"],
-	function (dom, on) {
+define(["dojo/dom"],
+	function (dom) {
 		return {
 			name: "",
 			lastSelection: "",
@@ -22,7 +22,7 @@ define(["dojo/dom", "dojo/on"],
 				list.store = this.loadedStores.list2Store;
 
 				// When the list is clicked, transition to dstoreMemoryAppHome2, pass the label of the selected item.
-				on(this.domNode.ownerDocument.getElementById("list2"), "click",
+				this.domNode.ownerDocument.getElementById("list2").on("click",
 					function ( /*MouseEvent*/ evt) {
 						var label = evt.target.innerHTML || "";
 						var params = {
@@ -50,9 +50,6 @@ define(["dojo/dom", "dojo/on"],
 				//console.log("app-view:", "afterActivate called for [" + this.viewName + "] with previousView.id =[" +
 				//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
 				this._afterActivateCallCount++;
-				//	this.app.emit("afterActivateCalled", {
-				//		view: this
-				//	});
 			},
 			afterDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "afterDeactivate called for [" + this.viewName +

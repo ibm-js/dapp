@@ -4,15 +4,12 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"dojo/json",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/appStatus/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, register, Deferred,
 	appStatusConfig) {
 	// for appStatusSuite
 	var appStatusContainer1,
@@ -34,25 +31,11 @@ define([
 			register.parse(appStatusContainer1);
 			appStatusNode1 = document.getElementById("appStatusApp1dlayout");
 			testApp = null;
-			previousStatus = 0;
+			previousStatus = 1;
 			appName = "appStatusApp1";
 		},
 		"appStatusSuite dapp appStatus test app status": function () {
 			this.timeout = 20000;
-
-			var handle;
-			// check the app status as it updates when the app is started and stopped
-			handle = on(document, "dapp-status-change", function (params) {
-				var appId = params.app.id;
-				var status = params.status;
-				if (appId === appName) {
-					assert.deepEqual(status, previousStatus + 1, "app status should progress from Starting to Stopped");
-					previousStatus = status;
-					if (previousStatus === 4) { // STOPPED
-						handle.remove();
-					}
-				}
-			});
 
 			// create the app from the config and wait for the deferred
 			//var appStartedDef = new Application(json.parse(stripComments(appStatusConfig)), appStatusContainer1);
@@ -61,19 +44,28 @@ define([
 				appStatusContainer1).then(function (appStatusTest) {
 				// we are ready to test
 				testApp = appStatusTest;
+				var handle = testApp.on("dapp-status-change", function (params) {
+					var status = params.status;
+					//console.log("in dapp-status-change with status = " + status);
+					assert.deepEqual(status, previousStatus + 1, "app status should progress from Starting to Stopped");
+					previousStatus = status;
+					if (status === testApp.STOPPED) { // STOPPED
+						handle.unadvise();
+					}
+				});
 
 				// check the app status it should be STARTED
-				assert.deepEqual(testApp.status, testApp.lifecycle.STARTED);
+				assert.deepEqual(testApp.status, testApp.STARTED);
 				// This section would normally go in teardown, but do it here to test status
 				appStatusContainer1.parentNode.removeChild(appStatusContainer1);
 
-				var appStoppedDef = testApp.unloadApp(); // unload and stop the app
-				appStoppedDef.then(function () { // when the app is unloaded verify status and call resolve
-					assert.deepEqual(testApp.status, testApp.lifecycle.STOPPED);
-				});
 			});
 		},
-		teardown: function () {}
+		teardown: function () {
+			testApp.unloadApp().then(function () { // when the app is unloaded verify status and call resolve
+				assert.deepEqual(testApp.status, testApp.STOPPED);
+			});
+		}
 	};
 
 	registerSuite(appStatusSuite);

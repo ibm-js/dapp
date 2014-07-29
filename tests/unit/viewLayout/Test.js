@@ -4,7 +4,6 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"dojo/json",
-	"dojo/on",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"delite/register",
@@ -12,7 +11,7 @@ define([
 	"requirejs-text/text!dapp/tests/unit/viewLayout/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
+], function (registerSuite, assert, Application, json, domGeom, domClass, register, Deferred,
 	viewLayoutconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for viewLayoutSuite

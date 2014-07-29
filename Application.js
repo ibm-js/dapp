@@ -1,20 +1,13 @@
-define(["require", "dcl/dcl", "decor/Stateful",
-		"dojo/Evented", "dojo/Deferred", "dojo/when", "dojo/on",
-		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config",
-		"dojo/domReady" // unit tests fail if I do not pull in dojo/domReady even though only using
-		// requirejs-domready/domReady!
+define(["require", "dcl/dcl", "decor/Stateful", "decor/Evented", "dojo/Deferred", "dojo/when",
+		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config", "requirejs-domready/domReady!"
 	],
-	function (require, dcl, Stateful, Evented, Deferred, when, on,
-		nls, hash, viewUtils, configUtils) {
+	function (require, dcl, Stateful, Evented, Deferred, when, nls, hash, viewUtils, configUtils) {
 
 		var Application = dcl([Evented, Stateful], {
-			lifecycle: {
-				UNKNOWN: 0, //unknown
-				STARTING: 1, //starting
-				STARTED: 2, //started
-				STOPPING: 3, //stopping
-				STOPPED: 4 //stopped
-			},
+			UNKNOWN: 0, //unknown
+			STARTED: 1, //started
+			STOPPING: 2, //stopping
+			STOPPED: 3, //stopped
 
 			status: 0, //unknown
 
@@ -24,12 +17,12 @@ define(["require", "dcl/dcl", "decor/Stateful",
 				this.children = {};
 				this.loadedStores = {};
 				this.loadedControllers = [];
-				//TODO: do we need to save and remove this watch on unload?
-				this.observe("status", function (name, oldValue, value) {
-					on.emit(document, "dapp-status-change", {
-						status: value,
-						app: this
-					});
+			},
+
+			setStatus: function (status) {
+				this.status = status;
+				this.emit("dapp-status-change", {
+					status: this.status
 				});
 			},
 
@@ -54,7 +47,7 @@ define(["require", "dcl/dcl", "decor/Stateful",
 						transition: "slide",
 						direction: "end"
 					});
-				on.emit(document, "dapp-display", opts);
+				this.emit("dapp-display", opts);
 			},
 
 			createControllers: function (controllers) {
@@ -75,7 +68,7 @@ define(["require", "dcl/dcl", "decor/Stateful",
 					require(requireItems, function () {
 						for (var i = 0; i < arguments.length; i++) {
 							// instantiate controllers, set Application object, and perform auto binding
-							this.loadedControllers.push((new arguments[i](this)).bind());
+							this.loadedControllers.push((new arguments[i](this)).bindAll());
 						}
 						controllerDef.resolve(this);
 					}.bind(this));
@@ -133,14 +126,13 @@ define(["require", "dcl/dcl", "decor/Stateful",
 				// 		emit dapp-unload-view to have controllers stop, and delete the global app reference.
 				//
 				var appStoppedDef = new Deferred();
-				this.status = this.lifecycle.STOPPING;
-
+				this.setStatus(this.STOPPING);
 				var params = {};
 				params.view = this;
 				params.parentView = this;
 				params.unloadApp = true;
 				params.callback = function () {
-					this.status = this.lifecycle.STOPPED;
+					this.setStatus(this.STOPPED);
 					delete window[this.name]; // remove the global for the app
 					appStoppedDef.resolve();
 				}.bind(this);
@@ -224,7 +216,6 @@ define(["require", "dcl/dcl", "decor/Stateful",
 
 				require(["requirejs-domready/domReady!"], function () {
 					var app = new App(config, node || document.body);
-					app.status = app.lifecycle.STARTING;
 					// Create global namespace for application.
 					// The global name is application id. For example, modelApp
 					var globalAppName = app.id;

@@ -1,8 +1,8 @@
-define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/Widget", "delite/register",
+define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "delite/Widget", "delite/register",
 		"delite/handlebars", "./ViewBase", "./utils/nls"
 	],
-	function (require, when, on, dcl, Deferred, Widget, register, handlebars, ViewBase, nls) {
-		return dcl([ViewBase, Widget], {
+	function (require, when, dcl, Deferred, Widget, register, handlebars, ViewBase, nls) {
+		return dcl([ViewBase], {
 			// summary:
 			//		View class inheriting from ViewBase adding templating & globalization capabilities.
 			constructor: function (viewParams) { // jshint unused:false
@@ -53,11 +53,6 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 				//		- parentView: parent view
 				//		- children: children views
 				//		- nls: nls definition module identifier
-			},
-
-			// _TemplatedMixin requires a connect method if data-dojo-attach-* are used
-			connect: function (obj, event, method) {
-				return this.own(on(obj, event, method.bind(this)))[0]; // handle
 			},
 
 			_loadTemplate: function () {
@@ -151,7 +146,7 @@ define(["require", "dojo/when", "dojo/on", "dcl/dcl", "dojo/Deferred", "delite/W
 					register(tag, [HTMLElement, Widget], viewParams);
 
 					this.domNode = register.createElement(tag);
-					this.own(this.domNode);
+					//this.own(this.domNode); // had problem extending Widget
 					this.domNode.id = this.id;
 
 					//had to do this for widgets in templates to work

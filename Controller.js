@@ -1,14 +1,12 @@
-define(["dcl/dcl", "dojo/on"], function (dcl, on) {
+define(["dcl/dcl"], function (dcl) {
 	// module:
 	//		dapp/Controller
 	// summary:
 	//		Bind events on dapp application's dojo/Evented instance or document.
-
 	return dcl(null, {
-		constructor: function (app) {
+		constructor: function (newapp) {
 			// summary:
 			//		bind events on application
-			//		bind docEvents on document
 			//
 
 			// app:
@@ -17,78 +15,60 @@ define(["dcl/dcl", "dojo/on"], function (dcl, on) {
 			//		{event : handler}
 
 			this._boundEvents = [];
-			this.app = app;
+			this.app = newapp;
 			this.app.on("dapp-unload-app", this._unloadApp.bind(this));
 		},
 
 		_unloadApp: function () {
-			this.unbind(); // remove all bound events
+			this.unbindAll(); // remove all bound events
 		},
 
-		bind: function (evented, event, handler) {
+		bindAll: function () {
 			// summary:
-			//		Bind event on dojo/Evented instance, document, domNode or window.
-			//		Save event signal in controller instance. If no parameter is provided
-			//		automatically bind all events registered in controller events property.
+			//		Bind all event on the application instance.
+			//		Save event signal in controller instance.
 			//
-			// evented: Object
-			//		dojo/Evented instance, document, domNode or window
-			// event: String
-			//		event
-			// handler: Function
-			//		event handler
-			if (arguments.length === 0) {
-				if (this.events) {
-					for (var item in this.events) {
-						if (item.charAt(0) !== "_") { //skip the private properties
-							this.bind(this.app, item, this.events[item].bind(this));
-						}
+			if (this.events) {
+				for (var item in this.events) {
+					if (item.charAt(0) !== "_") { //skip the private properties
+						var signal = this.app.on(item, this.events[item]);
+						this._boundEvents.push({
+							"event": item,
+							"evented": this.app,
+							"signal": signal
+						});
 					}
 				}
-				if (this.docEvents) {
-					for (var docitem in this.docEvents) {
-						if (docitem.charAt(0) !== "_") { //skip the private properties
-							this.bind(document, docitem, this.docEvents[docitem].bind(this));
-						}
+			}
+			if (this.mapEvents) {
+				for (var mapItem in this.mapEvents) {
+					if (mapItem.charAt(0) !== "_") { //skip the private properties
+						var mapItem2 = this.mapEvents[mapItem];
+						mapItem2.evented.addEventListener(mapItem2.event, mapItem2.handler, false);
 					}
 				}
-			} else {
-				var signal = on(evented, event, handler);
-				this._boundEvents.push({
-					"event": event,
-					"evented": evented,
-					"signal": signal
-				});
 			}
 			return this;
 		},
 
-		unbind: function (evented, event) {
+		unbindAll: function () {
 			// summary:
-			//		remove a binded event signal.
+			//		call signal.destroy to remove all event listeners.
 			//
-			// evented: Object
-			//		dojo/Evented instance, document, domNode or window
-			// event: String
-			//		event
 
 			var len = this._boundEvents.length;
-			if (arguments.length === 0) {
-				for (var i = 0; i < len; i++) {
-					this._boundEvents[i].signal.remove();
-				}
-				this._boundEvents = [];
-				return this;
-			} else {
-				for (var j = 0; j < len; j++) {
-					if ((this._boundEvents[j].event === event) && (this._boundEvents[j].evented === evented)) {
-						this._boundEvents[j].signal.remove();
-						this._boundEvents.splice(j, 1);
-						return this;
+			for (var i = 0; i < len; i++) {
+				this._boundEvents[i].signal.destroy();
+			}
+			this._boundEvents = [];
+			if (this.mapEvents) {
+				for (var item in this.mapEvents) {
+					if (item.charAt(0) !== "_") { //skip the private properties
+						var mapItem = this.mapEvents[item];
+						mapItem.evented.removeEventListener(mapItem.event, mapItem.handler);
 					}
 				}
 			}
-			//console.warn("event '" + event + "' not bind on ", evented);
 			return this;
 		}
 	});

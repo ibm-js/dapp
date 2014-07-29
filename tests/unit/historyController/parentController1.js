@@ -23,9 +23,6 @@ define([], function () {
 			//console.log("app-view:", "afterActivate called for [" + this.viewName + "] with previousView.id =[" +
 			//	(previousView ? previousView.id : "") + "] with viewData=", viewData);
 			this._afterActivateCallCount++;
-			this.app.emit("afterActivateCalled", {
-				view: this
-			}); // do not do this for the parentView
 		},
 		afterDeactivate: function ( /*nextView*/ ) {
 			//console.log("app-view:", "afterDeactivate called for [" + this.viewName + "] with previousView.id =[" +

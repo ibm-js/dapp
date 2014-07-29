@@ -1,6 +1,6 @@
 // jshint quotmark:false
-define(["dojo/dom", "dojo/on"],
-	function (dom, on) {
+define(["dojo/dom"],
+	function (dom) {
 		return {
 			name: "",
 			lastSelection: "",
@@ -25,7 +25,7 @@ define(["dojo/dom", "dojo/on"],
 				var dstoreMemoryApp = this.app;
 
 				// When the list is clicked, transition to dstoreMemoryAppHome2, pass the label of the selected item.
-				on(this.domNode.ownerDocument.getElementById("list1"), "click",
+				this.domNode.ownerDocument.getElementById("list1").on("click",
 					function ( /*MouseEvent*/ evt) {
 						var label = evt.target.innerHTML || "";
 						var targetView = "dstoreMemoryAppHome2";

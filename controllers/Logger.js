@@ -1,8 +1,7 @@
 define(
-	["dcl/dcl", "dojo/on", "../Controller", "dojo/topic", "dojo/aspect", "dapp/utils/view",
-		"../ViewBase", "../View"
-	],
-	function (dcl, on, Controller, topic, aspect, viewUtils, ViewBase, View) {
+	["dcl/dcl", "../Controller", "dcl/advise", "dapp/utils/view", "../ViewBase", "../View"],
+	function (dcl, Controller, advise, viewUtils, ViewBase, View) {
+		var app; // need app in closure for loadMapper
 		return dcl(Controller, {
 			constructor: function () {
 				// summary:
@@ -10,23 +9,17 @@ define(
 				// 		logTimeStamp.
 				//
 				this.app.appLogging = this.app.appLogging || {};
+				app = this.app;
 
-				this.docEvents = {
-					"dapp-display": this.dappdisplay,
-					"delite-display-load": this.delitedisplayload,
-					"dapp-status-change": this.dappstatuschange
-				};
 				this.events = {
-					"dapp-init": this.dappinit,
-					"dapp-unload-view": this.dappunloadview,
-					"dapp-setup-view-stores": this.dappsetupviewstores,
-					"delite-before-show": this.delitebeforeshow,
-					"delite-before-hide": this.delitebeforehide
+					"dapp-status-change": this.dappstatuschange.bind(this),
+					"delite-display-load": this.delitedisplayload.bind(this),
+					"dapp-unload-view": this.dappunloadview.bind(this)
 				};
 
-				var signal = aspect.after(viewUtils, "setSelectedChild",
-					function (view, constraint, child, app) { // jshint unused:false
-						if (this.app.appLogging.logAll) {
+				if (this.app.appLogging.logAll) {
+					var signal = advise.before(viewUtils, "setSelectedChild",
+						function (view, constraint, child, app) { // jshint unused:false
 							var type = typeof (constraint);
 							var hash = (type === "string" || type === "number") ? constraint : constraint.__hash;
 							if (child) {
@@ -36,82 +29,95 @@ define(
 								console.log("  > utils/view.setSelectedChild view.id=[" + view.id +
 									"] setting selectedChild to null with hash=[" + hash + "]");
 							}
-						}
-					}.bind(this), true);
-				this._boundEvents.push({
-					"signal": signal
-				});
+						}.bind(this), true);
+					this._boundEvents.push({
+						"event": "setSelectedChild",
+						"signal": signal
+					});
+				}
+
+				if (this.app.appLogging.logAll) {
+					signal = advise.before(this.app, "emit",
+						function (evttype, params) { // jshint unused:false
+							var msg = "> app.emit for evttype=[" + evttype + "]";
+							if (evttype === "dapp-init") {
+								msg = msg + " for app.id=[" + this.app.id + "]";
+							}
+							if (evttype === "dapp-status-change") {
+								msg = msg + " status=[" + params.status + "] for app.id=[" + this.app.id + "]";
+							}
+							if (evttype === "dapp-display") {
+								msg = msg + " **NEW TRANSITION**";
+							}
+							if (params.dest) {
+								msg = msg + " dest=[" + params.dest + "]";
+							}
+							if (params.dapp && params.dapp.parentView.id) {
+								msg = msg + " dapp.parentView.id=[" + params.dapp.parentView.id + "]";
+							}
+							if (params.hide) {
+								msg = msg + " dapp.hide=[" + params.hide + "]";
+							}
+
+							if (evttype === "dapp-setup-view-stores") {
+								msg = msg + " event.id=[" + params.id + "] for app.id=[" + this.app.id + "]";
+							}
+
+							console.log(msg);
+						}.bind(this), true);
+					this._boundEvents.push({
+						"event": "setSelectedChild",
+						"signal": signal
+					});
+				}
 
 				if (this.app.appLogging.logAll || this.app.appLogging.logViews) {
-					this.setupAspectsForViews();
+					this.setupAdvisesForViews();
 				}
 			},
 
-			dappinit: function () {
-				if (this.app.appLogging.logAll) {
-					console.log("> dapp-init fired for this.app.id=[" + this.app.id + "]");
-				}
-			},
-
-			dappstatuschange: function (params) { // jshint maxcomplexity: 14
-				// Note app.status = app.lifecycle.STARTING is done in Application.js on domReady,
+			dappstatuschange: function (params) {
+				// Note app.status = app.STARTING is done in Application.js on domReady,
 				// so this is too late for 1.
-				var appId = params.app.id;
 				var status = params.status;
 				if (this.app.appLogging.logAll) {
-					console.log("> dapp-status-change fired with status=[" + status + "] for params.app.id=[" +
-						params.app.id + "]");
-				}
-				if (appId === this.app.id) {
-					if (status === this.app.lifecycle.STARTED) {
-						if (this.app.appLogging.logAll) {
-							console.log(" > dapp/status fired with status for lifecycle.STARTED for app.id=[" +
-								this.app.id + "]");
-						}
-						//Once the app is started we can add aspect before or after for methods in other controllers
+					if (status === this.app.STARTED) {
+						//Once the app is started we can add advise before or after for methods in other controllers
 						for (var i = 0; i < this.app.controllers.length; i++) {
 							// log things from the load controller here
-							if (this.app.appLogging.logAll || this.app.appLogging.LoadController) {
-								if (this.app.controllers[i] === "dapp/controllers/delite/Load") {
-									this.setupAspectsForLoadController(this.app.loadedControllers[i]);
-								}
+							if (this.app.controllers[i] === "dapp/controllers/delite/Load") {
+								this.setupAdvisesForLoadController(this.app.loadedControllers[i]);
 							}
 							if (this.app.controllers[i] === "dapp/controllers/delite/Transition") {
-								if (this.app.appLogging.logAll || this.app.appLogging.TransitionController) {
-									this.setupAspectsForTransitionController(this.app.loadedControllers[i]);
-								}
+								this.setupAdvisesForTransitionController(this.app.loadedControllers[i]);
 							}
 						}
 					}
-					if (status === 4) { // STOPPED
-						if (this.app.appLogging.logAll) {
-							console.log(" > dapp/status fired with status for lifecycle.STOPPED for app.id=[" +
-								this.app.id + "]");
-						}
-					}
 				}
 			},
-
-			dappsetupviewstores: function (event) {
-				if (this.app.appLogging.logAll) {
-					console.log(" > dapp-setup-view-stores fired for [" + event.id + "] this.app.id=[" +
-						this.app.id + "]");
+			logBeforeAfterShowHideDisplay: function (selfApp, value, event, show, before, handle) {
+				// If the value.dest does not match the one we are expecting keep waiting
+				if (app !== selfApp) { // if wrong app ignore the load request
+					console.warn(value.type + " called for the wrong application app.id=" +
+						selfApp.id + " value.dest=" + value.dest);
+					return;
 				}
-			},
-			dappdisplay: function (event) {
-				if (this.app.appLogging.logAll) {
-					console.log("> dapp-display fired **NEW** dapp-display event with event.dest=[" +
-						event.dest + "] this.app.id=[" + this.app.id + "]");
+				if (value.dest !== event.dest) { // if this delite-after-show is not for this view return
+					return;
 				}
+				handle.remove(); // remove the handle when we match value.dest
+				console.log("  > " + value.type + " fired value.dest=[" + value.dest +
+					"] event.dapp.parentView.id=[" +
+					(event.dapp.parentView ? event.dapp.parentView.id : "") + "]");
 			},
 			delitedisplayload: function (event) {
+				var self = this;
 				if (this.app.appLogging.logAll || this.app.appLogging.logDisplayLoad) {
-					if (event.dapp) {
-						console.log(" > delite-display-load fired with event.dest=[" + event.dest +
-							"] event.dapp.parentView.id=[" + event.dapp.parentView.id + "] event.hide=[" +
-							event.hide + "] this.app.id=[" + this.app.id + "]");
-
-					} else {
+					if (app !== this.app) { // if wrong app ignore the load request
+						console.warn("delite-display-load fired for the wrong application this.app.id=" +
+							this.app.id + " event.dest=" + event.dest);
+					}
+					if (!event.dapp) {
 						console.log("> delite-display-load fired no event.dapp with event.dest=[" + event.dest +
 							"] event.hide=[" + event.hide + "] this.app.id=[" + this.app.id + "]");
 					}
@@ -122,32 +128,26 @@ define(
 								(value.dapp && value.dapp.parentView ? value.dapp.parentView.id : "") + "]");
 						});
 					}
+					if (!event.dapp.hide) {
+						var onbeforeShowDisplayHandle = event.target.on("delite-before-show", function (value) {
+							this.logBeforeAfterShowHideDisplay(self.app, value, event, true, false,
+								onbeforeShowDisplayHandle);
+						}.bind(this));
+						var onafterShowDisplayHandle = event.target.on("delite-after-show", function (value) {
+							this.logBeforeAfterShowHideDisplay(self.app, value, event, false, false,
+								onafterShowDisplayHandle);
+						}.bind(this));
+					} else { // hide
+						var onbeforeHideDisplayHandle = event.target.on("delite-before-hide", function (value) {
+							this.logBeforeAfterShowHideDisplay(self.app, value, event, true, true,
+								onbeforeHideDisplayHandle);
+						}.bind(this));
+						var onafterHideDisplayHandle = event.target.on("delite-after-hide", function (value) {
+							this.logBeforeAfterShowHideDisplay(self.app, value, event, false, true,
+								onafterHideDisplayHandle);
+						}.bind(this));
+					}
 				}
-				var onbeforeDisplayHandle = event.target.on("delite-before-show, delite-before-hide", function (value) {
-					// If the value.dest does not match the one we are expecting keep waiting
-					if (value.dest !== event.dest) { // if this delite-after-show is not for this view return
-						return;
-					}
-					onbeforeDisplayHandle.remove(); // remove the handle when we match value.dest
-					if (this.app.appLogging.logAll) {
-						console.log("  > " + value.type + " fired value.dest=[" + value.dest +
-							"] event.dapp.parentView.id=[" + (event.dapp.parentView ? event.dapp.parentView.id : "") +
-							"]");
-					}
-				}.bind(this));
-				// on delite-after-show we will be ready to call afterDeactivate and afterActivate
-				var onHandle = event.target.on("delite-after-show, delite-after-hide", function (value) {
-					//var onHandle = on(event.target, "delite-after-show, , delite-after-hide", function (complete) {
-					if (value.dest !== event.dest) { // if this delite-after-show is not for this view return
-						return;
-					}
-					onHandle.remove();
-					if (this.app.appLogging.logAll) {
-						console.log("  > " + value.type + " fired value.dest=[" + value.dest +
-							"] event.dapp.parentView.id=[" + (event.dapp.parentView ? event.dapp.parentView.id : "") +
-							"]");
-					}
-				}.bind(this));
 			},
 			dappunloadview: function (event) {
 				if (this.app.appLogging.logAll) {
@@ -155,80 +155,76 @@ define(
 						"] this.app.id=[" + this.app.id + "]");
 				}
 			},
-			delitebeforeshow: function (event) {
-				if (this.app.appLogging.logAll) {
-					console.log("  > delite-before-show fired with event.view.id=[" + event.view.id +
-						"] this.app.id=[" + this.app.id + "]");
-				}
-			},
-			delitebeforehide: function (event) {
-				if (this.app.appLogging.logAll) {
-					console.log("  > delite-before-hide fired with event.view.id=[" + event.view.id +
-						"] this.app.id=[" + this.app.id + "]");
-				}
-			},
 
-			setupAspectsForViews: function () {
-				var signal = aspect.before(ViewBase.prototype, "start",
+			setupAdvisesForViews: function () {
+				var signal = advise.before(ViewBase.prototype, "start",
 					function () {
 						console.log("  > dapp/ViewBase.start called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "start",
 					"signal": signal
 				});
-				signal = aspect.before(View.prototype, "start",
+				signal = advise.before(View.prototype, "start",
 					function () {
 						console.log("  > dapp/View.start called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "start",
 					"signal": signal
 				});
-				signal = aspect.before(View.prototype, "load",
+				signal = advise.before(View.prototype, "load",
 					function () {
 						console.log("  > dapp/View.load called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "load",
 					"signal": signal
 				});
-				signal = aspect.before(ViewBase.prototype, "_loadViewController",
+				signal = advise.before(ViewBase.prototype, "_loadViewController",
 					function () {
 						console.log("  > dapp/ViewBase._loadViewController called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "_loadViewController",
 					"signal": signal
 				});
-				signal = aspect.before(View.prototype, "_loadTemplate",
+				signal = advise.before(View.prototype, "_loadTemplate",
 					function () {
 						console.log("  > dapp/View._loadTemplate called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "_loadTemplate",
 					"signal": signal
 				});
-				signal = aspect.before(View.prototype, "_startup",
+				signal = advise.before(View.prototype, "_startup",
 					function () {
 						console.log("  > dapp/View._startup called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "_startup",
 					"signal": signal
 				});
-				signal = aspect.before(ViewBase.prototype, "_initViewHidden",
+				signal = advise.before(ViewBase.prototype, "_initViewHidden",
 					function () {
 						console.log("  > dapp/ViewBase._initViewHidden called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "_initViewHidden",
 					"signal": signal
 				});
-				signal = aspect.before(ViewBase.prototype, "_startLayout",
+				signal = advise.before(ViewBase.prototype, "_startLayout",
 					function () {
 						console.log("  > dapp/ViewBase._startLayout called for [" + this.id + "]");
 					});
 				this._boundEvents.push({
+					"event": "_startLayout",
 					"signal": signal
 				});
 			},
 
-			setupAspectsForLoadController: function (loadController) {
-				var signal = aspect.before(loadController,
+			setupAdvisesForLoadController: function (loadController) {
+				var signal = advise.before(loadController,
 					"_handleBeforeDeactivateCalls", function (subs, next, current, data) { // jshint unused:false
 						for (var i = subs.length - 1; i >= 0; i--) {
 							var v = subs[i];
@@ -241,9 +237,10 @@ define(
 						}
 					}, true);
 				this._boundEvents.push({
+					"event": "_handleBeforeDeactivateCalls",
 					"signal": signal
 				});
-				signal = aspect.before(loadController, "_handleBeforeActivateCalls",
+				signal = advise.before(loadController, "_handleBeforeActivateCalls",
 					function (subs, current, data) { // jshint unused:false
 						for (var i = subs.length - 1; i >= 0; i--) {
 							var v = subs[i];
@@ -256,9 +253,10 @@ define(
 						}
 					}, true);
 				this._boundEvents.push({
+					"event": "_handleBeforeActivateCalls",
 					"signal": signal
 				});
-				signal = aspect.before(loadController, "_handleAfterActivateCalls",
+				signal = advise.before(loadController, "_handleAfterActivateCalls",
 					function (subs, removeView, current, data) { // jshint unused:false
 						var startInt = 0;
 						if (removeView && subs.length > 1) {
@@ -273,9 +271,10 @@ define(
 						}
 					}, true);
 				this._boundEvents.push({
+					"event": "_handleAfterActivateCalls",
 					"signal": signal
 				});
-				signal = aspect.before(loadController, "_handleAfterDeactivateCalls",
+				signal = advise.before(loadController, "_handleAfterDeactivateCalls",
 					function (subs, next, current, data) { // jshint unused:false
 						if (subs) {
 							//now we need to loop forwards thru subs calling afterDeactivate
@@ -289,41 +288,46 @@ define(
 						}
 					}, true);
 				this._boundEvents.push({
+					"event": "_handleAfterDeactivateCalls",
 					"signal": signal
 				});
 			},
 
-			setupAspectsForTransitionController: function (transitionController) {
-				var signal = aspect.before(transitionController, "_handleMultipleViewParts",
+			setupAdvisesForTransitionController: function (transitionController) {
+				var signal = advise.before(transitionController, "_handleMultipleViewParts",
 					function (event) {
 						console.log(" > Transition._handleMultipleViewParts called event.dest=[" + event.dest +
 							"] and event.viewData=[" + event.viewData + "]");
 					}, true);
 				this._boundEvents.push({
+					"event": "_handleMultipleViewParts",
 					"signal": signal
 				});
-				signal = aspect.before(transitionController, "_hideView",
+				signal = advise.before(transitionController, "_hideView",
 					function (viewTarget, event, isParent, viewPath) { // jshint unused:false
 						console.log(" > Transition._hideView called for viewTarget [" +
 							viewTarget + "] with event.dest = [" + event.dest + "] ");
 					}, true);
 				this._boundEvents.push({
+					"event": "_hideView",
 					"signal": signal
 				});
-				signal = aspect.before(transitionController, "_displayView",
+				signal = advise.before(transitionController, "_displayView",
 					function (viewTarget, event, isParent, viewPath) { // jshint unused:false
 						console.log(" > Transition._displayView called for viewTarget [" +
 							viewTarget + "] with event.dest = [" + event.dest + "] ");
 					}, true);
 				this._boundEvents.push({
+					"event": "_displayView",
 					"signal": signal
 				});
-				signal = aspect.before(transitionController, "_displayParents",
+				signal = advise.before(transitionController, "_displayParents",
 					function (viewTarget, event, isParent, viewPath) { // jshint unused:false
 						console.log(" > Transition._displayParents called for viewTarget [" +
 							viewTarget + "]");
 					}, true);
 				this._boundEvents.push({
+					"event": "_displayParents",
 					"signal": signal
 				});
 			}
