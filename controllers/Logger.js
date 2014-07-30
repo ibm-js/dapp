@@ -128,7 +128,7 @@ define(
 								(value.dapp && value.dapp.parentView ? value.dapp.parentView.id : "") + "]");
 						});
 					}
-					if (!event.dapp.hide) {
+					if (event.dapp.dest && !event.dapp.hide) {
 						var onbeforeShowDisplayHandle = event.target.on("delite-before-show", function (value) {
 							this.logBeforeAfterShowHideDisplay(self.app, value, event, true, false,
 								onbeforeShowDisplayHandle);

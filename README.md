@@ -6,7 +6,7 @@ configuration file defining:
   * application data stores
   * application views including their rendering, logical controller and internationalization file
 
-The views rendering can be based on any JavaScript UI framework including Dojo Mobile.
+The views rendering can be based on any JavaScript UI framework including delite/deliteful.
 
 ## Status
 
@@ -14,12 +14,11 @@ No official release yet.
 
 ## Migration
 
-This is the former dojox/app project.
+This is the former [dojox/app project](https://github.com/dmachi/dojox_application).
 
-Migration steps from dojox/app to dapp:
+Migration will require manual steps listed [here](docs/migration.md).
 
-* replace any use of "dojox/app/module" AMD module path by "dapp/modules"
-* replace any use of "dojox/app" AMD module path by "dapp"
+## Issues
 
 Bugs and open issues are tracked in the
 [github issues tracker](https://github.com/ibm-js/dapp/issues).
@@ -32,13 +31,13 @@ All contributions require a [Dojo Foundation CLA](http://dojofoundation.org/abou
 ## Dependencies
 
 This project requires the following other projects to run:
- * dojo
+ * delite
  * dcl    (git clone https://github.com/uhop/dcl.git)
  * requirejs (git clone https://github.com/jrburke/requirejs.git)
  * requirejs-dplugins
  * requirejs-domready
  * requirejs-text
- * delite
+ * dojo
  * (optional, only useful to run applications using deliteful) deliteful
  * (optional, only useful to run applications using jquery mobile) jquery mobile
 
@@ -60,11 +59,3 @@ Then install dependencies with bower (or manually from github if you prefer to):
 ## Documentation
 
 See the [docs directory](./docs).
-
-## Credits
-
-* Ed Chatelain (IBM CCLA)
-* Dustin Machi (CLA)
-* Christophe Jolif (IBM CCLA)
-* Stephen Zhang (IBM CCLA)
-* Eric Wang (IBM CCLA)

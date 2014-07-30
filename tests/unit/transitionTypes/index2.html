@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>dapp Transition Sample Application</title>
+
+	<link rel="stylesheet" href="app.css">
+
+	<!-- for requireJS -->
+	<script src="../../requirejs/require.js"></script>
+		<script>
+			require.config({
+			    paths: {
+			        "dapp": "../../dapp",
+					"dcl": "../../dcl",
+					"dojo": "../../dojo",
+					"dpointer": "../../dpointer",
+					"decor": "../../decor",
+					"delite": "../../delite",
+					"deliteful": "../../deliteful",
+					"requirejs": "../../requirejs",
+					"requirejs-text": "../../requirejs-text",
+					"requirejs-dplugins": "../../requirejs-dplugins",
+					"requirejs-domready": "../../requirejs-domready"
+			    },
+			    waitSeconds: 15
+			  });
+        </script>
+
+	<script>
+		require(["dapp/Application", //"dojo/json",
+				"requirejs-text/text!./config.json",
+				/*"requirejs-text/text!./dapp/samples/transitionTypes/config.json",*/
+				"dojo/sniff"
+			],
+			function (Application, /*json,*/ config, has) {
+				/* jshint nonew: false */
+				has.add("requirejs", window.requirejs);
+
+				// remove single line comments from the config json
+				var jsonData = config;
+				jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
+				jsonData = jsonData.replace(/\/\/.*/g, "");
+				jsonData.defaultView = "";
+				var appDeferred = new Application(JSON.parse(jsonData));
+				appDeferred.then(function (app) {
+					console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+				});
+			});
+	</script>
+
+	<style>
+		button {
+			width: 10em;
+		}
+		.vs > div {
+			font-size: 20px;
+			font-family: Helvetica;
+			text-align: center;
+			font-weight: bold;
+		}
+		.vs {
+			width: 50%;
+			height: 300px;
+			border: 2px solid gold
+		}
+	</style>
+
+	</head>
+	<body>
+	<d-linear-layout class="width100 height100 page">
+	    <div>
+	        <d-view-stack id="vs" class="vs" selectedChildId="bbb">
+	            <div style="background-color: honeydew; " id="aaa">
+	                	<h1>AAA</h1>
+	            </div>
+	            <div style="background-color: whitesmoke;" id="bbb">
+	                	<h1>BBB</h1>
+	            </div>
+	            <div style="background-color: powderblue;" id="ccc">
+	                	<h1>CCC</h1>
+	            </div>
+	            <div style="background-color: oldlace;" id="ddd">
+	                	<h1>DDD</h1>
+	            </div>
+	        </d-view-stack>
+	        <br>
+	        <input id="rev" type="checkbox">Reverse transition
+	        <br>
+	        <d-view-stack id="buts" selectedChildId="button1" style="height:100px"  class="vs">
+	            <div id="button1">
+	                <button is="d-button" onclick="vs.show('aaa',{transition:'slide', reverse:rev.checked})">Slide AAA</button>
+	                <button is="d-button" onclick="vs.show('bbb',{transition:'slide', reverse:rev.checked})">Slide BBB</button>
+	                <button is="d-button" onclick="vs.show('ccc',{transition:'slide', reverse:rev.checked})">Slide CCC</button>
+	                <button is="d-button" onclick="vs.show('ddd',{transition:'slide', reverse:rev.checked})">Slide DDD</button>
+	                <button is="d-button" onclick="buts.show('button2',{transition:'slide', reverse:rev.checked})">Slide button2</button>
+	            </div>
+	            <div id="button2">
+	                <button is="d-button" onclick="vs2.show('aaa2',{transition:'slide', reverse:rev.checked})">Slide AAA2</button>
+	                <button is="d-button" onclick="vs2.show('bbb2',{transition:'slide', reverse:rev.checked})">Slide BBB2</button>
+	                <button is="d-button" onclick="vs2.show('ccc2',{transition:'slide', reverse:rev.checked})">Slide CCC2</button>
+	                <button is="d-button" onclick="vs2.show('ddd2',{transition:'slide', reverse:rev.checked})">Slide DDD2</button>
+	                <button is="d-button" onclick="buts.show('button1',{transition:'slide', reverse:rev.checked})">Slide button2</button>
+	            </div>
+	        </d-view-stack>
+	        <d-view-stack id="vs2" selectedChildId="bbb2" class="vs width100  pageFooter">
+	            <div class="width100" style="background-color: coral; " id="aaa2">
+	                	<h1>AAA</h1>
+	            </div>
+	            <div style="background-color: whitesmoke;" id="bbb2">
+	                	<h1>BBB</h1>
+	            </div>
+	            <div style="background-color: powderblue;" id="ccc2">
+	                	<h1>CCC</h1>
+	            </div>
+	            <div style="background-color: oldlace;" id="ddd2">
+	                	<h1>DDD</h1>
+	            </div>
+	        </d-view-stack>
+	    </div>
+	</d-linear-layout>
+	</body>
+</html>

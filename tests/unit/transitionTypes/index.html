@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>dapp Transition Sample Application</title>
+
+	<link rel="stylesheet" href="app.css">
+
+	<!-- for requireJS -->
+	<script src="../../../../requirejs/require.js"></script>
+	<script>
+		require.config({
+			paths: {
+				"dapp": "../../../../dapp",
+				"dcl": "../../../../dcl",
+				"dojo": "../../../../dojo",
+				"dpointer": "../../../../dpointer",
+				"decor": "../../../../decor",
+				"delite": "../../../../delite",
+				"deliteful": "../../../../deliteful",
+				"requirejs": "../../../../requirejs",
+				"requirejs-text": "../../../../requirejs-text",
+				"requirejs-dplugins": "../../../../requirejs-dplugins",
+				"requirejs-domready": "../../../../requirejs-domready"
+			},
+			waitSeconds: 15
+		});
+	</script>
+
+	<script>
+		//require(["./App.js"]);
+		require(["dapp/Application", //"dojo/json",
+				"requirejs-text/text!./config.json",
+				"dojo/sniff"
+			],
+			function (Application, /*json,*/ config, has) {
+				/* jshint nonew: false */
+				has.add("requirejs", window.requirejs);
+
+				// remove single line comments from the config json
+				var jsonData = config;
+				jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
+				jsonData = jsonData.replace(/\/\/.*/g, "");
+				var json = JSON.parse(jsonData);
+				json.loaderConfig.paths.transitionTypesApp = "../transitionTypes"
+				//new Application(JSON.parse(jsonData));
+				var appDeferred = new Application(json);
+				appDeferred.then(function (app) {
+					console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+				});
+			});
+
+	</script>
+</head>
+<body>
+<d-linear-layout class=" width100 height100 page">
+	<!-- Header -->
+	<d-linear-layout id="headerll" class=" width100 pageHeader">
+	</d-linear-layout>
+	<!-- Main content (ViewStack) TODO: Note there is a problem with the reveal transitions when views are 1st loaded-->
+	<d-view-stack id="vs" class="vs width100">
+	</d-view-stack>
+	<!-- Footer -->
+	<d-view-stack id="footerll" class="vs width100 pageFooter" style="height:356px; background-color: blue;">
+		<div id="inline">
+			<input id="nextFooter4" type="button" onclick="footerll.show('footer')">Transition with footerll.show(footer) <br>
+			<button is="d-button" onclick="vs.show('aaa',{transition:'slidev'})">SlideV AAA</button>
+			<button is="d-button" onclick="vs.show('bbb',{transition:'reveal'})">Reveal BBB</button>
+			<button is="d-button" onclick="vs.show('ccc',{transition:'flip'})">Flip CCC</button>
+			<button is="d-button" onclick="vs.show('ddd',{transition:'coverv'})">CoverV DDD</button>
+	 	</div>
+	</d-view-stack>
+</d-linear-layout>
+</body>
+</html>

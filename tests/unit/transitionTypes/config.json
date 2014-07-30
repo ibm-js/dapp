@@ -1,0 +1,94 @@
+{
+	"id": "ttApp",
+
+	"loaderConfig": {
+		"paths": {
+			"transitionTypesApp": "./dapp/tests/unit/transitionTypes"
+		}
+	},
+
+	"containerSelector" : "#vs",
+
+	"modules": [
+	],
+
+	"parseOnLoad": true,
+
+	"dependencies": [
+		"delite/register",
+		"deliteful/ViewStack",
+		"deliteful/LinearLayout",
+		"deliteful/Button",
+		"delite/css!deliteful/ViewStack/transitions/cover.css",
+		"delite/css!deliteful/ViewStack/transitions/coverv.css",
+		"delite/css!deliteful/ViewStack/transitions/fade.css",
+		"delite/css!deliteful/ViewStack/transitions/flip.css",
+		"delite/css!deliteful/ViewStack/transitions/slidev.css",
+		"delite/css!deliteful/ViewStack/transitions/revealv.css",
+		"delite/theme!delite/themes/{{theme}}/global.css",	// page level CSS
+		"delite/css!dapp/tests/unit/transitionTypes/app.css"
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/History"
+	],
+
+	"appLogging": {
+		"logAll": 1
+	},
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
+	"defaultView": "header+aaa+footer",
+
+	"views": {
+		"aaa": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "transitionTypesApp/aaa.js",
+			"template": "transitionTypesApp/aaa.html"
+		},
+		"bbb": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "transitionTypesApp/bbb.js",
+			"template": "transitionTypesApp/bbb.html"
+		},
+		"ccc": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "transitionTypesApp/ccc.js",
+			"template": "transitionTypesApp/ccc.html"
+		},
+		"ddd": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "transitionTypesApp/ddd.js",
+			"template": "transitionTypesApp/ddd.html"
+		},
+		"header": {
+			"parentSelector": "#headerll",
+			"template": "transitionTypesApp/header.html"
+		},
+		"footer": {
+			"parentSelector": "#footerll",
+			"constraint": "footerll",
+			"controller" : "transitionTypesApp/footer.js",
+			"template": "transitionTypesApp/footer.html"
+		},
+		"footer3": {
+			"parentSelector": "#footerll",
+			"constraint": "footerll",
+			"controller" : "transitionTypesApp/footer3.js",
+			"template": "transitionTypesApp/footer3.html"
+		},
+		"footerShow": {
+			"parentSelector": "#footerll",
+			"constraint": "footerll",
+			"controller" : "transitionTypesApp/footerShow.js",
+			"template": "transitionTypesApp/footerShow.html"
+		}
+	}
+}

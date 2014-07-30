@@ -42,6 +42,7 @@ define(
 				if (this.app.id !== app.id) {
 					//TODO: rmove this warn
 					console.warn("TEMP msg - mapping *** Wrong appId app.id=" + app.id + " this.app.id=" + this.app.id);
+					return; // do not fire to the wrong application
 				}
 				app.emit("delite-display-load", event);
 			},
@@ -96,10 +97,12 @@ define(
 				} else {
 					viewId = viewUtils.getViewIdFromEvent(this.app, event);
 				}
-
+				event.dapp = {};
+				if (!viewId) {
+					return event.dapp; // not a dapp view so nothing to setup in event.dapp
+				}
 				// setup dest with the full view path, add in defaultViews if necessary
 				dest = viewId.replace(/_/g, ",");
-				event.dapp = {};
 
 				// Note at one point this code would not set callTransition = true for a single view but in that
 				// case the history controller would not be notified of the transition, so it was changed to always
@@ -148,7 +151,8 @@ define(
 							}
 							var appView = self.app;
 
-							var firstChildView = appView.children[firstChildId];
+							var firstChildView = appView.children[firstChildId] ||
+								viewUtils.getViewFromViewId(appView, value.dapp.id); // may be nested
 
 							var nextSubViewArray = self._getNextSubViewArray(subIds, firstChildView, appView);
 
@@ -303,9 +307,19 @@ define(
 			},
 
 			_handleShowFromDispContainer: function (event, dest) {
+				if (!dest) { // this is not a dapp view, so it should be loaded, resolve it
+					var child = document.getElementById(event.dest);
+					event.loadDeferred.resolve({
+						child: child
+					});
+					return;
+				}
 				var tempDisplaydeferred = new Deferred();
+				var savedLoadDeferred = event.loadDeferred;
 				this.app.emit("dapp-display", {
 					dest: dest,
+					transition: event.transition,
+					reverse: event.reverse,
 					displayDeferred: tempDisplaydeferred,
 					bubbles: true,
 					cancelable: true
@@ -314,7 +328,7 @@ define(
 					// resolve the loadDeferred here, do not need dapp stuff since we are not waiting on the
 					// "delite-before-show" or "delite-after-show" it was handled already by the emit
 					// for "dapp-display" above.
-					event.loadDeferred.resolve({
+					savedLoadDeferred.resolve({
 						child: value[0].child
 					});
 				});

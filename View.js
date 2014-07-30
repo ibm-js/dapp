@@ -143,9 +143,10 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "delite/Widget", "de
 					dcl.mix(viewParams, viewAttributes);
 
 					var tag = "dapp-view-" + this.id.toLowerCase();
-					register(tag, [HTMLElement, Widget], viewParams);
+					var TagWidget = register(tag, [HTMLElement, Widget], viewParams);
 
-					this.domNode = register.createElement(tag);
+					//this.domNode = register.createElement(tag);
+					this.domNode = new TagWidget();
 					//this.own(this.domNode); // had problem extending Widget
 					this.domNode.id = this.id;
 

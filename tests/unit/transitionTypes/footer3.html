@@ -1,0 +1,48 @@
+<template class="width100 height100">
+	<div class="width100">
+			<d-linear-layout vertical="false" class="width100" style="height:40px; background-color: pink;">
+				<input id="rev3" type="checkbox">Reverse transition
+				<input id="nextFooter3" type="button" on-click="footerll.show('inline',{transition:'slide'})">Transition with footerll.show(inline)
+			</d-linear-layout>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'slide', reverse:rev3.checked})">Slide AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'slide', reverse:rev3.checked})">Slide BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'slide', reverse:rev3.checked})">Slide CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'slide', reverse:rev3.checked})">Slide DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'slidev', reverse:rev3.checked})">SlideV AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'slidev', reverse:rev3.checked})">SlideV BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'slidev', reverse:rev3.checked})">SlideV CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'slidev', reverse:rev3.checked})">SlideV DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'reveal', reverse:rev3.checked})">Reveal AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'reveal', reverse:rev3.checked})">Reveal BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'reveal', reverse:rev3.checked})">Reveal CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'reveal', reverse:rev3.checked})">Reveal DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'revealv', reverse:rev3.checked})">RevealV AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'revealv', reverse:rev3.checked})">RevealV BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'revealv', reverse:rev3.checked})">RevealV CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'revealv', reverse:rev3.checked})">RevealV DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'flip', reverse:rev3.checked})">Flip AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'flip', reverse:rev3.checked})">Flip BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'flip', reverse:rev3.checked})">Flip CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'flip', reverse:rev3.checked})">Flip DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'fade', reverse:rev3.checked})">Fade AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'fade', reverse:rev3.checked})">Fade BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'fade', reverse:rev3.checked})">Fade CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'fade', reverse:rev3.checked})">Fade DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'cover', reverse:rev3.checked})">Cover AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'cover', reverse:rev3.checked})">Cover BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'cover', reverse:rev3.checked})">Cover CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'cover', reverse:rev3.checked})">Cover DDD</button>
+		<br>
+		<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'coverv', reverse:rev3.checked})">CoverV AAA</button>
+		<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'coverv', reverse:rev3.checked})">CoverV BBB</button>
+		<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'coverv', reverse:rev3.checked})">CoverV CCC</button>
+		<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'coverv', reverse:rev3.checked})">CoverV DDD</button>
+	</div>
+</template>

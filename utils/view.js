@@ -323,6 +323,9 @@ define(["dcl/dcl"], function (dcl) {
 				return pViewId;
 			}
 			var pView = this.getParentViewFromViewName(app, dest, parentNode);
+			if (!pView) { // this is not a dapp view
+				return null;
+			}
 			if (app === pView) { // pView is the app
 				return dest;
 			}
@@ -355,7 +358,8 @@ define(["dcl/dcl"], function (dcl) {
 				}
 			}
 			if (!app.views[viewName]) {
-				console.warn("Did not find parentView will use the app for viewName = " + viewName);
+				console.warn("Did not find parentView returning null for parentView for viewName = " + viewName);
+				return null;
 			}
 			return app;
 		},
