@@ -1,6 +1,6 @@
 {
 	"name": "dapp",
-	"version": "0.1.0-dev",
+	"version": "0.1.1-dev",
 	"description": "AMD-based Application Framework for building Web & Mobile applications ",
 	"dependencies": {
 	},
@@ -10,7 +10,8 @@
 		"grunt-contrib-jshint": "~0.6.3",
 		"grunt-contrib-less": "~0.8.3",
 		"grunt-contrib-uglify": "~0.2.2",
-		"grunt-jsbeautifier": "~0.2.2"
+		"grunt-jsbeautifier": "~0.2.2",
+		"jsdoc-amddcl": "git://github.com/ibm-js/jsdoc-amddcl#master"
 	},
 	"licenses": [
 		{

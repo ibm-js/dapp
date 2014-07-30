@@ -72,6 +72,39 @@ module.exports = function (grunt) {
 					reporters: ["runner"]
 				}
 			}
+		},
+
+		"jsdoc-amddcl": {
+			docs: {
+				files: [{
+					src: [
+						".",
+						"./controllers/delite",
+						"./README.md",
+						"./package.json"
+					]//,
+				//	imports: [
+				//		"../delite/out"
+				//	]
+				}]
+			},
+			export: {
+				files: [{
+					args: [
+						"-X"
+					],
+					src: [
+						".",
+						"./list",
+						"./README.md",
+						"./package.json"
+					],
+					dest: "./out/doclets.json"//,
+				//	imports: [
+				//		"../delite/out"
+				//	]
+				}]
+			}
 		}
 	});
 
@@ -79,7 +112,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("intern");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-jsbeautifier");
+	grunt.loadNpmTasks("jsdoc-amddcl");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
+
+	// Aliases
+	grunt.registerTask("jsdoc", "jsdoc-amddcl");
 
 	// By default, lint and run all tests.
 	grunt.registerTask("default", ["jsbeautifier", "jshint"]);
