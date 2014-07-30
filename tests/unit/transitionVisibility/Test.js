@@ -89,7 +89,7 @@ define([
 			transitionVisibilityNode3.show("transitionVisibilityAppHome3NoController");
 			return d;
 		},
-		"Test displayView (by view name) ": function () {
+		"Test showOrHideViews (by view name) ": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
 

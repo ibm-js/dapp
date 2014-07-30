@@ -4,18 +4,18 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/> 
 		<meta name="apple-mobile-web-app-capable" content="yes" /> 
 		<title>dstoreMemory Unit App Test</title>
-		<link rel="stylesheet" href="../../../delite/themes/defaultapp.css">
+		<link rel="stylesheet" href="../../../../delite/themes/defaultapp.css">
 
-		<link rel="stylesheet" href="../deliteApp/app.css">
 
 		<!-- for dojo -->
 		<!--
+		<link rel="stylesheet" href="../deliteApp/app.css">
 		<script type="text/javascript" data-dojo-config="async: true" src="../../../dojo/dojo.js"></script>
 		-->
 
 		<!-- for requireJS -->
 		<!--  -->
-		<script src="../../../requirejs/require.js"></script>
+		<script src="../../../../requirejs/require.js"></script>
 			<script>
 				require.config({
 					/* either us baseUrl and paths or packages
@@ -45,7 +45,46 @@
 	        </script>
 		<!-- -->
 		<script>
-			require(["./App"]);
+			//require(["./App"]);
+			require(["dapp/Application", "dojo/json", "requirejs-text/text!./app.json", "dojo/sniff"],
+				function (Application, json, config, has) {
+					window.dstoreMemoryApp = {};
+					window.dstoreMemoryApp.list1Data = {
+						identifier: "id",
+						'items': []
+					};
+					for (var i = 1; i < 6; i++) {
+						window.dstoreMemoryApp.list1Data.items.push({
+							label: "Selection " + i,
+							id: i
+						});
+					}
+
+
+					window.dstoreMemoryApp.list2Data = {
+						identifier: "id",
+						'items': []
+					};
+					for (i = 6; i < 11; i++) {
+						window.dstoreMemoryApp.list2Data.items.push({
+							label: "Selection " + i,
+							id: i
+						});
+					}
+
+					has.add("requirejs", window.requirejs);
+					/* jshint nonew: false */
+					var jsonData = config;
+					jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
+					jsonData = jsonData.replace(/\/\/.*/g, "");
+					var json = JSON.parse(jsonData);
+					json.loaderConfig.paths.dstoreMemoryApp = "../dstoreMemory"
+					//new Application(JSON.parse(jsonData));
+					var appDeferred = new Application(json);
+					appDeferred.then(function (app) {
+						console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+					});
+				});
         </script>
 	</head>
 	<body style="width:100%; height: 100%">

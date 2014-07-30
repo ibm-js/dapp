@@ -82,10 +82,10 @@ module.exports = function (grunt) {
 						"./controllers/delite",
 						"./README.md",
 						"./package.json"
-					]//,
-				//	imports: [
-				//		"../delite/out"
-				//	]
+					] //,
+					//	imports: [
+					//		"../delite/out"
+					//	]
 				}]
 			},
 			export: {
@@ -99,10 +99,10 @@ module.exports = function (grunt) {
 						"./README.md",
 						"./package.json"
 					],
-					dest: "./out/doclets.json"//,
-				//	imports: [
-				//		"../delite/out"
-				//	]
+					dest: "./out/doclets.json" //,
+					//	imports: [
+					//		"../delite/out"
+					//	]
 				}]
 			}
 		}

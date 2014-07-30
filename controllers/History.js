@@ -30,6 +30,12 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
 			},
 
 			popstateMapper: function (event) {
+				if (this.app.id !== app.id) {
+					//TODO: rmove this warn
+					console.warn("TEMP msg - mapping *** Wrong appId history app.id=" + app.id + " this.app.id=" +
+						this.app.id);
+					return; // do not fire to the wrong application
+				}
 				app.emit("popstate", event);
 			},
 
@@ -59,7 +65,8 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
 					"hash": evt.hash,
 					"viewParams": evt.viewParams,
 					"viewData": evt.viewData,
-					"transition": evt.transition
+					"transition": evt.transition,
+					"reverse": evt.reverse
 				};
 
 				// Create a new "current state" history entry
@@ -138,12 +145,12 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
 					dest: newDest,
 					viewParams: evt.state.viewParams,
 					viewData: evt.state.viewData,
-					reverse: backward ? true : false
+					reverse: backward ? !evt.state.reverse : evt.state.reverse,
+					transition: evt.state.transition
 				};
-				dcl.mix(opts, {
-					transition: "slide",
-					direction: "end"
-				});
+				//dcl.mix(opts, {
+				//	direction: "end"
+				//});
 				this.app.emit("dapp-display", opts);
 
 				// Finally: Publish popState topic

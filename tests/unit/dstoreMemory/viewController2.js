@@ -24,13 +24,14 @@ define([],
 				// When the list is clicked, transition to dstoreMemoryAppHome2, pass the label of the selected item.
 				this.domNode.ownerDocument.getElementById("list2").on("click",
 					function ( /*MouseEvent*/ evt) {
-						var label = evt.target.innerHTML || "";
-						var params = {
-							viewData: label
-						};
+						var label = evt.target.innerText || evt.target.textContent || "";
 						var targetView = "dstoreMemoryAppHome1";
-						//	dstoreMemoryApp.displayView(targetView,{viewData:label)
-						dstoreMemoryApp.displayView(targetView, params);
+						var params = {
+							viewData: {
+								label: label
+							}
+						};
+						dstoreMemoryApp.showOrHideViews(targetView, params);
 					}
 				);
 

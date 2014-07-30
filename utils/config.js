@@ -1,4 +1,4 @@
-define(["dojo/sniff"], function (has) {
+define(["delite/uacss"], function (has) {
 
 	// module:
 	//		dapp/utils/config

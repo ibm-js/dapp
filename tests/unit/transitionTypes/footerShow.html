@@ -1,0 +1,62 @@
+<template class="width100 height100">
+	<d-linear-layout vertical="true" class="width100" id="llinTemplate">
+		<d-linear-layout vertical="false" class="width100" style="height:40px; background-color: pink;">
+			<input id="rev2" type="checkbox">Reverse transition
+			<input id="nextFooter2" type="button" on-click="ttApp.showOrHideViews('footer3',{transition:'slide', reverse:rev2.checked})">Transition with showOrHideViews(footer3)
+		</d-linear-layout>
+	</d-linear-layout>
+
+	<d-linear-layout vertical="false" class="width100">
+		<d-linear-layout vertical="true" class="width100" style="background-color: lightskyblue;">
+		<span> These use vs.show</span>
+		<d-linear-layout vertical="false" class="width100" >
+			<button is="d-button" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'slide', reverse:rev2.checked})">Slide AAA</button>
+			<button is="d-button" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'slide', reverse:rev2.checked})">Slide BBB</button>
+			<button is="d-button" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'slide', reverse:rev2.checked})">Slide CCC</button>
+			<button is="d-button" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'slide', reverse:rev2.checked})">Slide DDD</button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false" class="width100">
+			<d-button disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'slidev', reverse:rev2.checked})">SlideV AAA</d-button>
+			<d-button disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'slidev', reverse:rev2.checked})">SlideV BBB</d-button>
+			<d-button disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'slidev', reverse:rev2.checked})">SlideV CCC</d-button>
+			<d-button disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'slidev', reverse:rev2.checked})">SlideV DDD</d-button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false" class="width100">
+			<d-button disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'reveal', reverse:rev2.checked})">Reveal AAA</d-button>
+			<d-button disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'reveal', reverse:rev2.checked})">Reveal BBB</d-button>
+			<d-button disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'reveal', reverse:rev2.checked})">Reveal CCC</d-button>
+			<d-button disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'reveal', reverse:rev2.checked})">Reveal DDD</d-button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false" class="width100">
+			<d-button id="revealvAAA2" disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'revealv', reverse:rev2.checked})">RevealV AAA</d-button>
+			<d-button disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'revealv', reverse:rev2.checked})">RevealV BBB</d-button>
+			<d-button disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'revealv', reverse:rev2.checked})">RevealV CCC</d-button>
+			<d-button disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'revealv', reverse:rev2.checked})">RevealV DDD</d-button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false">
+			<d-button disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'flip', reverse:rev2.checked})">Flip AAA</d-button>
+			<d-button id="flipBBB2" disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'flip', reverse:rev2.checked})">Flip BBB</d-button>
+			<d-button disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'flip', reverse:rev2.checked})">Flip CCC</d-button>
+			<d-button disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'flip', reverse:rev2.checked})">Flip DDD</d-button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false">
+			<d-button disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'fade', reverse:rev2.checked})">Fade AAA</d-button>
+			<d-button disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'fade', reverse:rev2.checked})">Fade BBB</d-button>
+			<d-button id="fadeCCC2" disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'fade', reverse:rev2.checked})">Fade CCC</d-button>
+			<d-button disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'fade', reverse:rev2.checked})">Fade DDD</d-button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false">
+			<d-button disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'cover', reverse:rev2.checked})">Cover AAA</d-button>
+			<d-button disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'cover', reverse:rev2.checked})">Cover BBB</d-button>
+			<d-button disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'cover', reverse:rev2.checked})">Cover CCC</d-button>
+			<d-button id="coverDDD2" disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'cover', reverse:rev2.checked})">Cover DDD</d-button>
+		</d-linear-layout>
+		<d-linear-layout vertical="false">
+			<d-button disabled="{{aaasel}}" on-click="vs.show('aaa',{transition:'coverv', reverse:rev2.checked})">CoverV AAA</d-button>
+			<d-button disabled="{{bbbsel}}" on-click="vs.show('bbb',{transition:'coverv', reverse:rev2.checked})">CoverV BBB</d-button>
+			<d-button disabled="{{cccsel}}" on-click="vs.show('ccc',{transition:'coverv', reverse:rev2.checked})">CoverV CCC</d-button>
+			<d-button disabled="{{dddsel}}" on-click="vs.show('ddd',{transition:'coverv', reverse:rev2.checked})">CoverV DDD</d-button>
+		</d-linear-layout>
+		</d-linear-layout>
+	</d-linear-layout>
+</template>

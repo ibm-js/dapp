@@ -1,5 +1,6 @@
 // Listing of all the infrastructure unit tests
 define([
+	"./transitionTypes/Test",
 	"./viewLayout/Test",
 	"./appStatus/Test",
 	"./transitionVisibility/Test",
