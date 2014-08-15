@@ -257,7 +257,7 @@ define([
 					checkActivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
 
 					// Now multipleAndNestedViewsActivateCallsApp1P2V1View DeactivateCallCounts should be 1
-					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V1View, 1);
+					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V1View, 0, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V7View, 2, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V1View, 3, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
@@ -299,7 +299,7 @@ define([
 		},
 
 		// Currently showing P1,S1,V1 test transition to P2,P2S1,P2V1
-		"testApp.showOrHideViews('-content,P2,P2S1') NOTE problem w/ -content,P2!!! hides P2,P2S1,P2V2": function () {
+		"testApp.showOrHideViews('-content,P2,P2S1')": function () {
 			this.timeout = 20000;
 			return document.getElementById("content_P2_P2S1").parentNode
 				.hide(document.getElementById("content_P2_P2S1").id).then(function () {
@@ -325,7 +325,7 @@ define([
 					checkActivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
 
 					// Now multipleAndNestedViewsActivateCallsApp1P2V1View DeactivateCallCounts should be 1
-					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V2View, 1);
+					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V2View, 0, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V7View, 2, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V1View, 3, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);

@@ -304,7 +304,7 @@ define([
 				var hc1left1View = viewUtils.getViewFromViewId(testApp, "hc1leftParent_hc1left1");
 				assert.isTrue(hc1left1content.style.display === "none");
 				checkActivateCallCount(hc1left1View, 1, true);
-				checkDeactivateCallCount(hc1left1View, 1, true);
+				checkDeactivateCallCount(hc1left1View, 0, true); // not deactivated because only parent was
 			});
 		},
 		// Currently showing hc1header1+hc1centerParent+hc1center1+hc1footer1 test

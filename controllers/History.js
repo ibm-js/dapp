@@ -157,9 +157,9 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
 				this.app.emit("dapp-popState", opts);
 			},
 
-			//TODO: question about removing the parent and the child view for example +leftParent,left1 when added adds
-			//TODO: both leftParent and left1, but -leftParent,left1 only hides left1, not leftParent, if you want to
-			//TODO: hide both you need to do -leftParent-leftParent,left1, so we do that on getViewsToRemoveFromDest
+			// when removing the parent and the child view for example +leftParent,left1 when added adds
+			// both leftParent and left1, but -leftParent,left1 only hides left1, not leftParent, if you want to
+			// hide both you need to do -leftParent,left1-leftParent so we do that on getViewsToRemoveFromDest
 			getViewsToRemoveFromDest: function (nextDest, prevDest) {
 				var removedDest = "";
 				if (nextDest && prevDest) {
@@ -181,14 +181,22 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
 									break;
 								}
 							}
+							// Need to remove the parent and subparents separately because if there is a nested
+							// child in a sidepane for example, and we need to hide the child we also need to close
+							// the sidepane.
 							if (removeView) {
 								var remTemp2 = "";
 								var remTempParts = remTemp.split(",");
 								if (remTempParts.length > 1) {
-									for (var i = 0; i < remTempParts.length - 1; i++) {
-										remTemp2 = remTemp2 + "-" + remTempParts[i];
+									var currRem = "-" + remTempParts.shift();
+									remTemp2 = remTemp2 + currRem;
+									if (remTempParts.length > 0) {
+										while (remTempParts.length > 0) {
+											var nxtOne = remTempParts.shift(",");
+											currRem = currRem + "," + nxtOne;
+											remTemp2 = currRem + remTemp2;
+										}
 									}
-									remTemp2 = remTemp2 + "-" + remTemp;
 									removedDest = removedDest + remTemp2;
 								} else {
 									removedDest = removedDest + "-" + prevParts[item];

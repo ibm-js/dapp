@@ -259,7 +259,7 @@ define([
 					checkActivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
 
 					// Now multipleAndNestedViewsActivateCallsApp1P2V1View DeactivateCallCounts should be 1
-					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V1View, 1);
+					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V1View, 0, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V7View, 2, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V1View, 3, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);
@@ -330,7 +330,7 @@ define([
 					checkActivateCallCount(multipleAndNestedViewsActivateCallsApp1P1View, 4, true);
 
 					// Now multipleAndNestedViewsActivateCallsApp1P2V1View DeactivateCallCounts should be 1
-					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V2View, 1);
+					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1P2V2View, 0, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V7View, 2, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V1View, 3, true);
 					checkDeactivateCallCount(multipleAndNestedViewsActivateCallsApp1V2View, 1, true);

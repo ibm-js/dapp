@@ -66,8 +66,8 @@ define([
 				// check the DOM state to see if we are in the expected state
 				assert.isNotNull(nestedViewsActivateCallsNode1, "root nestedViewsActivateCallsNode1 must be here");
 				assert.isNotNull(nestedViewsActivateCallsApp1P1, "nestedViewsActivateCallsApp1Home1 view must exist");
-				assert.deepEqual(nestedViewsActivateCallsApp1P1View._beforeActivateCallCount, 1,
-					"nestedViewsActivateCallsApp1P1View._beforeActivateCallCount should be 1");
+				assert.deepEqual(nestedViewsActivateCallsApp1P1View.beforeActivateCallCount, 1,
+					"nestedViewsActivateCallsApp1P1View.beforeActivateCallCount should be 1");
 
 				checkNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1P1);
 			});
@@ -189,6 +189,33 @@ define([
 				checkDeactivateCallCount(nestedViewsActivateCallsApp1P1View, 3, true);
 			});
 		},
+		// Currently showing P1_S1_V1 use history.back() to get back to V7
+		"test history.back() to get back to V7)": function () {
+			this.timeout = 20000;
+			var displayDeferred = new Deferred();
+			setupOnOnce(testApp, displayDeferred);
+			history.back();
+			return displayDeferred.then(function () {
+				var nestedViewsActivateCallsApp1V7 = document.getElementById("V7");
+				checkNodeVisibility(nestedViewsActivateCallsNode1, nestedViewsActivateCallsApp1V7);
+
+				// Now nestedViewsActivateCallsApp1V2View ActivateCallCounts should be 1
+				checkActivateCallCount(nestedViewsActivateCallsApp1V7View, 2, true);
+
+				// Now nestedViewsActivateCallsApp1V1View ActivateCallCounts should be 1
+				checkActivateCallCount(nestedViewsActivateCallsApp1V2View, 1, true);
+				checkActivateCallCount(nestedViewsActivateCallsApp1V1View, 3, true);
+				checkActivateCallCount(nestedViewsActivateCallsApp1S1View, 4, true);
+				checkActivateCallCount(nestedViewsActivateCallsApp1P1View, 4, true);
+
+				// Now nestedViewsActivateCallsApp1V1View DeactivateCallCounts should be 1
+				checkDeactivateCallCount(nestedViewsActivateCallsApp1V7View, 2, true);
+				checkDeactivateCallCount(nestedViewsActivateCallsApp1V1View, 3);
+				checkDeactivateCallCount(nestedViewsActivateCallsApp1V2View, 1);
+				checkDeactivateCallCount(nestedViewsActivateCallsApp1S1View, 4);
+				checkDeactivateCallCount(nestedViewsActivateCallsApp1P1View, 4);
+			});
+		},
 
 		teardown: function () {
 			// call unloadApp to cleanup and end the test
@@ -198,6 +225,13 @@ define([
 	};
 
 	registerSuite(nestedViewsActivateCallsSuite1);
+
+	function setupOnOnce(testApp, displayDeferred) {
+		var signal = testApp.on("dapp-finished-transition", function () {
+			displayDeferred.resolve();
+			signal.unadvise();
+		});
+	}
 
 	function checkNodeVisibility(vs, target) {
 		for (var i = 0; i < vs.children.length; i++) {
@@ -220,10 +254,10 @@ define([
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view._beforeActivateCallCount, count,
-				view.id + " _beforeActivateCallCount should be " + count);
-			assert.deepEqual(view._afterActivateCallCount, count,
-				view.id + " _afterActivateCallCount should be " + count);
+			assert.deepEqual(view.beforeActivateCallCount, count,
+				view.id + " beforeActivateCallCount should be " + count);
+			assert.deepEqual(view.afterActivateCallCount, count,
+				view.id + " afterActivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to true
 			if (!skipActiveCheck) {
@@ -234,10 +268,10 @@ define([
 
 	function checkDeactivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view._beforeDeactivateCallCount, count,
-				view.id + " _beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view._afterDeactivateCallCount, count,
-				view.id + " _afterDeactivateCallCount should be " + count);
+			assert.deepEqual(view.beforeDeactivateCallCount, count,
+				view.id + " beforeDeactivateCallCount should be " + count);
+			assert.deepEqual(view.afterDeactivateCallCount, count,
+				view.id + " afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false
 			if (!skipActiveCheck) {

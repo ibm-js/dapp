@@ -116,7 +116,7 @@ define([
 		"Hide sp1left1 with testApp.showOrHideViews('-sp1leftParent')": function () {
 			this.timeout = 20000;
 			var displayDeferred = new Deferred();
-			testApp.showOrHideViews('-sp1leftParent', {
+			testApp.showOrHideViews('-sp1leftParent,sp1left1-sp1leftParent', {
 				displayDeferred: displayDeferred
 			});
 			return displayDeferred.then(function () {
@@ -127,7 +127,7 @@ define([
 				assert.isTrue(sp1left1content.style.display === "none");
 
 				checkActivateCallCount(sp1left1View, 1, true);
-				checkDeactivateCallCount(sp1left1View, 1, true);
+				checkDeactivateCallCount(sp1left1View, 1, true); // note not deactivated because only parent is hidden
 			});
 		},
 		// Currently showing sp1header1+sp1centerParent+sp1center1+sp1footer1 test
