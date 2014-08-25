@@ -7,7 +7,7 @@ define([], function () {
 		_afterDeactivateCallCount: 0,
 		tempName: "",
 		init: function () {
-			this.domNode.name = this.id;
+			this.name = this.id;
 		},
 		beforeActivate: function () {
 			this._beforeActivateCallCount++;
@@ -21,9 +21,9 @@ define([], function () {
 		afterDeactivate: function () {
 			this._afterDeactivateCallCount++;
 		},
-		// for now destroy function is required or an error can occur during dapp-unload-app or dapp-unload-view
-		destroy: function () {
-			//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+		// for now beforeDestroy function is required or an error can occur during dapp-unload-app or dapp-unload-view
+		beforeDestroy: function () {
+			//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 		}
 	};
 });

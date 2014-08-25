@@ -21,35 +21,35 @@ define([
 
 		"test defaultView sel111 initialized and active": function () {
 			return this.remote
-				.execute("return simple1App1.children.header1.initialized")
+				.execute("return simple1App1.childViews.header1.initialized")
 				.then(function (value) {
-					//console.log("value simple1App1.children.header1.initialized is = " + value);
-					assert.isTrue(value, "simple1App1.children.header1.initialized should be true");
+					//console.log("value simple1App1.childViews.header1.initialized is = " + value);
+					assert.isTrue(value, "simple1App1.childViews.header1.initialized should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.header1._active")
-				.then(function (value) {
-					assert.isTrue(value);
-				})
-				.end()
-				.execute("return simple1App1.children.center1.initialized")
-				.then(function (value) {
-					//console.log("value simple1App1.children.center1.initialized is = " + value);
-					assert.isTrue(value, "simple1App1.children.center1.initialized should be true");
-				})
-				.end()
-				.execute("return simple1App1.children.center1._active")
+				.execute("return simple1App1.childViews.header1._active")
 				.then(function (value) {
 					assert.isTrue(value);
 				})
 				.end()
-				.execute("return simple1App1.children.footer1.initialized")
+				.execute("return simple1App1.childViews.center1.initialized")
 				.then(function (value) {
-					//console.log("value simple1App1.children.footer1.initialized is = " + value);
-					assert.isTrue(value, "simple1App1.children.footer1.initialized should be true");
+					//console.log("value simple1App1.childViews.center1.initialized is = " + value);
+					assert.isTrue(value, "simple1App1.childViews.center1.initialized should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.footer1._active")
+				.execute("return simple1App1.childViews.center1._active")
+				.then(function (value) {
+					assert.isTrue(value);
+				})
+				.end()
+				.execute("return simple1App1.childViews.footer1.initialized")
+				.then(function (value) {
+					//console.log("value simple1App1.childViews.footer1.initialized is = " + value);
+					assert.isTrue(value, "simple1App1.childViews.footer1.initialized should be true");
+				})
+				.end()
+				.execute("return simple1App1.childViews.footer1._active")
 				.then(function (value) {
 					assert.isTrue(value);
 				})
@@ -63,22 +63,22 @@ define([
 
 		"test defaultView sel111 activate calls": function () {
 			return this.remote
-				.execute("return simple1App1.children.header1._beforeActivateCallCount")
+				.execute("return simple1App1.childViews.header1._beforeActivateCallCount")
 				.then(function (value) {
 					assert.equal(1, value);
 				})
 				.end()
-				.execute("return simple1App1.children.header1.domNode.textContent")
+				.execute("return simple1App1.childViews.header1.textContent")
 				.then(function (value) {
 					assert(/header1/.test(value), "textContent (" + value + ") contains header1");
 				})
 				.end()
-				.execute("return simple1App1.children.center1.domNode.textContent")
+				.execute("return simple1App1.childViews.center1.textContent")
 				.then(function (value) {
 					assert(/center1/.test(value), "textContent (" + value + ") contains center1");
 				})
 				.end()
-				.execute("return simple1App1.children.footer1.domNode.textContent")
+				.execute("return simple1App1.childViews.footer1.textContent")
 				.then(function (value) {
 					assert(/footer1/.test(value), "textContent (" + value + ") contains footer1");
 				})
@@ -87,17 +87,17 @@ define([
 
 		"test defaultView sel111 textContent calls": function () {
 			return this.remote
-				.execute("return simple1App1.children.header1.domNode.textContent")
+				.execute("return simple1App1.childViews.header1.textContent")
 				.then(function (value) {
 					assert(/header1/.test(value), "textContent (" + value + ") contains header1");
 				})
 				.end()
-				.execute("return simple1App1.children.center1.domNode.textContent")
+				.execute("return simple1App1.childViews.center1.textContent")
 				.then(function (value) {
 					assert(/center1/.test(value), "textContent (" + value + ") contains center1");
 				})
 				.end()
-				.execute("return simple1App1.children.footer1.domNode.textContent")
+				.execute("return simple1App1.childViews.footer1.textContent")
 				.then(function (value) {
 					assert(/footer1/.test(value), "textContent (" + value + ") contains footer1");
 				})
@@ -106,21 +106,21 @@ define([
 
 		"test click sel222": function () {
 			return this.remote
-				.execute("return simple1App1.children.center1.domNode.getElementsByClassName('sel222')[0]")
+				.execute("return simple1App1.childViews.center1.getElementsByClassName('sel222')[0]")
 				.click()
 				.end()
 				.wait(500)
-				.execute("return simple1App1.children.header2.domNode.textContent")
+				.execute("return simple1App1.childViews.header2.textContent")
 				.then(function (value) {
 					assert(/header2/.test(value), "textContent (" + value + ") contains header2");
 				})
 				.end()
-				.execute("return simple1App1.children.center2.domNode.textContent")
+				.execute("return simple1App1.childViews.center2.textContent")
 				.then(function (value) {
 					assert(/center2/.test(value), "textContent (" + value + ") contains center2");
 				})
 				.end()
-				.execute("return simple1App1.children.footer2.domNode.textContent")
+				.execute("return simple1App1.childViews.footer2.textContent")
 				.then(function (value) {
 					assert(/footer2/.test(value), "textContent (" + value + ") contains footer2");
 				})
@@ -128,53 +128,53 @@ define([
 		},
 		"test sel222 initialized and active": function () {
 			return this.remote
-				.execute("return simple1App1.children.header2.initialized")
+				.execute("return simple1App1.childViews.header2.initialized")
 				.then(function (value) {
-					assert.isTrue(value, "simple1App1.children.header2.initialized should be true");
+					assert.isTrue(value, "simple1App1.childViews.header2.initialized should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.header2._active")
+				.execute("return simple1App1.childViews.header2._active")
 				.then(function (value) {
-					assert.isTrue(value, "simple1App1.children.header2._active should be true");
+					assert.isTrue(value, "simple1App1.childViews.header2._active should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.center2.initialized")
+				.execute("return simple1App1.childViews.center2.initialized")
 				.then(function (value) {
-					assert.isTrue(value, "simple1App1.children.center2.initialized should be true");
+					assert.isTrue(value, "simple1App1.childViews.center2.initialized should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.center2._active")
+				.execute("return simple1App1.childViews.center2._active")
 				.then(function (value) {
-					assert.isTrue(value, "simple1App1.children.center2._active should be true");
+					assert.isTrue(value, "simple1App1.childViews.center2._active should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.footer2.initialized")
+				.execute("return simple1App1.childViews.footer2.initialized")
 				.then(function (value) {
-					assert.isTrue(value, "simple1App1.children.footer2.initialized should be true");
+					assert.isTrue(value, "simple1App1.childViews.footer2.initialized should be true");
 				})
 				.end()
-				.execute("return simple1App1.children.footer2._active")
+				.execute("return simple1App1.childViews.footer2._active")
 				.then(function (value) {
-					assert.isTrue(value, "simple1App1.children.footer2._active should be true");
+					assert.isTrue(value, "simple1App1.childViews.footer2._active should be true");
 				})
 				.end();
 		},
 
 		"test sel222 active sel111 not active": function () {
 			return this.remote
-				.execute("return simple1App1.children.header1._active")
+				.execute("return simple1App1.childViews.header1._active")
 				.then(function (value) {
-					assert.isFalse(value, "simple1App1.children.header1._active should be false");
+					assert.isFalse(value, "simple1App1.childViews.header1._active should be false");
 				})
 				.end()
-				.execute("return simple1App1.children.center1._active")
+				.execute("return simple1App1.childViews.center1._active")
 				.then(function (value) {
-					assert.isFalse(value, "simple1App1.children.center1._active should be false");
+					assert.isFalse(value, "simple1App1.childViews.center1._active should be false");
 				})
 				.end()
-				.execute("return simple1App1.children.footer1._active")
+				.execute("return simple1App1.childViews.footer1._active")
 				.then(function (value) {
-					assert.isFalse(value, "simple1App1.children.footer1._active should be false");
+					assert.isFalse(value, "simple1App1.childViews.footer1._active should be false");
 				})
 				.end();
 		},
@@ -183,8 +183,8 @@ define([
 			return this.remote
 				.execute(function () {
 					return {
-						display: simple1App1.children.header1.domNode.style.display,
-						visibility: simple1App1.children.header1.domNode.style.visibility
+						display: simple1App1.childViews.header1.style.display,
+						visibility: simple1App1.childViews.header1.style.visibility
 					};
 				})
 				.then(function (style) {
@@ -194,8 +194,8 @@ define([
 				.end()
 				.execute(function () {
 					return {
-						display: simple1App1.children.center1.domNode.style.display,
-						visibility: simple1App1.children.center1.domNode.style.visibility
+						display: simple1App1.childViews.center1.style.display,
+						visibility: simple1App1.childViews.center1.style.visibility
 					};
 				})
 				.then(function (style) {
@@ -205,8 +205,8 @@ define([
 				.end()
 				.execute(function () {
 					return {
-						display: simple1App1.children.footer1.domNode.style.display,
-						visibility: simple1App1.children.footer1.domNode.style.visibility
+						display: simple1App1.childViews.footer1.style.display,
+						visibility: simple1App1.childViews.footer1.style.visibility
 					};
 				})
 				.then(function (style) {
@@ -216,8 +216,8 @@ define([
 				.end()
 				.execute(function () {
 					return {
-						display: simple1App1.children.header2.domNode.style.display,
-						visibility: simple1App1.children.header2.domNode.style.visibility
+						display: simple1App1.childViews.header2.style.display,
+						visibility: simple1App1.childViews.header2.style.visibility
 					};
 				})
 				.then(function (style) {
@@ -227,8 +227,8 @@ define([
 				.end()
 				.execute(function () {
 					return {
-						display: simple1App1.children.center2.domNode.style.display,
-						visibility: simple1App1.children.center2.domNode.style.visibility
+						display: simple1App1.childViews.center2.style.display,
+						visibility: simple1App1.childViews.center2.style.visibility
 					};
 				})
 				.then(function (style) {
@@ -238,8 +238,8 @@ define([
 				.end()
 				.execute(function () {
 					return {
-						display: simple1App1.children.footer2.domNode.style.display,
-						visibility: simple1App1.children.footer2.domNode.style.visibility
+						display: simple1App1.childViews.footer2.style.display,
+						visibility: simple1App1.childViews.footer2.style.visibility
 					};
 				})
 				.then(function (style) {
@@ -251,12 +251,12 @@ define([
 
 		"test sel222 activate calls": function () {
 			return this.remote
-				.execute("return simple1App1.children.header2._beforeActivateCallCount")
+				.execute("return simple1App1.childViews.header2._beforeActivateCallCount")
 				.then(function (value) {
 					assert.equal(1, value);
 				})
 				.end()
-				.execute("return simple1App1.children.center2.domNode.textContent")
+				.execute("return simple1App1.childViews.center2.textContent")
 				.then(function (value) {
 					assert(/center2/.test(value), "textContent (" + value + ") contains center2");
 				})
@@ -265,17 +265,17 @@ define([
 
 		"test sel222 textContent calls": function () {
 			return this.remote
-				.execute("return simple1App1.children.header2.domNode.textContent")
+				.execute("return simple1App1.childViews.header2.textContent")
 				.then(function (value) {
 					assert(/header2/.test(value), "textContent (" + value + ") contains header1");
 				})
 				.end()
-				.execute("return simple1App1.children.center2.domNode.textContent")
+				.execute("return simple1App1.childViews.center2.textContent")
 				.then(function (value) {
 					assert(/center2/.test(value), "textContent (" + value + ") contains center2");
 				})
 				.end()
-				.execute("return simple1App1.children.footer2.domNode.textContent")
+				.execute("return simple1App1.childViews.footer2.textContent")
 				.then(function (value) {
 					assert(/footer2/.test(value), "textContent (" + value + ") contains footer2");
 				})
@@ -284,7 +284,7 @@ define([
 
 		"test footer1": function () {
 			return this.remote
-				.execute("return simple1App1.children.footer1.domNode.textContent")
+				.execute("return simple1App1.childViews.footer1.textContent")
 				.then(function (value) {
 					assert(/footer1/.test(value), "textContent (" + value + ") contains footer1");
 				})

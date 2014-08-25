@@ -6,7 +6,7 @@ define([], function () {
 		_afterActivateCallCount: 0,
 		_afterDeactivateCallCount: 0,
 		init: function () {
-			this.domNode.name = this.id;
+			this.name = this.id;
 		},
 		beforeActivate: function () {
 			this._beforeActivateCallCount++;
@@ -20,8 +20,8 @@ define([], function () {
 		afterDeactivate: function () {
 			this._afterDeactivateCallCount++;
 		},
-		destroy: function () {
-			//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+		beforeDestroy: function () {
+			//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 		}
 	};
 });

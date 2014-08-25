@@ -121,6 +121,9 @@ define(
 						console.log("> delite-display-load fired no event.dapp with event.dest=[" + event.dest +
 							"] event.hide=[" + event.hide + "] this.app.id=[" + this.app.id + "]");
 					}
+					if (typeof event.dest !== "string") {
+						return;
+					}
 					if (event.loadDeferred) {
 						event.loadDeferred.then(function (value) {
 							console.log("  < back from delite-display-load resolveView with value.child.id=[" +
@@ -128,7 +131,7 @@ define(
 								(value.dapp && value.dapp.parentView ? value.dapp.parentView.id : "") + "]");
 						});
 					}
-					if (event.dapp.dest && !event.dapp.hide) {
+					if (event.dapp && event.dapp.dest && !event.dapp.hide) {
 						var onbeforeShowDisplayHandle = event.target.on("delite-before-show", function (value) {
 							this.logBeforeAfterShowHideDisplay(self.app, value, event, true, false,
 								onbeforeShowDisplayHandle);

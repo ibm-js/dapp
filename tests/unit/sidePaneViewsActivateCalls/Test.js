@@ -154,7 +154,7 @@ define([
 				var sp1right2content = sp1right2View.containerNode;
 				assert.isNotNull(sp1right2content, "sp1right2content must be here");
 				//	checkNodeVisibile(sp1right2content);
-				assert.isTrue(sp1right2View.domNode.style.display === "none");
+				assert.isTrue(sp1right2View.style.display === "none");
 				assert.isTrue(sp1rightPaneElem.style.display === "none");
 			});
 		},

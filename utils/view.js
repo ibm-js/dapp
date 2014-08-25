@@ -172,8 +172,8 @@ define(["dcl/dcl"], function (dcl) {
 				if (app.autoUnloadCount) {
 					child.transitionCount = 0;
 					// add code to bump the transitionCounter to see when to unload other child views
-					for (var otherChildKey in view.children) {
-						var otherChild = view.children[otherChildKey];
+					for (var otherChildKey in view.childViews) {
+						var otherChild = view.childViews[otherChildKey];
 						var otherChildConstraint = otherChild.constraint;
 						var childtype = typeof (otherChildConstraint);
 						var childhash = (childtype === "string" || childtype === "number") ? otherChildConstraint :
@@ -223,7 +223,7 @@ define(["dcl/dcl"], function (dcl) {
 				var nextChildId = "";
 				for (var item in parts) {
 					var childId = nextChildId + parts[item];
-					view = view.children[childId];
+					view = view.childViews[childId];
 					nextChildId = childId + "_";
 				}
 				return view;
@@ -372,7 +372,7 @@ define(["dcl/dcl"], function (dcl) {
 				var nextChildId = "";
 				for (var item in parts) {
 					var childId = nextChildId + parts[item];
-					view = view.children[childId];
+					view = view.childViews[childId];
 					nextChildId = childId + "_";
 				}
 				return view;
@@ -453,6 +453,8 @@ define(["dcl/dcl"], function (dcl) {
 
 		register: function (constraint) {
 			// if the constraint has already been registered we don't care about it...
+			//TODO: need to look into this code, it does not seem to be doing anything since the constraint is always
+			// a string and never has an __hash
 			var type = typeof (constraint);
 			if (!constraint.__hash && type !== "string" && type !== "number") {
 				var match = null;

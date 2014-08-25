@@ -333,7 +333,7 @@ define([
 				var hc1right2content = hc1right2View.containerNode;
 				assert.isNotNull(hc1right2content, "hc1right2content must be here");
 				//	checkNodeVisibile(hc1right2content);
-				assert.isTrue(hc1right2View.domNode.style.display === "none");
+				assert.isTrue(hc1right2View.style.display === "none");
 				assert.isTrue(hc1rightPaneElem.style.display === "none");
 			});
 		},

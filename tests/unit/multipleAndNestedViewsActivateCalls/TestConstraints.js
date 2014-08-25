@@ -246,7 +246,7 @@ define([
 					//	checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					// 		multipleAndNestedViewsActivateCallsApp1P2V1);
 					assert.isNull(multipleAndNestedViewsActivateCallsApp1P2V2);
-					assert.isNull(testApp.children.contentCons.domNode.parentNode);
+					assert.isNull(testApp.childViews.contentCons.parentNode);
 
 
 
@@ -317,7 +317,7 @@ define([
 					//	checkNestedNodeVisibility(multipleAndNestedViewsActivateCallsApp1Content,
 					// multipleAndNestedViewsActivateCallsApp1P2V2);
 					assert.isNull(multipleAndNestedViewsActivateCallsApp1P2V2);
-					assert.isNull(multipleAndNestedViewsActivateCallsApp1P2S1View.domNode.parentNode);
+					assert.isNull(multipleAndNestedViewsActivateCallsApp1P2S1View.parentNode);
 
 
 

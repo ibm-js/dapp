@@ -30,7 +30,7 @@ define([], function () {
 			this._afterDeactivateCallCount++;
 		},
 		destroy: function () {
-			//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+			//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 		}
 	};
 });

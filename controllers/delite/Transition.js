@@ -136,13 +136,13 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../../Cont
 				event.dapp.hide = true;
 				event.dapp.viewPath = viewPath;
 				event.dapp.parentView = viewUtils.getParentViewFromViewId(this.app, viewPath.lastViewId);
-				event.dest = event.dapp.parentView.children[viewPath.lastViewId].viewName;
+				event.dest = event.dapp.parentView.childViews[viewPath.lastViewId].viewName;
 				var self = this;
 				var p = self._getParentNode(event);
 				if (!p.hide) { // should have a hide function, if not
 					//TODO: ELC need a test for this!!
 					console.error("No hide function available on parentNode for viewTarget =" + viewTarget);
-					event.dapp.nextView = event.dapp.parentView.children[viewTarget];
+					event.dapp.nextView = event.dapp.parentView.childViews[viewTarget];
 					var parentSelChild = viewUtils.getSelectedChild(event.dapp.parentView,
 						event.dapp.nextView.constraint);
 					event.dapp.nextView.viewShowing = false;

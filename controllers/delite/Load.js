@@ -1,13 +1,13 @@
 define(
-	["require", "dcl/dcl", "dojo/Deferred", "../../Controller", "../../utils/view"],
-	function (require, dcl, Deferred, Controller, viewUtils) {
+	["require", "dcl/dcl", "dojo/Deferred", "../../Controller", "../../utils/view", "../../viewFactory"],
+	function (require, dcl, Deferred, Controller, viewUtils, viewFactory) {
 		var app; // need app in closure for loadMapper
 		var mapHandler;
 		var resolveView = function (event, newView, parentView) {
 			// in addition to arguments required by delite we pass our own needed arguments
 			// to get them back in the transitionDeferred
 			event.loadDeferred.resolve({
-				child: newView.domNode,
+				child: newView,
 				dapp: {
 					nextView: newView,
 					parentView: parentView,
@@ -63,8 +63,8 @@ define(
 
 				// Check to see if this view has already been loaded
 				var view = null;
-				if (event.dapp.parentView && event.dapp.parentView.children) {
-					view = event.dapp.parentView.children[viewId];
+				if (event.dapp.parentView && event.dapp.parentView.childViews) {
+					view = event.dapp.parentView.childViews[viewId];
 				}
 
 				// if this is a hide for a view which is not loaded then do not process it
@@ -91,11 +91,13 @@ define(
 			_setupEventDapp: function (event) {
 				var dest = event.dest;
 				var viewId;
-				if (dest.indexOf("_") >= 0) { // if dest is already a view id.
-					viewId = dest;
-					dest = viewUtils.getViewDestFromViewid(this.app, viewId);
-				} else {
-					viewId = viewUtils.getViewIdFromEvent(this.app, event);
+				if (typeof dest === "string") {
+					if (dest.indexOf("_") >= 0) { // if dest is already a view id.
+						viewId = dest;
+						dest = viewUtils.getViewDestFromViewid(this.app, viewId);
+					} else {
+						viewId = viewUtils.getViewIdFromEvent(this.app, event);
+					}
 				}
 				event.dapp = {};
 				if (!viewId) {
@@ -156,7 +158,7 @@ define(
 							}
 							var appView = self.app;
 
-							var firstChildView = appView.children[firstChildId] ||
+							var firstChildView = appView.childViews[firstChildId] ||
 								viewUtils.getViewFromViewId(appView, value.dapp.id); // may be nested
 
 							var nextSubViewArray = self._getNextSubViewArray(subIds, firstChildView, appView);
@@ -309,27 +311,27 @@ define(
 
 			},
 
-			_createView: function (event, id, viewName, viewParams, parentView, parentNode, isParent, type, viewPath) {
+			_createView: function (event, id, viewName, viewParams, parentView, parentNode, isParent, viewType,
+				viewPath) {
 				var app = this.app;
-				require([type ? type : "../../View"], function (View) {
-					var params = {
-						"app": app,
-						"id": id,
-						"viewName": viewName,
-						"parentView": parentView,
-						"parentNode": parentNode,
-						"isParent": isParent,
-						"viewPath": viewPath,
-						"viewParams": viewParams
-					};
-					new View(params).start().then(function (newView) {
-						parentView.children[id] = newView;
-						event.dapp.parentView = parentView;
-						event.dapp.parentNode = newView.parentNode;
-						event.dapp.isParent = isParent;
-						event.dapp.viewPath = viewPath;
-						resolveView(event, newView, parentView);
-					});
+				var params = {
+					"app": app,
+					"id": id,
+					"viewType": viewType,
+					"viewName": viewName,
+					"parentView": parentView,
+					"parentNode": parentNode,
+					"isParent": isParent,
+					"viewPath": viewPath,
+					"viewParams": viewParams
+				};
+				viewFactory(params).then(function (newView) {
+					parentView.childViews[id] = newView;
+					event.dapp.parentView = parentView;
+					event.dapp.parentNode = newView.parentNode;
+					event.dapp.isParent = isParent;
+					event.dapp.viewPath = viewPath;
+					resolveView(event, newView, parentView);
 				});
 			},
 
@@ -432,7 +434,7 @@ define(
 				//now we need to loop forwards thru subIds calling beforeActivate
 				for (var i = 0; i < parts.length; i++) {
 					prevViewId = prevViewId + "_" + parts[i];
-					var v = p.children[prevViewId];
+					var v = p.childViews[prevViewId];
 					if (v) {
 						nextSubViewArray.push(v);
 						p = v;
@@ -535,7 +537,7 @@ define(
 					parentView.selectedChildren = {};
 				}
 				if (parentView && !parentView.selectedChildren[viewId] &&
-					(parentView.children[viewId] || event.unloadApp)) {
+					(parentView.childViews[viewId] || event.unloadApp)) {
 
 					this.unloadChild(parentView, view);
 					if (event.callback) {
@@ -551,25 +553,28 @@ define(
 				// summary:
 				//		Unload the view, and all of its child views recursively.
 				// 		Destroy all children, destroy all widgets, destroy the domNode, remove the view from the
-				// 		parentView.children, then destroy the view.
+				// 		parentView.childViews, then destroy the view.
 				//
 				// parentView: Object
 				//		parentView of this view.
 				// viewToUnload: Object
 				//		the view to be unloaded.
-				for (var child in viewToUnload.children) {
+				for (var child in viewToUnload.childViews) {
 					// unload children then unload the view itself
-					this.unloadChild(viewToUnload, viewToUnload.children[child]);
+					this.unloadChild(viewToUnload, viewToUnload.childViews[child]);
 				}
 				// the viewToUnload.domNode is owned by viewToUnload so it will be destroyed when viewToUnload is.
 				//TODO: the call to viewToUnload.destroy() can cause an error during destroy for the view if the view
 				// controller does not have a destroy method
 				var viewId = viewToUnload.id;
+				if (viewToUnload.beforeDestroy) {
+					viewToUnload.beforeDestroy(); // call beforeDestroy to handle any controller specific cleanup.
+				}
 				if (viewToUnload.destroy) {
-					viewToUnload.destroy(); // call destroy for the view.
+					viewToUnload.destroy(); // call destroy for the view to destroy the widget and node.
 				}
 				viewToUnload = null;
-				delete parentView.children[viewId]; // remove it from the parentViews children
+				delete parentView.childViews[viewId]; // remove it from the parentViews children
 			}
 		});
 	});

@@ -3,7 +3,7 @@ define([], function () {
 	return {
 		name: "",
 		init: function () {
-			this.domNode.name = this.id;
+			this.name = this.id;
 			var tempName = "";
 			if (this.id === "viewLayoutApp1Home2") {
 				setTimeout(function () {
@@ -33,8 +33,8 @@ define([], function () {
 			//	(nextView ? nextView.id : "") + "]");
 			this._afterDeactivateCallCount++;
 		},
-		destroy: function () {
-			//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+		beforeDestroy: function () {
+			//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 		}
 	};
 });

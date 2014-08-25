@@ -7,18 +7,18 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 		dddsel: false,
 
 		setSelection: function (sel) {
-			this.domNode.aaasel = false;
-			this.domNode.bbbsel = false;
-			this.domNode.cccsel = false;
-			this.domNode.dddsel = false;
+			this.aaasel = false;
+			this.bbbsel = false;
+			this.cccsel = false;
+			this.dddsel = false;
 			if (sel === "aaa") {
-				this.domNode.aaasel = true;
+				this.aaasel = true;
 			} else if (sel === "bbb") {
-				this.domNode.bbbsel = true;
+				this.bbbsel = true;
 			} else if (sel === "ccc") {
-				this.domNode.cccsel = true;
+				this.cccsel = true;
 			} else if (sel === "ddd") {
-				this.domNode.dddsel = true;
+				this.dddsel = true;
 			}
 		},
 
@@ -35,8 +35,8 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 			//console.log("in footer3.js beforeDeactivate called previousView=", previousView);
 		},
 		afterActivate: function (previousView) {
-			if (this.domNode.ownerDocument.getElementById("vs")) {
-				var vsNode = this.domNode.ownerDocument.getElementById("vs");
+			if (this.ownerDocument.getElementById("vs")) {
+				var vsNode = this.ownerDocument.getElementById("vs");
 				var sel = vsNode.selectedChildId;
 				this.setSelection(sel);
 			}

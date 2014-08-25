@@ -9,8 +9,8 @@ define([],
 			_afterActivateCallCount: 0,
 			_afterDeactivateCallCount: 0,
 			init: function () {
-				this.domNode.name = this.id;
-				var list = this.domNode.ownerDocument.getElementById("list1");
+				this.name = this.id;
+				var list = this.ownerDocument.getElementById("list1");
 
 				// Different options for creating the store, 1. ObservableStore, add data below
 				//var ObservableMemoryStore = dcl([MemoryStore, Observable], {});
@@ -25,7 +25,7 @@ define([],
 				var dstoreMemoryApp = this.app;
 
 				// When the list is clicked, transition to dstoreMemoryAppHome2, pass the label of the selected item.
-				this.domNode.ownerDocument.getElementById("list1").on("click",
+				this.ownerDocument.getElementById("list1").on("click",
 					function ( /*MouseEvent*/ evt) {
 						var label = evt.target.innerText || evt.target.textContent || "";
 						var targetView = "dstoreMemoryAppHome2";
@@ -44,7 +44,7 @@ define([],
 				//	"] with previousView.id =[" + (previousView ? previousView.id : "") +
 				// "] with viewData=", viewData);
 				this._beforeActivateCallCount++;
-				this.domNode.lastSelection = viewData ? viewData.label : "";
+				this.lastSelection = viewData ? viewData.label : "";
 			},
 			beforeDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "beforeDeactivate called for [" + this.viewName +
@@ -61,8 +61,8 @@ define([],
 				// "] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this._afterDeactivateCallCount++;
 			},
-			destroy: function () {
-				//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+			beforeDestroy: function () {
+				console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 			}
 		};
 	});

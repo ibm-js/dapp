@@ -71,7 +71,8 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "delite/Widget", "de
 					}
 					var loadViewDeferred = new Deferred();
 					require(deps, function () {
-						this.templateString = this.template ? arguments[arguments.length - 1] : "<div></div>";
+						this.templateString = this.template ?
+							arguments[arguments.length - 1] : "<div></div>";
 						loadViewDeferred.resolve(this);
 					}.bind(this));
 					return loadViewDeferred;
@@ -105,6 +106,55 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "delite/Widget", "de
 				};
 			}),
 
+			setupViewParams: function (controller) {
+				// summary:
+				//		setup the viewParams before creating the node
+				var viewParams = {
+					baseClass: "d-" + this.id,
+					template: handlebars.compile(this.templateString)
+					/* leaving this in case it is helpful to debug things later
+					preCreate: function () {
+						console.log("View._startup in view preCreate for [" + self.id + "]");
+					},
+					postCreate: function () {
+						console.log("View._startup in view postCreate for [" + self.id + "]");
+					},
+					refreshRendering: dcl.after(function () {
+						console.log("View._startup in view refreshRendering for [" + self.id + "]");
+					})
+					*/
+				};
+				var viewAttributes = {};
+				if (controller) {
+					// Here we need to setup the attributes for the view from the properties on the controller.
+					// loop thru controller properties and add to viewAttributes if not private or a function
+					Object.keys(controller).forEach(function (prop) {
+						if (!/^_/.test(prop)) { // TODO: should we skip private properties for viewParams?
+							if (typeof controller[prop] !== "function") {
+								var copyVal = controller[prop]; // needed for setting values of 0
+								viewAttributes[prop] = copyVal;
+							}
+						}
+					});
+				}
+				viewAttributes.nls = this.nls; // add nls strings to viewAttributes
+				dcl.mix(viewParams, viewAttributes);
+
+				return viewParams;
+			},
+
+			_safeMixIntoNode: function (copyTo, copyFrom) {
+				// mix things from copyFrom into the domNode if they are not already in copyTo
+				for (var n in copyFrom) {
+					// do not mixin if already set copyTo
+					if (!copyTo[n] && n !== "parentNode") {
+						var copyVal = copyFrom[n]; // needed for setting values of 0
+						copyTo[n] = copyVal;
+					}
+				}
+
+			},
+
 			// in another place it was mentioned that may want to change from startup --> enteredViewCallback.
 			_startup: dcl.superCall(function (sup) {
 				return function (controller) {
@@ -112,56 +162,26 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "delite/Widget", "de
 					//		startup widgets in view template.
 					// tags:
 					//		private
-					var viewParams = {
-						baseClass: "d-" + this.id,
-						template: handlebars.compile(this.templateString)
-						/* leaving this in case it is helpful to debug things later
-						preCreate: function () {
-							console.log("View._startup in view preCreate for [" + self.id + "]");
-						},
-						postCreate: function () {
-							console.log("View._startup in view postCreate for [" + self.id + "]");
-						},
-						refreshRendering: dcl.after(function () {
-							console.log("View._startup in view refreshRendering for [" + self.id + "]");
-						})
-						*/
-					};
-					var viewAttributes = {};
-					if (controller) {
-						// Here we need to setup the attributes for the view from the properties on the controller.
-						// loop thru controller properties and add to viewAttributes if not private or a function
-						Object.keys(controller).forEach(function (prop) {
-							if (!/^_/.test(prop)) {
-								if (typeof controller[prop] !== "function") {
-									viewAttributes[prop] = this[prop];
-								}
-							}
-						});
-					}
-					viewAttributes.nls = this.nls; // add nls strings to viewAttributes
-					dcl.mix(viewParams, viewAttributes);
-
+					var viewParams = this.setupViewParams(controller);
 					var tag = "dapp-view-" + this.id.toLowerCase();
 					var TagWidget = register(tag, [HTMLElement, Widget], viewParams);
 
-					//this.domNode = register.createElement(tag);
-					this.domNode = new TagWidget();
-					//this.own(this.domNode); // had problem extending Widget
-					this.domNode.id = this.id;
+					var newDomNode = new TagWidget();
 
 					//had to do this for widgets in templates to work
-					this.domNode.containerNode = this.domNode;
-					this.domNode.startup();
-					this.domNode.viewId = this.id;
+					newDomNode.startup();
 
-					if (!this.containerNode) {
-						if (this.containerSelector) {
-							this.containerNode = this.domNode.querySelector(this.containerSelector);
-						} else if (this.domNode.children[0]) {
-							this.containerNode = this.domNode.children[0];
+					newDomNode.viewId = this.id;
+					//newDomNode.id = this.id;
+					this._safeMixIntoNode(newDomNode, this); // do not mixin "template"
+					if (!newDomNode.containerNode) { //TODO: never seem to have a containerNode already set, remove?
+						if (newDomNode.containerSelector) { //TODO: need test with containerSelector
+							newDomNode.containerNode = newDomNode.querySelector(newDomNode.containerSelector);
+						} else if (newDomNode.children[0]) {
+							newDomNode.containerNode = newDomNode.children[0];
 						}
 					}
+					this.domNode = newDomNode;
 
 					sup.call(this);
 				};

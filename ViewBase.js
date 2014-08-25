@@ -1,4 +1,4 @@
-define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "./utils/view"],
+define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "dapp/utils/view"],
 	function (require, when, dcl, Deferred, viewUtils) {
 		return dcl(null, {
 			// summary:
@@ -18,7 +18,7 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "./utils/view"],
 				//		- children: children views
 				this.id = "";
 				this.viewName = "";
-				this.children = {};
+				this.childViews = {};
 				this.selectedChildren = {};
 				this.loadedStores = {};
 				this.transitionCount = 0;
@@ -96,6 +96,7 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "./utils/view"],
 				if (!this.hasOwnProperty("constraint")) {
 					this.constraint = this.domNode.getAttribute("data-app-constraint") ||
 						viewUtils.getDefaultConstraint(this.id, this.parentNode);
+					this.domNode.constraint = this.constraint;
 				}
 				viewUtils.register(this.constraint);
 
@@ -119,7 +120,7 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "./utils/view"],
 				if (!this.controller) {
 					this.controller = "dapp/ViewBase";
 				}
-				if (!this.controller) { // no longer using this.controller === "none", if we dont have one it means none
+				if (!this.controller) {
 					viewControllerDef.resolve(true);
 					return viewControllerDef;
 				} else {
@@ -157,9 +158,10 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "./utils/view"],
 				//		view life cycle afterDeactivate()
 			},
 
-			destroy: function () {
+			beforeDestroy: function () {
 				// summary:
-				//		view life cycle destroy()
+				//		view life cycle beforeDestroy() to do controller specific cleanup
 			}
+
 		});
 	});

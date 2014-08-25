@@ -6,7 +6,7 @@ define([], function () {
 		_afterActivateCallCount: 0,
 		_afterDeactivateCallCount: 0,
 		init: function () {
-			this.domNode.name = this.id;
+			this.name = this.id;
 		},
 		beforeActivate: function (previousView, viewData) {
 			//console.log("app-view:", "beforeActivate called for [" + this.viewName + "] with previousView.id =[" +
@@ -14,9 +14,9 @@ define([], function () {
 			this._beforeActivateCallCount++;
 			this.viewData = viewData;
 			if (this.id === "right1") {
-				this.domNode.style.backgroundColor = "darkgoldenrod";
+				this.style.backgroundColor = "darkgoldenrod";
 			} else {
-				this.domNode.style.backgroundColor = "orange";
+				this.style.backgroundColor = "orange";
 			}
 		},
 		beforeDeactivate: function ( /*nextView*/ ) {
@@ -34,8 +34,8 @@ define([], function () {
 			//	(nextView ? nextView.id : "") + "]");
 			this._afterDeactivateCallCount++;
 		},
-		destroy: function () {
-			//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+		beforeDestroy: function () {
+			//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 		}
 	};
 });

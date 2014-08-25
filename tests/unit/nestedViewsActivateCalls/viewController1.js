@@ -9,7 +9,7 @@ define([ /*"dojo/dom", "dojo/on", "delite/register", "dcl/dcl", "dapp/View"*/ ],
 			afterActivateCallCount: 0,
 			afterDeactivateCallCount: 0,
 			init: function () {
-				this.domNode.name = this.id;
+				this.name = this.id;
 			},
 			beforeActivate: function ( /*previousView, viewData*/ ) {
 				//console.log("app-view:", "beforeActivate called for [" + this.viewName +
@@ -31,8 +31,8 @@ define([ /*"dojo/dom", "dojo/on", "delite/register", "dcl/dcl", "dapp/View"*/ ],
 				//	"] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this.afterDeactivateCallCount++;
 			},
-			destroy: function () {
-				//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+			beforeDestroy: function () {
+				//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 			}
 		};
 		//); // for dcl view attempt...

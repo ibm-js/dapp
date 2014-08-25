@@ -9,8 +9,8 @@ define([],
 			_afterActivateCallCount: 0,
 			_afterDeactivateCallCount: 0,
 			init: function () {
-				this.domNode.name = this.id;
-				var list = this.domNode.ownerDocument.getElementById("list2");
+				this.name = this.id;
+				var list = this.ownerDocument.getElementById("list2");
 				var dstoreMemoryApp = this.app;
 
 				// Different options for creating the store, 1. MemoryStore, add data below
@@ -22,7 +22,7 @@ define([],
 				list.store = this.loadedStores.list2Store;
 
 				// When the list is clicked, transition to dstoreMemoryAppHome2, pass the label of the selected item.
-				this.domNode.ownerDocument.getElementById("list2").on("click",
+				this.ownerDocument.getElementById("list2").on("click",
 					function ( /*MouseEvent*/ evt) {
 						var label = evt.target.innerText || evt.target.textContent || "";
 						var targetView = "dstoreMemoryAppHome1";
@@ -40,7 +40,7 @@ define([],
 				//console.log("app-view:", "beforeActivate called for [" + this.viewName +
 				// "] with previousView.id =[" + (previousView ? previousView.id : "") + "] with viewData=", viewData);
 				this._beforeActivateCallCount++;
-				this.domNode.lastSelection = viewData ? viewData.label : "";
+				this.lastSelection = viewData ? viewData.label : "";
 			},
 			beforeDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "beforeDeactivate called for [" + this.viewName +
@@ -57,8 +57,8 @@ define([],
 				// "] with previousView.id =[" + (nextView ? nextView.id : "") + "]");
 				this._afterDeactivateCallCount++;
 			},
-			destroy: function () {
-				//console.log("app-view:", " in [" + this.viewName + "] destroy called for [" + this.id + "]");
+			beforeDestroy: function () {
+				//console.log("app-view:", " in [" + this.viewName + "] beforeDestroy called for [" + this.id + "]");
 			}
 		};
 	});

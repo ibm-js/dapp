@@ -66,7 +66,7 @@ define([
 				var hideViewApp3Home1 = document.getElementById("hideViewApp3Home1");
 				hideViewApp3Home1View = viewUtils.getViewFromViewId(testApp, "hideViewApp3Home1");
 				assert.isNull(hideViewApp3Home1);
-				assert.isNull(hideViewApp3Home1View.domNode.parentNode);
+				assert.isNull(hideViewApp3Home1View.parentNode);
 			});
 
 		},
@@ -103,7 +103,7 @@ define([
 				var hideViewApp3Home2 = document.getElementById("hideViewApp3Home2");
 				hideViewApp3Home2View = viewUtils.getViewFromViewId(testApp, "hideViewApp3Home2");
 				assert.isNull(hideViewApp3Home2);
-				assert.isNull(hideViewApp3Home2View.domNode.parentNode);
+				assert.isNull(hideViewApp3Home2View.parentNode);
 
 				// Now hideViewApp3Home2View ActivateCallCounts should be 1
 				var view = hideViewApp3Home2View;

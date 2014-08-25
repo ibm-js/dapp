@@ -14,7 +14,7 @@ define(["require", "dcl/dcl", "decor/Stateful", "decor/Evented", "dojo/Deferred"
 			constructor: function (params, node) {
 				dcl.mix(this, params);
 				this.domNode = node;
-				this.children = {};
+				this.childViews = {};
 				this.loadedStores = {};
 				this.loadedControllers = [];
 			},
