@@ -22,13 +22,13 @@
 		"deliteful/ViewStack",
 		"deliteful/ScrollableContainer",
 		"dstore/Memory",
-		"dstore/Observable"
+		"dstore/Trackable"
 	],
 
 	"stores": {
        "list1Store":{
            "type": "dstore/Memory",
-		   "observable": true,
+		   "trackable": true,
 		   "params": {
                 "data": "dstoreMemoryApp.list1Data"
            }

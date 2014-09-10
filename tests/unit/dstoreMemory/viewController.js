@@ -12,9 +12,9 @@ define([],
 				this.name = this.id;
 				var list = this.ownerDocument.getElementById("list1");
 
-				// Different options for creating the store, 1. ObservableStore, add data below
-				//var ObservableMemoryStore = dcl([MemoryStore, Observable], {});
-				//list.store = new ObservableMemoryStore();
+				// Different options for creating the store, 1. TrackableStore, add data below
+				//var TrackableMemoryStore = dcl([MemoryStore, Trackable], {});
+				//list.store = new TrackableMemoryStore();
 				// Different options for creating the store, 2. MemoryStore, add data below
 				//list.store = new MemoryStore();
 				//for (i = 1; i < 6; i++) {

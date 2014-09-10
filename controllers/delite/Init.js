@@ -69,24 +69,24 @@ define(["require", "dcl/dcl", "dojo/Deferred",
 								//and will cause infinitive loop when creating StatefulModel.
 								config.data = getObject(config.data);
 							}
-							if (appOrView.stores[item].observable) {
-								var observableCtor;
+							if (appOrView.stores[item].trackable) {
+								var trackableCtor;
 								try {
-									observableCtor = require("dstore/Observable");
+									trackableCtor = require("dstore/Trackable");
 								} catch (e) {
-									throw new Error("dstore/Observable must be listed in the dependencies");
+									throw new Error("dstore/Trackable must be listed in the dependencies");
 								}
-								// TODO: I was not able to get dstore observable working with dcl
-								//appOrView.stores[item].store = observableCtor(new StoreCtor(config));
-								//var MyStore = dcl([StoreCtor, observableCtor], {
+								// TODO: I was not able to get dstore Trackable working with dcl
+								//appOrView.stores[item].store = trackableCtor(new StoreCtor(config));
+								//var MyStore = dcl([StoreCtor, trackableCtor], {
 								//	get: dcl.superCall(function (sup) {
 								//		return function () {
 								//			sup.call(this);
 								//		}
 								//	})
-								var MyStore = declare([StoreCtor, observableCtor], {
+								var MyStore = declare([StoreCtor, trackableCtor], {
 									get: function () {
-										// need to make sure that this.inherited still works with Observable
+										// need to make sure that this.inherited still works with Trackable
 										return this.inherited(arguments);
 									}
 								});

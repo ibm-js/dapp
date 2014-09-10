@@ -4,8 +4,8 @@
 	"dependencies": {
 		"dcl": "1.1.x",
 		"decor": "0.2.0-dev",
-		"delite": "0.2.0-dev",
-		"deliteful": "0.2.0-dev",
+		"delite": "#master",
+		"deliteful": "#master",
 		"dojo": ">=1.9.1",
 		"dpointer": "0.1.x",
 		"ecma402": "0.2.x",
@@ -13,7 +13,7 @@
 		"requirejs-domready": "2.0.x",
 		"requirejs-dplugins": "0.2.x",
 		"requirejs-text": "2.0.x",
-		"dstore": "0.1.0"
+		"dstore": "0.2.0"
 	},
 	"ignore": [
 		".jshintrc",
