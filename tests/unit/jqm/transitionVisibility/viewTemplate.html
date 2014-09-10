@@ -1,0 +1,23 @@
+<template class="ui-content" data-role="page">
+	<div data-role="header">
+		<h4>jqmTransitionVisibilityAppHome1</h4>
+		<div>beforeActivate: {{beforeActivateStatus}}</div>
+		<div>afterActivate: {{afterActivateStatus}}</div>
+		NOTE view is created the as a delite widget with the template
+	</div>
+	<div data-role="content">
+		<ul data-role="listview">
+			<li><a on-click="jqmTransitionVisibilityApp.showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'slide'})">showOrHideViews('jqmTransitionVisibilityAppHome2')</a></li>
+			<li><a on-click="jqmTransitionVisibilityApp.showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'slide', reverse: true})">showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'slide', reverse: true})</a></li>
+			<li><a on-click="jqmTransitionVisibilityApp.showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'slide'})">showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'slide'})</a></li>
+			<li><a on-click="jqmTransitionVisibilityApp.showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'pop', reverse: true})">showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'pop', reverse: true})</a></li>
+			<li><a on-click="jqmTransitionVisibilityApp.showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'pop'})">showOrHideViews('jqmTransitionVisibilityAppHome2',{transition:'pop'})</a></li>
+			<li><a on-click="jqmTransitionVisibilityApp.showOrHideViews('-jqmTransitionVisibilityAppHome1',{transition:'pop'})">showOrHideViews('-jqmTransitionVisibilityAppHome1',{transition:'pop'}) Warning will hide the entire page!</a></li>
+			<li><a href="#jqmTransitionVisibilityAppHome2">Try 1 href="#jqmTransitionVisibilityAppHome2" - NOTE: will not work with $.mobile.hashListeningEnabled = false; </a></li>
+			<li><a href="#jqmTransitionVisibilityAppHome2">Try 2 href="#jqmTransitionVisibilityAppHome2" - NOTE: and having problem on initial display!</a></li>
+		</ul>
+	</div>
+	<div data-role="footer" data-position="fixed" data-id="tVisfooter">
+		<h4>Footer content jqmTransitionVisibilityAppHome1</h4>
+	</div>
+</template>

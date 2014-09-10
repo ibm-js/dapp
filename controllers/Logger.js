@@ -132,23 +132,27 @@ define(
 						});
 					}
 					if (event.dapp && event.dapp.dest && !event.dapp.hide) {
-						var onbeforeShowDisplayHandle = event.target.on("delite-before-show", function (value) {
-							this.logBeforeAfterShowHideDisplay(self.app, value, event, true, false,
-								onbeforeShowDisplayHandle);
-						}.bind(this));
-						var onafterShowDisplayHandle = event.target.on("delite-after-show", function (value) {
-							this.logBeforeAfterShowHideDisplay(self.app, value, event, false, false,
-								onafterShowDisplayHandle);
-						}.bind(this));
+						if (event.target.on) {
+							var onbeforeShowDisplayHandle = event.target.on("delite-before-show", function (value) {
+								this.logBeforeAfterShowHideDisplay(self.app, value, event, true, false,
+									onbeforeShowDisplayHandle);
+							}.bind(this));
+							var onafterShowDisplayHandle = event.target.on("delite-after-show", function (value) {
+								this.logBeforeAfterShowHideDisplay(self.app, value, event, false, false,
+									onafterShowDisplayHandle);
+							}.bind(this));
+						}
 					} else { // hide
-						var onbeforeHideDisplayHandle = event.target.on("delite-before-hide", function (value) {
-							this.logBeforeAfterShowHideDisplay(self.app, value, event, true, true,
-								onbeforeHideDisplayHandle);
-						}.bind(this));
-						var onafterHideDisplayHandle = event.target.on("delite-after-hide", function (value) {
-							this.logBeforeAfterShowHideDisplay(self.app, value, event, false, true,
-								onafterHideDisplayHandle);
-						}.bind(this));
+						if (event.target.on) {
+							var onbeforeHideDisplayHandle = event.target.on("delite-before-hide", function (value) {
+								this.logBeforeAfterShowHideDisplay(self.app, value, event, true, true,
+									onbeforeHideDisplayHandle);
+							}.bind(this));
+							var onafterHideDisplayHandle = event.target.on("delite-after-hide", function (value) {
+								this.logBeforeAfterShowHideDisplay(self.app, value, event, false, true,
+									onafterHideDisplayHandle);
+							}.bind(this));
+						}
 					}
 				}
 			},

@@ -12,5 +12,7 @@ define([
 	"./multipleAndNestedViewsActivateCalls/TestConstraints",
 	"./sidePaneViewsActivateCalls/Test",
 	"./historyController/Test",
+	"./jqm/hideViewJqm/Test",
+	"./jqm/transitionVisibility/Test",
 	"./dstoreMemory/Test"
 ]);

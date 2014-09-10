@@ -1,0 +1,23 @@
+<div class="ui-content" data-role="page">
+	<div data-role="header">
+		<h4>hideViewJqmAppHome1</h4>
+		<div>beforeActivate: {{beforeActivateStatus}}</div>
+		<div>afterActivate: {{afterActivateStatus}}</div>
+		NOTE view is created the as a delite widget with the template
+	</div>
+	<div data-role="content">
+		<ul data-role="listview">
+			<li><a on-click="hideViewJqmApp.showOrHideViews('hideViewJqmAppHome2',{transition:'slide'})">showOrHideViews('hideViewJqmAppHome2')</a></li>
+			<li><a on-click="hideViewJqmApp.showOrHideViews('hideViewJqmAppHome2',{transition:'slide', reverse: true})">showOrHideViews('hideViewJqmAppHome2',{transition:'slide', reverse: true})</a></li>
+			<li><a on-click="hideViewJqmApp.showOrHideViews('hideViewJqmAppHome2',{transition:'slide'})">showOrHideViews('hideViewJqmAppHome2',{transition:'slide'})</a></li>
+			<li><a on-click="hideViewJqmApp.showOrHideViews('hideViewJqmAppHome2',{transition:'pop', reverse: true})">showOrHideViews('hideViewJqmAppHome2',{transition:'pop', reverse: true})</a></li>
+			<li><a on-click="hideViewJqmApp.showOrHideViews('hideViewJqmAppHome2',{transition:'pop'})">showOrHideViews('hideViewJqmAppHome2',{transition:'pop'})</a></li>
+			<li><a on-click="hideViewJqmApp.showOrHideViews('-hideViewJqmAppHome1',{transition:'pop'})">showOrHideViews('-hideViewJqmAppHome1',{transition:'pop'}) Warning will hide the entire page!</a></li>
+			<li><a href="#hideViewJqmAppHome2">Try 1 href="#hideViewJqmAppHome2" - NOTE: will not work with $.mobile.hashListeningEnabled = false; </a></li>
+			<li><a href="#hideViewJqmAppHome2">Try 2 href="#hideViewJqmAppHome2" - NOTE: and having problem on initial display!</a></li>
+		</ul>
+	</div>
+	<div data-role="footer">
+		<h4>Footer content hideViewJqmAppHome1</h4>
+	</div>
+</div>

@@ -1,0 +1,49 @@
+{
+	"id": "hideViewJqmApp",
+	"name": "hideViewJqmApp",
+	"loaderConfig": {
+		"paths": {
+			"hideViewJqmApp": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/jqm/Init",
+		"dapp/controllers/jqm/Load",
+		"dapp/controllers/jqm/Transition",
+		"dapp/controllers/History",
+		"dapp/controllers/Logger"
+	],
+
+	"dependencies": [
+		"delite/css!jquery.mobile.css/jquery.mobile-1.4.3.min.css"
+	],
+
+	"appLogging": {
+		"logAll": 1
+	},
+
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
+	//"containerSelector" : "#mainPnodeJQM",
+	//"parseOnLoad": true,
+	//"hideUrlHash": true,
+	"defaultView": "hideViewJqmAppHome1",
+
+	"views": {
+		"hideViewJqmAppHome1": {
+			//"parentSelector": "#homeContainer",
+			"constraint" : "center",
+			"controller": "dapp/tests/unit/jqm/hideViewJqm/viewController1.js",
+			"template": "dapp/tests/unit/jqm/hideViewJqm/viewTemplate.html"
+		},
+		"hideViewJqmAppHome2": {
+			//"parentSelector": "#detailContainer",
+			"constraint" : "center",
+			"controller": "dapp/tests/unit/jqm/hideViewJqm/viewController2.js",
+			"template": "dapp/tests/unit/jqm/hideViewJqm/viewTemplate2.html"
+		}
+
+	}
+}

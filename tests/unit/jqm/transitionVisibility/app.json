@@ -1,0 +1,52 @@
+{
+	"id": "jqmTransitionVisibilityApp",
+	"name": "jqmTransitionVisibilityApp",
+	"loaderConfig": {
+		"paths": {
+			"jqmTransitionVisibilityApp": "dapp/tests/unit"
+		}
+	},
+	"modules": [
+	],
+
+	"controllers": [
+		"dapp/controllers/jqm/Init",
+		"dapp/controllers/jqm/Load",
+		"dapp/controllers/jqm/Transition",
+		"dapp/controllers/History",
+		"dapp/controllers/Logger"
+	],
+
+	"dependencies": [
+		"delite/css!jquery.mobile.css/jquery.mobile-1.4.3.min.css"
+	],
+
+	"containerSelector" : "#main",
+
+
+	"appLogging": {
+		"logAll": 1
+	},
+
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
+	//"containerSelector" : "#main",
+	//"parseOnLoad": true,
+	//"hideUrlHash": true,
+	"defaultView": "jqmTransitionVisibilityAppHome1",
+
+	"views": {
+		"jqmTransitionVisibilityAppHome1": {
+		//	"parentSelector": "#jqmTransitionVisibilityAppdviewStack",
+			"constraint" : "center",
+			"controller": "dapp/tests/unit/jqm/transitionVisibility/viewController1.js",
+			"template": "dapp/tests/unit/jqm/transitionVisibility/viewTemplate.html"
+		},
+		"jqmTransitionVisibilityAppHome2": {
+		//	"parentSelector": "#jqmTransitionVisibilityAppdviewStack",
+			"constraint" : "center",
+			"controller": "dapp/tests/unit/jqm/transitionVisibility/viewController2.js",
+			"template": "dapp/tests/unit/jqm/transitionVisibility/viewTemplate2.html"
+		}
+
+	}
+}

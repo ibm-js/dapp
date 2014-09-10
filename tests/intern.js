@@ -42,6 +42,17 @@ define({
 	},
 	loader: {
 		baseUrl: typeof window !== "undefined" ? "../../.." : "..",
+		paths: {
+			//"jquery": "jquery/jquery",
+			//"jquery.mobile": "jquery-mobile/js/jquery.mobile-1.4.2",
+			"jquery": "https://code.jquery.com/jquery-2.1.1.min",
+			"jquery.mobile": "http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3",
+			//"jquery.mobile": "http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2",
+			"jquery.mobile.css": "http://code.jquery.com/mobile/1.4.3/"
+		},
+		shim: {
+			'jquery.mobile': { deps: ['jquery'] }
+		},
 		waitSeconds: 15
 	},
 
@@ -57,5 +68,5 @@ define({
 	functionalSuites: ["dapp/tests/functional/all"],
 
 	// A regular expression matching URLs to files that should not be included in code coverage analysis
-	excludeInstrumentation: /^(requirejs.*|dcl|dojo|dpointer|dstore|decor|delite|deliteful\/|dapp\/tests|.*themes|.*transitions)/
+	excludeInstrumentation: /^(requirejs.*|dcl|dojo|dpointer|dstore|decor|jquery|jquery.mobile|delite|deliteful\/|dapp\/tests|.*themes|.*transitions)/
 });
