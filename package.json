@@ -1,6 +1,6 @@
 {
 	"name": "dapp",
-	"version": "0.1.1-dev",
+	"version": "0.3.0-alpha",
 	"description": "AMD-based Application Framework for building Web & Mobile applications ",
 	"dependencies": {
 	},
