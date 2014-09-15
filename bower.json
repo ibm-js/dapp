@@ -1,13 +1,13 @@
 {
 	"name": "dapp",
-	"version": "0.3.0-alpha",
+	"version": "0.3.0",
 	"dependencies": {
 		"dcl": "1.1.x",
-		"decor": "0.2.0-dev",
-		"delite": "0.3.0-alpha",
-		"deliteful": "0.3.0-alpha",
+		"decor": "0.2.1",
+		"delite": "0.3.0",
+		"deliteful": "0.3.0",
 		"dojo": ">=1.9.1",
-		"dpointer": "0.1.x",
+		"dpointer": "0.3.x",
 		"ecma402": "0.2.x",
 		"requirejs": "2.1.x",
 		"requirejs-domready": "2.0.x",
