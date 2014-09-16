@@ -57,6 +57,7 @@ module.exports = function (grunt) {
 				dest: "build/<%= pkg.name %>.min.js"
 			}
 		},
+
 		intern: {
 			local: {
 				options: {
@@ -82,10 +83,16 @@ module.exports = function (grunt) {
 						"./controllers/delite",
 						"./README.md",
 						"./package.json"
-					] //,
+					],
 					//	imports: [
 					//		"../delite/out"
-					//	]
+					//	],
+					paths: {
+						"decor": "../../../../decor/docs/api/0.3.0/decor",
+						"delite": "../../../../delite/docs/api/0.3.0/delite",
+						"deliteful": "../../../../delite/docs/api/0.3.0/deliteful"
+					},
+					packagePathFormat: "${name}/docs/api/${version}"
 				}]
 			},
 			export: {

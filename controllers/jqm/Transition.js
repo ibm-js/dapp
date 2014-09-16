@@ -23,6 +23,7 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../Transit
 							"] for parentView with id=[" + subEvent.dapp.parentView.id + "]");
 					}
 				} else if (p && p.getAttribute("data-role") !== "page") {
+					//TODO: need to test this!
 					console.warn("Parent found with parentSelector=[" + parentSelector +
 						"] does not have a child with a data-role of page for parentView with id=[" +
 						subEvent.dapp.parentView.id + "]");

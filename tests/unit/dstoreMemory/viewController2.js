@@ -41,6 +41,7 @@ define([],
 				// "] with previousView.id =[" + (previousView ? previousView.id : "") + "] with viewData=", viewData);
 				this._beforeActivateCallCount++;
 				this.lastSelection = viewData ? viewData.label : "";
+				this.deliver();
 			},
 			beforeDeactivate: function ( /*nextView, viewData*/ ) {
 				//console.log("app-view:", "beforeDeactivate called for [" + this.viewName +

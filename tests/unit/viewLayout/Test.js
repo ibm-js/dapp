@@ -2,8 +2,8 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
+	"decor/sniff",
 	"dapp/Application",
-	"dojo/json",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"delite/register",
@@ -11,9 +11,14 @@ define([
 	"requirejs-text/text!dapp/tests/unit/viewLayout/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, domGeom, domClass, register, Deferred,
-	viewLayoutconfig) {
+], function (registerSuite, assert, has, Application, domGeom, domClass, register, Deferred, viewLayoutconfig) {
 	// -------------------------------------------------------------------------------------- //
+
+	if (has("ie") === 10) {
+		console.log("Skipping multipleAndNestedViewsActivateCalls tests on IE10");
+		return;
+	}
+
 	// for viewLayoutSuite
 	var viewLayoutContainer2,
 		testApp,
@@ -36,7 +41,7 @@ define([
 			this.timeout = 20000;
 
 			// create the app from the config and wait for the deferred
-			return new Application(json.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2)
+			return new Application(JSON.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2)
 				.then(function (app) {
 					// we are ready to test
 					testApp = app;
@@ -58,9 +63,9 @@ define([
 					var box1 = domGeom.getMarginBox(children[0]);
 					var box2 = domGeom.getMarginBox(children[1]);
 					var box3 = domGeom.getMarginBox(children[2]);
-					assert.deepEqual(box1.h, 200);
-					assert.deepEqual(box3.h, 200);
-					assert.deepEqual(box1.h, box2.h);
+					assert.strictEqual(box1.h, 200);
+					assert.strictEqual(box3.h, 200);
+					assert.strictEqual(box1.h, box2.h);
 				});
 		},
 		// hide one view and verify sizes
@@ -83,9 +88,9 @@ define([
 					var box1 = domGeom.getMarginBox(children[0]);
 					var box2 = domGeom.getMarginBox(children[1]);
 					//	var box3 = domGeom.getMarginBox(children[2]);
-					assert.deepEqual(box1.h, 300);
-					assert.deepEqual(box2.h, 300);
-					assert.deepEqual(box1.h, box2.h);
+					assert.strictEqual(box1.h, 300);
+					assert.strictEqual(box2.h, 300);
+					assert.strictEqual(box1.h, box2.h);
 				});
 		},
 		teardown: function () {

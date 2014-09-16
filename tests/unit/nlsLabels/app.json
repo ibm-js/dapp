@@ -52,5 +52,14 @@
 			"template": "nlsLabelsApp/viewTemplate.html"
 		}
 
+	},
+
+	"has" : {
+		"dummyTest" : {
+			"hasTestFailed": true
+		},
+		"!dummyTest" : {
+			"hasTestPassed": true
+		}
 	}
 }

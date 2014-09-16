@@ -1,4 +1,4 @@
-define(["delite/uacss"], function (has) {
+define(["decor/sniff"], function (has) {
 
 	// module:
 	//		dapp/utils/config

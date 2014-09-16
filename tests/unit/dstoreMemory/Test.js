@@ -2,17 +2,23 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
+	"decor/sniff",
 	"dapp/Application",
-	"dojo/json",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/dstoreMemory/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack",
 	"deliteful/list/List",
 	"dstore/Memory"
-], function (registerSuite, assert, Application, json, Deferred,
-	dstoreMemoryconfig1) {
+], function (registerSuite, assert, has, Application, Deferred, dstoreMemoryconfig1) {
 	// -------------------------------------------------------------------------------------- //
+
+	console.log("has(ie) = " + has("ie"));
+	if (has("ie") === 10) {
+		console.log("Skipping dstoreMemorySuite tests on IE10");
+		return;
+	}
+
 	// for dstoreMemorySuite1 transition test
 	var dstoreMemoryContainer1,
 		testApp,
@@ -60,80 +66,41 @@ define([
 		},
 		"test initial view": function () {
 			this.timeout = 20000;
-			var d = new Deferred();
+			return new Application(JSON.parse(stripComments(dstoreMemoryconfig1)), dstoreMemoryContainer1)
+				.then(function (appx) {
+					// we are ready to test
+					testApp = appx;
 
-			var appStartedDef1 = new Application(json.parse(stripComments(dstoreMemoryconfig1)),
-				dstoreMemoryContainer1);
-			appStartedDef1.then(function (appx) {
-				// we are ready to test
-				testApp = appx;
+					// Here dstoreMemoryApp1Home1View should be displayed
 
-				// Here dstoreMemoryApp1Home1View should be displayed
+					dstoreMemoryNode1 = document.getElementById("dstoreMemoryAppdviewStack");
 
-				dstoreMemoryNode1 = document.getElementById("dstoreMemoryAppdviewStack");
-
-				// check the DOM state to see if we are in the expected state
-				var dstoreMemoryList1 = document.getElementById("list1");
-				dstoreMemoryAppHome1Node = document.getElementById("dstoreMemoryAppHome1");
-				assert.isNotNull(dstoreMemoryList1, "root dstoreMemoryNode1 must be here");
-				checkNodeVisibility(dstoreMemoryNode1, dstoreMemoryAppHome1Node);
-				setTimeout(function () { // try timeout to list to become visible
+					// check the DOM state to see if we are in the expected state
+					var dstoreMemoryList1 = document.getElementById("list1");
+					dstoreMemoryList1.deliver();
+					dstoreMemoryAppHome1Node = document.getElementById("dstoreMemoryAppHome1");
+					assert.isNotNull(dstoreMemoryList1, "root dstoreMemoryNode1 must be here");
+					checkNodeVisibility(dstoreMemoryNode1, dstoreMemoryAppHome1Node);
 					dstoreMemorylist1Elements = dstoreMemoryList1.getElementsByClassName("d-list-item-label");
 
-					assert.deepEqual(dstoreMemorylist1Elements[0].innerHTML, "Selection 1",
+					assert.strictEqual(dstoreMemorylist1Elements[0].innerHTML, "Selection 1",
 						"element[0].innerHTML should be Selection 1");
-					assert.deepEqual(dstoreMemorylist1Elements[1].innerHTML, "Selection 2",
+					assert.strictEqual(dstoreMemorylist1Elements[1].innerHTML, "Selection 2",
 						"element[1].innerHTML should be Selection 2");
-					assert.deepEqual(dstoreMemorylist1Elements[2].innerHTML, "Selection 3",
+					assert.strictEqual(dstoreMemorylist1Elements[2].innerHTML, "Selection 3",
 						"element[2].innerHTML should be Selection 3");
-					assert.deepEqual(dstoreMemorylist1Elements[3].innerHTML, "Selection 4",
+					assert.strictEqual(dstoreMemorylist1Elements[3].innerHTML, "Selection 4",
 						"element[3].innerHTML should be Selection 4");
-					assert.deepEqual(dstoreMemorylist1Elements[4].innerHTML, "Selection 5",
+					assert.strictEqual(dstoreMemorylist1Elements[4].innerHTML, "Selection 5",
 						"element[4].innerHTML should be Selection 5");
 
-					d.resolve();
-				}, 10);
-			});
-			return d;
+				});
 		},
 
 		// Currently showing dstoreMemoryAppHome1 test transition to dstoreMemoryAppHome2
 		"testApp.showOrHideViews('dstoreMemoryAppHome2')": function () {
 			this.timeout = 20000;
-			var d = new Deferred();
 			var displayDeferred = new Deferred();
-			displayDeferred.then(function () {
-				var dstoreMemoryList2 = document.getElementById("list2");
-				var dstoreMemoryAppHome2 = document.getElementById("dstoreMemoryAppHome2");
-				var header = dstoreMemoryAppHome2.getElementsByTagName("h2");
-				assert.isNotNull(dstoreMemoryList2, "root dstoreMemoryNode1 must be here");
-				setTimeout(function () { // try timeout to list to become visible
-					dstoreMemorylist2Elements = dstoreMemoryList2.getElementsByClassName("d-list-item-label");
-
-					dstoreMemoryAppHome2Node = document.getElementById("dstoreMemoryAppHome2");
-					assert.isNotNull(dstoreMemoryList2, "root dstoreMemoryAppHome2Node must be here");
-					checkNodeVisibility(dstoreMemoryNode1, dstoreMemoryAppHome2Node);
-
-					//Test for selected label in header for List2
-					var headerText = header[0].innerHTML;
-					var indx = headerText.indexOf(dstoreMemorylist1Elements[0].innerHTML);
-					assert.isFalse(indx === -1, "Should find label in header indx should not be -1");
-
-					//Test for List2 data being correct.
-					assert.deepEqual(dstoreMemorylist2Elements[0].innerHTML, "Selection 6",
-						"element[0].innerHTML should be Selection 1");
-					assert.deepEqual(dstoreMemorylist2Elements[1].innerHTML, "Selection 7",
-						"element[1].innerHTML should be Selection 2");
-					assert.deepEqual(dstoreMemorylist2Elements[2].innerHTML, "Selection 8",
-						"element[2].innerHTML should be Selection 3");
-					assert.deepEqual(dstoreMemorylist2Elements[3].innerHTML, "Selection 9",
-						"element[3].innerHTML should be Selection 4");
-					assert.deepEqual(dstoreMemorylist2Elements[4].innerHTML, "Selection 10",
-						"element[4].innerHTML should be Selection 5");
-
-					d.resolve();
-				}, 10);
-			});
 			var label = dstoreMemorylist1Elements[0].innerHTML || "";
 			testApp.showOrHideViews("dstoreMemoryAppHome2", {
 				viewData: {
@@ -141,14 +108,40 @@ define([
 				},
 				displayDeferred: displayDeferred
 			});
-			return d;
-		},
+			return displayDeferred.then(function () {
+				var dstoreMemoryList2 = document.getElementById("list2");
+				var dstoreMemoryAppHome2 = document.getElementById("dstoreMemoryAppHome2");
+				var header = dstoreMemoryAppHome2.getElementsByTagName("h2");
+				assert.isNotNull(dstoreMemoryList2, "root dstoreMemoryNode1 must be here");
+				dstoreMemorylist2Elements = dstoreMemoryList2.getElementsByClassName("d-list-item-label");
 
+				dstoreMemoryAppHome2Node = document.getElementById("dstoreMemoryAppHome2");
+				assert.isNotNull(dstoreMemoryList2, "root dstoreMemoryAppHome2Node must be here");
+				checkNodeVisibility(dstoreMemoryNode1, dstoreMemoryAppHome2Node);
+
+				//Test for selected label in header for List2
+				var headerText = header[0].innerHTML;
+				var indx = headerText.indexOf(dstoreMemorylist1Elements[0].innerHTML);
+				assert.notStrictEqual(indx, -1, "Should find label in header indx should not be -1");
+
+				//Test for List2 data being correct.
+				assert.strictEqual(dstoreMemorylist2Elements[0].innerHTML, "Selection 6",
+					"element[0].innerHTML should be Selection 1");
+				assert.strictEqual(dstoreMemorylist2Elements[1].innerHTML, "Selection 7",
+					"element[1].innerHTML should be Selection 2");
+				assert.strictEqual(dstoreMemorylist2Elements[2].innerHTML, "Selection 8",
+					"element[2].innerHTML should be Selection 3");
+				assert.strictEqual(dstoreMemorylist2Elements[3].innerHTML, "Selection 9",
+					"element[3].innerHTML should be Selection 4");
+				assert.strictEqual(dstoreMemorylist2Elements[4].innerHTML, "Selection 10",
+					"element[4].innerHTML should be Selection 5");
+
+			});
+		},
 
 		// Currently showing dstoreMemoryAppHome2 test transition to dstoreMemoryAppHome1
 		"testApp.showOrHideViews('dstoreMemoryAppHome1')": function () {
 			this.timeout = 20000;
-			var d = new Deferred();
 			var displayDeferred = new Deferred();
 			var label = dstoreMemorylist2Elements[4].innerHTML || "";
 			testApp.showOrHideViews("dstoreMemoryAppHome1", {
@@ -157,40 +150,38 @@ define([
 				},
 				displayDeferred: displayDeferred
 			});
-			displayDeferred.then(function () {
+			return displayDeferred.then(function () {
 				var dstoreMemoryList1 = document.getElementById("list2");
+				dstoreMemoryList1.deliver();
 				var dstoreMemoryAppHome1 = document.getElementById("dstoreMemoryAppHome1");
 				var header = dstoreMemoryAppHome1.getElementsByTagName("h2");
 				assert.isNotNull(dstoreMemoryList1, "root dstoreMemoryNode1 must be here");
-				setTimeout(function () { // try timeout to list to become visible
-					dstoreMemorylist1Elements = dstoreMemoryList1.getElementsByClassName("d-list-item-label");
+				dstoreMemorylist1Elements = dstoreMemoryList1.getElementsByClassName("d-list-item-label");
 
-					dstoreMemoryAppHome1Node = document.getElementById("dstoreMemoryAppHome1");
-					assert.isNotNull(dstoreMemoryList1, "root dstoreMemoryNode1 must be here");
-					checkNodeVisibility(dstoreMemoryNode1, dstoreMemoryAppHome1Node);
+				dstoreMemoryAppHome1Node = document.getElementById("dstoreMemoryAppHome1");
+				assert.isNotNull(dstoreMemoryList1, "root dstoreMemoryNode1 must be here");
+				checkNodeVisibility(dstoreMemoryNode1, dstoreMemoryAppHome1Node);
 
-					//Test for selected label in header for List0
-					var headerText = header[0].innerHTML;
-					var indx = headerText.indexOf(dstoreMemorylist2Elements[4].innerHTML);
-					assert.isFalse(indx === -1, "Should find label in header indx should not be -1");
+				//Test for selected label in header for List0
+				var headerText = header[0].innerHTML;
+				var indx = headerText.indexOf(dstoreMemorylist2Elements[4].innerHTML);
+				assert.notStrictEqual(indx, -1, "Should find label in header indx should not be -1");
 
-					//Test for List2 data being correct.
-					assert.deepEqual(dstoreMemorylist2Elements[0].innerHTML, "Selection 6",
-						"element[0].innerHTML should be Selection 1");
-					assert.deepEqual(dstoreMemorylist2Elements[1].innerHTML, "Selection 7",
-						"element[1].innerHTML should be Selection 2");
-					assert.deepEqual(dstoreMemorylist2Elements[2].innerHTML, "Selection 8",
-						"element[2].innerHTML should be Selection 3");
-					assert.deepEqual(dstoreMemorylist2Elements[3].innerHTML, "Selection 9",
-						"element[3].innerHTML should be Selection 4");
-					assert.deepEqual(dstoreMemorylist2Elements[4].innerHTML, "Selection 10",
-						"element[4].innerHTML should be Selection 5");
+				//Test for List2 data being correct.
+				assert.strictEqual(dstoreMemorylist2Elements[0].innerHTML, "Selection 6",
+					"element[0].innerHTML should be Selection 1");
+				assert.strictEqual(dstoreMemorylist2Elements[1].innerHTML, "Selection 7",
+					"element[1].innerHTML should be Selection 2");
+				assert.strictEqual(dstoreMemorylist2Elements[2].innerHTML, "Selection 8",
+					"element[2].innerHTML should be Selection 3");
+				assert.strictEqual(dstoreMemorylist2Elements[3].innerHTML, "Selection 9",
+					"element[3].innerHTML should be Selection 4");
+				assert.strictEqual(dstoreMemorylist2Elements[4].innerHTML, "Selection 10",
+					"element[4].innerHTML should be Selection 5");
 
-					d.resolve();
-				}, 10);
 			});
-			return d;
 		},
+
 		teardown: function () {
 			// call unloadApp to cleanup and end the test
 			dstoreMemoryContainer1.parentNode.removeChild(dstoreMemoryContainer1);
@@ -202,11 +193,13 @@ define([
 
 	function checkNodeVisibility(vs, target) {
 		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
-					(vs.children[i] !== target && vs.children[i].style.display === "none")),
-				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
+			if (vs.children[i] === target) {
+				assert.strictEqual(vs.children[i].style.display, "",
+					"checkNodeVisibility FAILED for target.id=" + target.id + " display should equal blank");
+			} else {
+				assert.strictEqual(vs.children[i].style.display, "none",
+					"checkNodeVisibility FAILED other children style.display should equal none");
+			}
 		}
 	}
 
