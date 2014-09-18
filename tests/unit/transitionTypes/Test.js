@@ -3,14 +3,12 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/Application",
-	"dojo/json",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/transitionTypes/config.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, register, Deferred,
-	transitionTypesconfig) {
+], function (registerSuite, assert, Application, register, Deferred, transitionTypesconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for transitionTypesSuite
 	var transitionTypesContainer1,
@@ -52,7 +50,7 @@ define([
 		"transitionTypesSuite dapp transitionTypes test initial layout": function () {
 			this.timeout = 10000;
 
-			var appStartedDef = new Application(json.parse(stripComments(transitionTypesconfig)),
+			var appStartedDef = new Application(JSON.parse(stripComments(transitionTypesconfig)),
 				transitionTypesContainer1);
 			return appStartedDef.then(function (app) {
 				// we are ready to test
@@ -378,7 +376,7 @@ define([
 		var testNode = document.getElementById(testId);
 		assert.isNotNull(testNode, "Node not found with Id = " + testId);
 		checkNodeVisibility(parentNode, testNode);
-		assert.deepEqual(evt.transition, transType, "evt.transition should be " + transType);
+		assert.strictEqual(evt.transition, transType, "evt.transition should be " + transType);
 		assert.isTrue(evt.dest.indexOf(testId) >= 0, "evt.dest should include " + testId);
 		assert.isTrue(evt.reverse ? rev : true, "evt.reverse=" + evt.reverse + " it should be " + rev);
 		if (parentNode === vsNode) {
@@ -395,11 +393,13 @@ define([
 
 	function checkNodeVisibility(vs, target) {
 		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
-					(vs.children[i] !== target && vs.children[i].style.display === "none")),
-				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
+			if (vs.children[i] === target) {
+				assert.strictEqual(vs.children[i].style.display, "",
+					"checkNodeVisibility FAILED for target.id=" + target.id + " display should equal blank");
+			} else {
+				assert.strictEqual(vs.children[i].style.display, "none",
+					"checkNodeVisibility FAILED other children style.display should equal none");
+			}
 		}
 	}
 

@@ -6,13 +6,12 @@ define([
 	"dapp/Application",
 	"dapp/utils/view",
 	"dapp/utils/hash",
-	"dojo/json",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/historyController/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, hash, json, register,
+], function (registerSuite, assert, Application, viewUtils, hash, register,
 	Deferred, historyControllerconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for historyControllerSuite1 transition test
@@ -54,7 +53,7 @@ define([
 		},
 		"historyController test initial view": function () {
 			this.timeout = 20000;
-			return new Application(json.parse(stripComments(historyControllerconfig1)),
+			return new Application(JSON.parse(stripComments(historyControllerconfig1)),
 				historyControllerContainer1).then(function (app) {
 				// we are ready to test
 				testApp = app;
@@ -86,7 +85,7 @@ define([
 
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1",
+				assert.strictEqual(currentHash, "#hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1");
 			});
 		},
@@ -105,7 +104,7 @@ define([
 				checkActivateCallCount(hc1center2View, 1, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
+				assert.strictEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1");
 			});
 		},
@@ -132,7 +131,7 @@ define([
 				checkActivateCallCount(hc1center3View, 1, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash,
+				assert.strictEqual(currentHash,
 					"#hc1header1+hc1centerParent+(hc1center3&pTestVal1=value1)+hc1right1+hc1footer1",
 					" currentHash should include (hc1center3&pTestVal1=value1)+hc1right1+hc1footer1");
 			});
@@ -150,7 +149,7 @@ define([
 				checkNodeVisibile(hc1center2content);
 				checkActivateCallCount(hc1center2View, 2, true);
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
+				assert.strictEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1");
 			});
 		},
@@ -168,7 +167,7 @@ define([
 				assert.isTrue(hc1center1content.style.display !== "none", "hc1center1content should be visible");
 				checkActivateCallCount(hc1center1View, 2, true);
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1",
+				assert.strictEqual(currentHash, "#hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center1+hc1right1+hc1footer1");
 			});
 		},
@@ -186,7 +185,7 @@ define([
 				checkActivateCallCount(hc1center2View, 3, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
+				assert.strictEqual(currentHash, "#hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center2+hc1right1+hc1footer1");
 			});
 		},
@@ -204,7 +203,7 @@ define([
 				checkActivateCallCount(hc1center3View, 2, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash,
+				assert.strictEqual(currentHash,
 					"#hc1header1+hc1centerParent+(hc1center3&pTestVal1=value1)+hc1right1+hc1footer1",
 					" currentHash should include (hc1center3&pTestVal1=value1)+hc1right1+hc1footer1");
 			});
@@ -219,7 +218,7 @@ define([
 			});
 			return displayDeferred.then(function () {
 				var hc1rightPane = document.getElementById("hc1rightPane");
-				assert.isTrue(hc1rightPane.style.display === "none");
+				assert.strictEqual(hc1rightPane.style.display, "none", "hc1rightPane.style.display should be none");
 				checkActivateCallCount(hc1right1View, 5, true);
 				checkDeactivateCallCount(hc1right1View, 5, true);
 			});
@@ -233,12 +232,13 @@ define([
 			history.back();
 			return displayDeferred.then(function () {
 				var hc1rightPane = document.getElementById("hc1rightPane");
-				assert.isFalse(hc1rightPane.style.display === "none");
+				assert.notStrictEqual(hc1rightPane.style.display, "none",
+					"hc1rightPane.style.display should not be none");
 				checkActivateCallCount(hc1right1View, 6, true);
 				checkDeactivateCallCount(hc1right1View, 5, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash,
+				assert.strictEqual(currentHash,
 					"#hc1header1+hc1centerParent+(hc1center3&pTestVal1=value1)+hc1right1+hc1footer1",
 					" currentHash should include (hc1center3&pTestVal1=value1)+hc1right1+hc1footer1");
 			});
@@ -252,12 +252,12 @@ define([
 			history.forward();
 			return displayDeferred.then(function () {
 				var hc1rightPane = document.getElementById("hc1rightPane");
-				assert.isTrue(hc1rightPane.style.display === "none");
+				assert.strictEqual(hc1rightPane.style.display, "none", "hc1rightPane.style.display should be none");
 				checkActivateCallCount(hc1right1View, 6, true);
 				checkDeactivateCallCount(hc1right1View, 6, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#hc1header1+hc1centerParent+hc1center3+hc1footer1",
+				assert.strictEqual(currentHash, "#hc1header1+hc1centerParent+hc1center3+hc1footer1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center3+hc1footer1");
 			});
 		},
@@ -278,13 +278,13 @@ define([
 				var hc1left1View = viewUtils.getViewFromViewId(testApp, "hc1leftParent_hc1left1");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 1, true);
-				assert.deepEqual(hc1left1View.viewParams.pTestVal, "value1",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal, "value1",
 					" hc1left1View.viewParams.pTestVal should equal value1");
-				//	assert.deepEqual(hc1leftParentView.viewParams.pTestVal, "value1",
+				//	assert.strictEqual(hc1leftParentView.viewParams.pTestVal, "value1",
 				//		" hc1leftParentView.viewParams.pTestVal should equal value1");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash,
+				assert.strictEqual(currentHash,
 					"#hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1&pTestVal=value1",
 					" currentHash should have &pTestVal=value1");
 			});
@@ -302,7 +302,8 @@ define([
 				//var hc1rightPane = document.getElementById("hc1rightPane");
 				var hc1left1content = document.getElementById("hc1leftPane");
 				var hc1left1View = viewUtils.getViewFromViewId(testApp, "hc1leftParent_hc1left1");
-				assert.isTrue(hc1left1content.style.display === "none");
+				assert.strictEqual(hc1left1content.style.display, "none",
+					"hc1left1content.style.display should be none");
 				checkActivateCallCount(hc1left1View, 1, true);
 				checkDeactivateCallCount(hc1left1View, 0, true); // not deactivated because only parent was
 			});
@@ -333,8 +334,9 @@ define([
 				var hc1right2content = hc1right2View.containerNode;
 				assert.isNotNull(hc1right2content, "hc1right2content must be here");
 				//	checkNodeVisibile(hc1right2content);
-				assert.isTrue(hc1right2View.style.display === "none");
-				assert.isTrue(hc1rightPaneElem.style.display === "none");
+				assert.strictEqual(hc1right2View.style.display, "none", "hc1right2View.style.display should be none");
+				assert.strictEqual(hc1rightPaneElem.style.display, "none",
+					"hc1rightPaneElem.style.display should be none");
 			});
 		},
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1 test
@@ -370,11 +372,11 @@ define([
 				hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left2content);
 				checkActivateCallCount(hc1left2View, 1, true);
-				assert.deepEqual(hc1left2View.viewParams.pTestVal, "value2",
+				assert.strictEqual(hc1left2View.viewParams.pTestVal, "value2",
 					" hc1left2View.viewParams.pTestVal should equal value2");
-				assert.deepEqual(hc1left2View.viewParams.pTestVal2, "parentVal2",
+				assert.strictEqual(hc1left2View.viewParams.pTestVal2, "parentVal2",
 					" hc1left2View.viewParams.pTestVal2 should equal parentVal2 mixed in from parent view");
-				assert.deepEqual(hc1leftParentView.viewParams.pTestVal2, "parentVal2",
+				assert.strictEqual(hc1leftParentView.viewParams.pTestVal2, "parentVal2",
 					" hc1leftParentView.viewParams.pTestVal2 should equal parentVal2");
 			}).then(function () {
 				var currentHash = window.location.hash;
@@ -383,7 +385,7 @@ define([
 				//	"hc1left2&pTestVal1=value2)&pTestVal=value2";
 				var t2 = "#hc1header1+hc1centerParent+hc1center3+hc1footer1+(hc1leftParent&pTestVal2=parentVal2)," +
 					"(hc1left2&pTestVal1=value2)&pTestVal=value2";
-				assert.deepEqual(currentHash, t2,
+				assert.strictEqual(currentHash, t2,
 					" currentHash should have (hc1leftParent,hc1left2&pTestVal1=value2) and &pTestVal=value1");
 			});
 		},
@@ -415,15 +417,15 @@ define([
 				var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 2, true);
-				assert.deepEqual(hc1left1View.viewParams.pTestVal, "value1",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal, "value1",
 					" hc1left1View.viewParams.pTestVal should equal value1");
-				assert.deepEqual(hc1left1View.viewParams.pTestVal1, "value1",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal1, "value1",
 					" hc1left1View.viewParams.pTestVal1 should equal value1 from the child !mixed from parent view");
-				assert.deepEqual(hc1leftParentView.viewParams.pTestVal1, "parentVal1",
+				assert.strictEqual(hc1leftParentView.viewParams.pTestVal1, "parentVal1",
 					" hc1leftParentView.viewParams.pTestVal1 should equal parentVal1");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "",
+				assert.strictEqual(currentHash, "",
 					" currentHash should be empty");
 			});
 		},
@@ -440,17 +442,17 @@ define([
 				//var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left2content);
 				checkActivateCallCount(hc1left2View, 2, true);
-				assert.deepEqual(hc1left2View.viewParams.pTestVal, "value2",
+				assert.strictEqual(hc1left2View.viewParams.pTestVal, "value2",
 					" hc1left2View.viewParams.pTestVal should equal value2");
-				assert.deepEqual(hc1left2View.viewParams.pTestVal2, "parentVal2",
+				assert.strictEqual(hc1left2View.viewParams.pTestVal2, "parentVal2",
 					" hc1left2View.viewParams.pTestVal2 should equal parentVal2 mixed in from parent view");
-				assert.deepEqual(hc1leftParentView.viewParams.pTestVal2, "parentVal2",
+				assert.strictEqual(hc1leftParentView.viewParams.pTestVal2, "parentVal2",
 					" hc1leftParentView.viewParams.pTestVal2 should equal parentVal2");
 			}).then(function () {
 				var currentHash = window.location.hash;
 				var t2 = "#hc1header1+hc1centerParent+hc1center3+hc1footer1+(hc1leftParent&pTestVal2=parentVal2)," +
 					"(hc1left2&pTestVal1=value2)&pTestVal=value2";
-				assert.deepEqual(currentHash, t2,
+				assert.strictEqual(currentHash, t2,
 					" currentHash should have (hc1leftParent,hc1left2&pTestVal1=value2) and &pTestVal=value1");
 			});
 		},
@@ -467,15 +469,15 @@ define([
 				var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 3, true);
-				assert.deepEqual(hc1left1View.viewParams.pTestVal, "value1",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal, "value1",
 					" hc1left1View.viewParams.pTestVal should equal value1");
-				assert.deepEqual(hc1left1View.viewParams.pTestVal1, "value1",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal1, "value1",
 					" hc1left1View.viewParams.pTestVal1 should equal value1 from the child !mixed from parent view");
-				assert.deepEqual(hc1leftParentView.viewParams.pTestVal1, "parentVal1",
+				assert.strictEqual(hc1leftParentView.viewParams.pTestVal1, "parentVal1",
 					" hc1leftParentView.viewParams.pTestVal1 should equal parentVal1");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "",
+				assert.strictEqual(currentHash, "",
 					" currentHash should be empty");
 			});
 		},
@@ -506,14 +508,14 @@ define([
 				//var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left2content);
 				checkActivateCallCount(hc1left2View, 3, true);
-				assert.deepEqual(hc1left2View.viewData.pTestVal, "value2",
+				assert.strictEqual(hc1left2View.viewData.pTestVal, "value2",
 					" hc1left2View.viewData.pTestVal should equal value2");
-				assert.deepEqual(hc1leftParentView.viewData.pTestVal2, "parentVal2",
+				assert.strictEqual(hc1leftParentView.viewData.pTestVal2, "parentVal2",
 					" hc1leftParentView.viewData.pTestVal2 should equal parentVal2");
 			}).then(function () {
 				var currentHash = window.location.hash;
 				var t2 = "#hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2";
-				assert.deepEqual(currentHash, t2,
+				assert.strictEqual(currentHash, t2,
 					" currentHash should be #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2");
 			});
 		},
@@ -543,13 +545,13 @@ define([
 				var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 4, true);
-				assert.deepEqual(hc1left1View.viewData.pTestVal, "value1",
+				assert.strictEqual(hc1left1View.viewData.pTestVal, "value1",
 					" hc1left1View.viewData.pTestVal should equal value1");
-				assert.deepEqual(hc1leftParentView.viewData.pTestVal1, "parentVal1",
+				assert.strictEqual(hc1leftParentView.viewData.pTestVal1, "parentVal1",
 					" hc1leftParentView.viewData.pTestVal1 should equal parentVal1");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash,
+				assert.strictEqual(currentHash,
 					"#hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1");
 			});
@@ -567,14 +569,14 @@ define([
 				//var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left2content);
 				checkActivateCallCount(hc1left2View, 4, true);
-				assert.deepEqual(hc1left2View.viewData.pTestVal, "value2",
+				assert.strictEqual(hc1left2View.viewData.pTestVal, "value2",
 					" hc1left2View.viewData.pTestVal should equal value2");
-				assert.deepEqual(hc1leftParentView.viewData.pTestVal2, "parentVal2",
+				assert.strictEqual(hc1leftParentView.viewData.pTestVal2, "parentVal2",
 					" hc1leftParentView.viewData.pTestVal2 should equal parentVal2");
 			}).then(function () {
 				var currentHash = window.location.hash;
 				var t2 = "#hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2";
-				assert.deepEqual(currentHash, t2,
+				assert.strictEqual(currentHash, t2,
 					" currentHash should be #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2");
 			});
 		},
@@ -591,13 +593,13 @@ define([
 				var hc1leftParentView = viewUtils.getViewFromViewId(testApp, "hc1leftParent");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 5, true);
-				assert.deepEqual(hc1left1View.viewData.pTestVal, "value1",
+				assert.strictEqual(hc1left1View.viewData.pTestVal, "value1",
 					" hc1left1View.viewData.pTestVal should equal value1");
-				assert.deepEqual(hc1leftParentView.viewData.pTestVal1, "parentVal1",
+				assert.strictEqual(hc1leftParentView.viewData.pTestVal1, "parentVal1",
 					" hc1leftParentView.viewData.pTestVal1 should equal parentVal1");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash,
+				assert.strictEqual(currentHash,
 					"#hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1",
 					" currentHash should be #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1");
 			});
@@ -619,7 +621,7 @@ define([
 				checkActivateCallCount(hc1left2View, 5, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#testHash1", " currentHash should be #testHash1");
+				assert.strictEqual(currentHash, "#testHash1", " currentHash should be #testHash1");
 			});
 		},
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left2" test
@@ -640,11 +642,11 @@ define([
 				var hc1left1View = viewUtils.getViewFromViewId(testApp, "hc1leftParent_hc1left1");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 6, true);
-				assert.deepEqual(hc1left1View.viewParams.pTestVal, "value2",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal, "value2",
 					" hc1left1View.viewParams.pTestVal should equal value2");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#testHash2&pTestVal=value2",
+				assert.strictEqual(currentHash, "#testHash2&pTestVal=value2",
 					" currentHash should be #testHash2&pTestVal=value2");
 			});
 		},
@@ -662,7 +664,7 @@ define([
 				checkActivateCallCount(hc1left2View, 6, true);
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#testHash1", " currentHash should be #testHash1");
+				assert.strictEqual(currentHash, "#testHash1", " currentHash should be #testHash1");
 			});
 		},
 		// Currently showing #hc1header1+hc1centerParent+hc1center3+hc1footer1+hc1leftParent,hc1left1" test
@@ -677,11 +679,11 @@ define([
 				var hc1left1View = viewUtils.getViewFromViewId(testApp, "hc1leftParent_hc1left1");
 				checkNodeVisibile(hc1left1content);
 				checkActivateCallCount(hc1left1View, 7, true);
-				assert.deepEqual(hc1left1View.viewParams.pTestVal, "value2",
+				assert.strictEqual(hc1left1View.viewParams.pTestVal, "value2",
 					" hc1left1View.viewParams.pTestVal should equal value2");
 			}).then(function () {
 				var currentHash = window.location.hash;
-				assert.deepEqual(currentHash, "#testHash2&pTestVal=value2",
+				assert.strictEqual(currentHash, "#testHash2&pTestVal=value2",
 					" currentHash should be #testHash2&pTestVal=value2");
 			});
 		},
@@ -709,9 +711,9 @@ define([
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view._beforeActivateCallCount, count,
+			assert.strictEqual(view._beforeActivateCallCount, count,
 				view.id + " _beforeActivateCallCount should be " + count);
-			assert.deepEqual(view._afterActivateCallCount, count,
+			assert.strictEqual(view._afterActivateCallCount, count,
 				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to true
@@ -723,9 +725,9 @@ define([
 
 	function checkDeactivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view._beforeDeactivateCallCount, count,
+			assert.strictEqual(view._beforeDeactivateCallCount, count,
 				view.id + " _beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view._afterDeactivateCallCount, count,
+			assert.strictEqual(view._afterDeactivateCallCount, count,
 				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false

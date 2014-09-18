@@ -1,6 +1,6 @@
 // jshint quotmark:false
-require(["dapp/Application", "dojo/json", "requirejs-text/text!./app.json", "dojo/sniff"],
-	function (Application, json, config, has) {
+require(["dapp/Application", "requirejs-text/text!./app.json"],
+	function (Application, config) {
 		window.dstoreMemoryApp = {};
 		window.dstoreMemoryApp.list1Data = {
 			identifier: "id",
@@ -25,8 +25,6 @@ require(["dapp/Application", "dojo/json", "requirejs-text/text!./app.json", "doj
 			});
 		}
 
-		has.add("requirejs", window.requirejs);
-		/* jshint nonew: false */
 		var jsonData = config;
 		jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
 		jsonData = jsonData.replace(/\/\/.*/g, "");
