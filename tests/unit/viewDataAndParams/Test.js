@@ -4,13 +4,11 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"dapp/utils/view",
-	"dojo/json",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/viewDataAndParams/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, Deferred,
-	viewDataconfig3) {
+], function (registerSuite, assert, Application, viewUtils, Deferred, viewDataconfig3) {
 	// -------------------------------------------------------------------------------------- //
 	// for viewDataSuite transition test
 	var viewDataContainer3,
@@ -34,7 +32,7 @@ define([
 		"test initial view": function () {
 			this.timeout = 20000;
 
-			return new Application(json.parse(stripComments(viewDataconfig3)), viewDataContainer3)
+			return new Application(JSON.parse(stripComments(viewDataconfig3)), viewDataContainer3)
 				.then(function (app) {
 					// we are ready to test
 					testApp = app;
@@ -46,7 +44,7 @@ define([
 						"viewDataAndParamsAppHome1View.initialized should be true");
 					// check the DOM state to see if we are in the expected state
 					assert.isNotNull(viewDataAndParamsAppHome1, "viewDataAndParamsAppHome1 view must be here");
-					assert.deepEqual(viewDataAndParamsAppHome1View._beforeActivateCallCount, 1,
+					assert.strictEqual(viewDataAndParamsAppHome1View._beforeActivateCallCount, 1,
 						"viewDataAndParamsAppHome1View._beforeActivateCallCount should be 1");
 					assert.isNotNull(viewDataNode3, "root viewDataNode3 must be here");
 					checkNodeVisibility(viewDataNode3, viewDataAndParamsAppHome1);
@@ -91,7 +89,7 @@ define([
 				// Now viewDataAndParamsAppHome3View DeactivateCallCounts should be 1
 				checkDeactivateCallCount(viewDataAndParamsAppHome3View, 1);
 
-				assert.equal(viewDataAndParamsAppHome1View.viewData.p, "testData",
+				assert.strictEqual(viewDataAndParamsAppHome1View.viewData.p, "testData",
 					"viewDataAndParamsAppHome1View.viewData should equal testData");
 			});
 		},
@@ -120,9 +118,9 @@ define([
 				//	var viewDataparentV1s1 = document.getElementById("parentV1_s1");
 				var viewDataparentV1s1View = viewUtils.getViewFromViewId(testApp, "parentV1_s1");
 
-				assert.equal(viewDataparentV1s1View.viewData.p, "testData",
+				assert.strictEqual(viewDataparentV1s1View.viewData.p, "testData",
 					"viewDataparentV1s1View.viewData.p should equal testData");
-				assert.equal(viewDataparentV1s1View.viewData.fromChild, "valuefromChild",
+				assert.strictEqual(viewDataparentV1s1View.viewData.fromChild, "valuefromChild",
 					"viewDataparentV1s1View.viewData.fromChild should equal valuefromChild");
 				//NOTE: viewData is not inherited from parentView, so viewData.parentV1 is not set
 				assert.isUndefined(viewDataparentV1s1View.viewData.fromParent,
@@ -130,7 +128,7 @@ define([
 
 				var viewDataparentV1View = viewUtils.getViewFromViewId(testApp, "parentV1");
 				//NOTE: viewData with fromParent on viewDataparentV1View should be set
-				assert.equal(viewDataparentV1View.viewData.fromParent, "valuefromParent",
+				assert.strictEqual(viewDataparentV1View.viewData.fromParent, "valuefromParent",
 					"viewDataparentV1View.viewData.fromParent should equal valuefromParent");
 				assert.isUndefined(viewDataparentV1View.viewData.fromChild,
 					"viewDataparentV1View.viewData.fromChild should not be set");
@@ -161,17 +159,17 @@ define([
 				//	var viewDataparentV1s1 = document.getElementById("parentV1_s1");
 				var viewDataparentV1s1View = viewUtils.getViewFromViewId(testApp, "parentV1_s1");
 
-				assert.equal(viewDataparentV1s1View.viewParams.p, "testData",
+				assert.strictEqual(viewDataparentV1s1View.viewParams.p, "testData",
 					"viewDataparentV1s1View.viewParams should equal testData");
-				assert.equal(viewDataparentV1s1View.viewParams.fromParent, "paramValuefromParent",
+				assert.strictEqual(viewDataparentV1s1View.viewParams.fromParent, "paramValuefromParent",
 					"viewDataparentV1s1View.viewParams.fromParent should equal paramValuefromParent");
-				assert.equal(viewDataparentV1s1View.viewParams.fromChild, "paramValuefromChild",
+				assert.strictEqual(viewDataparentV1s1View.viewParams.fromChild, "paramValuefromChild",
 					"viewDataparentV1s1View.viewParams.fromChild should equal paramValuefromChild");
 
 				var viewDataparentV1View = viewUtils.getViewFromViewId(testApp, "parentV1");
-				assert.equal(viewDataparentV1View.viewParams.p, "testData",
+				assert.strictEqual(viewDataparentV1View.viewParams.p, "testData",
 					"viewDataparentV1View.viewParams should equal testData");
-				assert.equal(viewDataparentV1View.viewParams.fromParent, "paramValuefromParent",
+				assert.strictEqual(viewDataparentV1View.viewParams.fromParent, "paramValuefromParent",
 					"viewDataparentV1View.viewParams.fromParent should equal paramValuefromParent");
 				assert.isUndefined(viewDataparentV1View.viewParams.fromChild,
 					"viewDataparentV1View.viewParams.fromChild should not be set");
@@ -189,24 +187,26 @@ define([
 
 	function checkNodeVisibility(vs, target) {
 		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
-					(vs.children[i] !== target && vs.children[i].style.display === "none")),
-				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
+			if (vs.children[i] === target) {
+				assert.strictEqual(vs.children[i].style.display, "",
+					"checkNodeVisibility FAILED for target.id=" + target.id + " display should equal blank");
+			} else {
+				assert.strictEqual(vs.children[i].style.display, "none",
+					"checkNodeVisibility FAILED other children style.display should equal none");
+			}
 		}
 	}
 
 	function checkActivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view._beforeActivateCallCount, count,
+			assert.strictEqual(view._beforeActivateCallCount, count,
 				view.id + " _beforeActivateCallCount should be " + count);
-			assert.deepEqual(view._afterActivateCallCount, count,
+			assert.strictEqual(view._afterActivateCallCount, count,
 				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for selectedChildren being set correctly with constraint view.parentNode.id
 			var selectedChildId = testApp.selectedChildren[view.parentNode.id].id;
-			assert.deepEqual(view.id, selectedChildId, view.id +
+			assert.strictEqual(view.id, selectedChildId, view.id +
 				" should be in testApp.selectedChildren[view.parentNode.id]. ");
 
 			//also test for view._active being set correctly to true
@@ -216,9 +216,9 @@ define([
 
 	function checkDeactivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view._beforeDeactivateCallCount, count,
+			assert.strictEqual(view._beforeDeactivateCallCount, count,
 				view.id + " _beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view._afterDeactivateCallCount, count,
+			assert.strictEqual(view._afterDeactivateCallCount, count,
 				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false

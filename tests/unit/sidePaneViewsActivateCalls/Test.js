@@ -5,13 +5,12 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"dapp/utils/view",
-	"dojo/json",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/sidePaneViewsActivateCalls/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, register, Deferred,
+], function (registerSuite, assert, Application, viewUtils, register, Deferred,
 	sidePaneViewsActivateCallsconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for sidePaneViewsActivateCallsSuite1 transition test
@@ -49,7 +48,7 @@ define([
 		"sidePaneViewsActivateCalls test initial view": function () {
 			this.timeout = 20000;
 
-			var appStartedDef1 = new Application(json.parse(stripComments(sidePaneViewsActivateCallsconfig1)),
+			var appStartedDef1 = new Application(JSON.parse(stripComments(sidePaneViewsActivateCallsconfig1)),
 				sidePaneViewsActivateCallsContainer1);
 			return appStartedDef1.then(function (app) {
 				// we are ready to test
@@ -89,7 +88,7 @@ define([
 			});
 			return displayDeferred.then(function () {
 				var sp1rightPane = document.getElementById("sp1rightPane");
-				assert.isTrue(sp1rightPane.style.display === "none");
+				assert.strictEqual(sp1rightPane.style.display, "none", "sp1rightPane.style.display should be none");
 				checkActivateCallCount(sp1right1View, 1, true);
 				checkDeactivateCallCount(sp1right1View, 1, true);
 			});
@@ -123,8 +122,9 @@ define([
 				var sp1rightPane = document.getElementById("sp1rightPane");
 				var sp1left1content = document.getElementById("sp1leftPane");
 				var sp1left1View = viewUtils.getViewFromViewId(testApp, "sp1leftParent_sp1left1");
-				assert.isTrue(sp1rightPane.style.display === "none");
-				assert.isTrue(sp1left1content.style.display === "none");
+				assert.strictEqual(sp1rightPane.style.display, "none", "sp1rightPane.style.display should be none");
+				assert.strictEqual(sp1left1content.style.display, "none",
+					"sp1left1content.style.display should be none");
 
 				checkActivateCallCount(sp1left1View, 1, true);
 				checkDeactivateCallCount(sp1left1View, 1, true); // note not deactivated because only parent is hidden
@@ -154,8 +154,9 @@ define([
 				var sp1right2content = sp1right2View.containerNode;
 				assert.isNotNull(sp1right2content, "sp1right2content must be here");
 				//	checkNodeVisibile(sp1right2content);
-				assert.isTrue(sp1right2View.style.display === "none");
-				assert.isTrue(sp1rightPaneElem.style.display === "none");
+				assert.strictEqual(sp1right2View.style.display, "none", "sp1right2View.style.display should be none");
+				assert.strictEqual(sp1rightPaneElem.style.display, "none",
+					"sp1rightPaneElem.style.display should be none");
 			});
 		},
 
@@ -170,14 +171,14 @@ define([
 	registerSuite(sidePaneViewsActivateCallsSuite1);
 
 	function checkNodeVisibile(target) {
-		assert.isTrue(target.style.display !== "none", target.id + " should be visible, but it is not");
+		assert.notStrictEqual(target.style.display, "none", target.id + " should be visible, but it is not");
 	}
 
 	function checkActivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view._beforeActivateCallCount, count,
+			assert.strictEqual(view._beforeActivateCallCount, count,
 				view.id + " _beforeActivateCallCount should be " + count);
-			assert.deepEqual(view._afterActivateCallCount, count,
+			assert.strictEqual(view._afterActivateCallCount, count,
 				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to true
@@ -189,9 +190,9 @@ define([
 
 	function checkDeactivateCallCount(view, count, skipActiveCheck) {
 		if (view) {
-			assert.deepEqual(view._beforeDeactivateCallCount, count,
+			assert.strictEqual(view._beforeDeactivateCallCount, count,
 				view.id + " _beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view._afterDeactivateCallCount, count,
+			assert.strictEqual(view._afterDeactivateCallCount, count,
 				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false

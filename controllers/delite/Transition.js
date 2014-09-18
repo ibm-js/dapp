@@ -35,8 +35,8 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../Transit
 				var self = this;
 				var p = self._getParentNode(event);
 				if (!p.hide) { // should have a hide function, if not
-					//TODO: ELC need a test for this!!
-					console.error("No hide function available on parentNode for viewTarget =" + viewTarget);
+					//TODO: need a test for this!!
+					console.warn("No hide function available on parentNode for viewTarget =" + viewTarget);
 					event.dapp.nextView = event.dapp.parentView.childViews[viewTarget];
 					var parentSelChild = viewUtils.getSelectedChild(event.dapp.parentView,
 						event.dapp.nextView.constraint);

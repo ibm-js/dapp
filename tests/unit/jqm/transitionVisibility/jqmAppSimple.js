@@ -20,12 +20,8 @@ require(["jquery"],
 			$.mobile.changePage.defaults.changeHash = false;
 		});
 	});
-require(["dapp/Application", "dojo/json", "requirejs-text/text!./app.json", "dojo/sniff",
-		"jquery", "jquery.mobile"
-	],
-	function (Application, json, config, has, $) {
-		has.add("requirejs", window.requirejs);
-		/* jshint nonew: false */
+require(["dapp/Application", "requirejs-text/text!./app.json", "jquery", "jquery.mobile"],
+	function (Application, config, has, $) {
 		var jsonData = config;
 		jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
 		jsonData = jsonData.replace(/\/\/.*/g, "");

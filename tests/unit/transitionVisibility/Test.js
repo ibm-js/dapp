@@ -3,14 +3,12 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/Application",
-	"dojo/json",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/transitionVisibility/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, register, Deferred,
-	transitionVisibilityconfig) {
+], function (registerSuite, assert, Application, register, Deferred, transitionVisibilityconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for transitionVisibilitySuite
 	var transitionVisibilityContainer3,
@@ -34,7 +32,7 @@ define([
 		"transitionVisibilitySuite dapp transitionVisibility test initial layout": function () {
 			this.timeout = 20000;
 
-			var appStartedDef = new Application(json.parse(stripComments(transitionVisibilityconfig)),
+			var appStartedDef = new Application(JSON.parse(stripComments(transitionVisibilityconfig)),
 				transitionVisibilityContainer3);
 			return appStartedDef.then(function (app) {
 				// we are ready to test
@@ -112,11 +110,13 @@ define([
 
 	function checkNodeVisibility(vs, target) {
 		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
-					(vs.children[i] !== target && vs.children[i].style.display === "none")),
-				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
+			if (vs.children[i] === target) {
+				assert.strictEqual(vs.children[i].style.display, "",
+					"checkNodeVisibility FAILED for target.id=" + target.id + " display should equal blank");
+			} else {
+				assert.strictEqual(vs.children[i].style.display, "none",
+					"checkNodeVisibility FAILED other children style.display should equal none");
+			}
 		}
 	}
 

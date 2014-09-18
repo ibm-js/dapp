@@ -2,10 +2,9 @@
 define([
 	"./intern"
 ], function (intern) {
-	intern.useSauceConnect = false;
-	//	maxConcurrency: 1
-	intern.webdriver = {
-		host: "localhost",
+	intern.tunnel = "NullTunnel";
+	intern.tunnelOptions = {
+		hostname: "localhost",
 		port: 4444
 	};
 

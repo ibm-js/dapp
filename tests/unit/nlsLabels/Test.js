@@ -2,15 +2,19 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
+	"decor/sniff",
 	"dapp/Application",
 	"dapp/utils/view",
-	"dojo/json",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/nlsLabels/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, json, Deferred,
+], function (registerSuite, assert, has, Application, viewUtils, Deferred,
 	nlsLabelsconfig3) {
+	if (has("ie") === 10) {
+		console.log("Skipping nlsLabelsSuite tests on IE10");
+		return;
+	}
 	// -------------------------------------------------------------------------------------- //
 	// TODO: should add a nested nls test with strings at the parent view available to the child view.
 	// for nlsLabelsSuite transition test
@@ -35,7 +39,7 @@ define([
 		"test initial view and nls labels": function () {
 			this.timeout = 20000;
 
-			var appStartedDef3 = new Application(json.parse(stripComments(nlsLabelsconfig3)), nlsLabelsContainer3);
+			var appStartedDef3 = new Application(JSON.parse(stripComments(nlsLabelsconfig3)), nlsLabelsContainer3);
 			return appStartedDef3.then(function (app) {
 				// we are ready to test
 				testApp = app;
@@ -45,21 +49,25 @@ define([
 				// Here nlsLabelsAppHome1View should be displayed
 				nlsLabelsAppHome1View = viewUtils.getViewFromViewId(testApp, "nlsLabelsAppHome1");
 
+				nlsLabelsAppHome1View.deliver(); // to get handlebars to update now
+
 				// check that init has been called on these views
 				assert.isTrue(nlsLabelsAppHome1View.initialized, "nlsLabelsAppHome1View.initialized should be true");
 				// check the DOM state to see if we are in the expected state
 				assert.isNotNull(nlsLabelsNode3, "root nlsLabelsNode3 must be here");
 				assert.isNotNull(nlsLabelsAppHome1, "nlsLabelsAppHome1 view must be here");
-				assert.deepEqual(nlsLabelsAppHome1View._beforeActivateCallCount, 1,
+				assert.strictEqual(nlsLabelsAppHome1View._beforeActivateCallCount, 1,
 					"nlsLabelsAppHome1View._beforeActivateCallCount should be 1");
+				assert.isTrue(testApp.hasTestPassed, "testApp.hasTestPassed should be true");
 
 				checkNodeVisibility(nlsLabelsNode3, nlsLabelsAppHome1);
 
 				//Test NLS Strings for app and view
 				var testAppNlsLabelDom = document.getElementById("testAppNlsLabel");
 				var testViewNlsLabelDom = document.getElementById("testViewNlsLabel");
-				assert.deepEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
-				assert.deepEqual(testViewNlsLabelDom.innerHTML, "Label One", "testViewNlsLabelDom should be Label One");
+				assert.strictEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
+				assert.strictEqual(testViewNlsLabelDom.innerHTML, "Label One",
+					"testViewNlsLabelDom should be Label One");
 			});
 		},
 
@@ -82,8 +90,9 @@ define([
 				//Test NLS Strings for app and view
 				var testAppNlsLabelDom = document.getElementById("testAppNlsLabel");
 				var testViewNlsLabelDom = document.getElementById("testViewNlsLabel");
-				assert.deepEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
-				assert.deepEqual(testViewNlsLabelDom.innerHTML, "Label One", "testViewNlsLabelDom should be Label One");
+				assert.strictEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
+				assert.strictEqual(testViewNlsLabelDom.innerHTML, "Label One",
+					"testViewNlsLabelDom should be Label One");
 			});
 
 		},
@@ -98,24 +107,26 @@ define([
 
 	function checkNodeVisibility(vs, target) {
 		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
-					(vs.children[i] !== target && vs.children[i].style.display === "none")),
-				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
+			if (vs.children[i] === target) {
+				assert.strictEqual(vs.children[i].style.display, "",
+					"checkNodeVisibility FAILED for target.id=" + target.id + " display should equal blank");
+			} else {
+				assert.strictEqual(vs.children[i].style.display, "none",
+					"checkNodeVisibility FAILED other children style.display should equal none");
+			}
 		}
 	}
 
 	function checkActivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view._beforeActivateCallCount, count,
+			assert.strictEqual(view._beforeActivateCallCount, count,
 				view.id + " _beforeActivateCallCount should be " + count);
-			assert.deepEqual(view._afterActivateCallCount, count,
+			assert.strictEqual(view._afterActivateCallCount, count,
 				view.id + " _afterActivateCallCount should be " + count);
 
 			//also test for selectedChildren being set correctly with constraint view.parentNode.id
 			var selectedChildId = testApp.selectedChildren[view.parentNode.id].id;
-			assert.deepEqual(view.id, selectedChildId, view.id +
+			assert.strictEqual(view.id, selectedChildId, view.id +
 				" should be in testApp.selectedChildren[view.parentNode.id]. ");
 
 			//also test for view._active being set correctly to true
@@ -125,9 +136,9 @@ define([
 
 	function checkDeactivateCallCount(view, count) {
 		if (view) {
-			assert.deepEqual(view._beforeDeactivateCallCount, count,
+			assert.strictEqual(view._beforeDeactivateCallCount, count,
 				view.id + " _beforeDeactivateCallCount should be " + count);
-			assert.deepEqual(view._afterDeactivateCallCount, count,
+			assert.strictEqual(view._afterDeactivateCallCount, count,
 				view.id + " _afterDeactivateCallCount should be " + count);
 
 			//also test for view._active being set correctly to false

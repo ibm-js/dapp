@@ -25,19 +25,13 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/Application",
-	"dojo/json",
-	"dojo/on",
-	"dojo/dom-geometry",
-	"dojo/dom-class",
-	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/jqm/transitionVisibility/app.json",
 	"jquery",
 	"jquery.mobile",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, on, domGeom, domClass, register, Deferred,
-	jqmTransitionVisibilityconfig, $) {
+], function (registerSuite, assert, Application, Deferred, jqmTransitionVisibilityconfig, $) {
 	// -------------------------------------------------------------------------------------- //
 	// for jqmTransitionVisibilitySuite
 	var jqmTransitionVisibilityContainer3,
@@ -63,7 +57,7 @@ define([
 		"jqmTransitionVisibilitySuite dapp jqmTransitionVisibility test initial layout": function () {
 			this.timeout = 20000;
 
-			var appStartedDef = new Application(json.parse(stripComments(jqmTransitionVisibilityconfig)),
+			var appStartedDef = new Application(JSON.parse(stripComments(jqmTransitionVisibilityconfig)),
 				jqmTransitionVisibilityContainer3);
 			return appStartedDef.then(function (app) {
 				// we are ready to test
@@ -82,7 +76,6 @@ define([
 				assert.isTrue(jqmTransitionVisibilityAppHome1ActiveTest,
 					"jqmTransitionVisibilityAppHome1 view should be active");
 
-				//checkNodeVisibility(jqmTransitionVisibilityNode3, jqmTransitionVisibilityAppHome1);
 			});
 		},
 		"Test displayView (by view name) ": function () {
@@ -107,7 +100,7 @@ define([
 					"jqmTransitionVisibilityAppHome1 view should be active");
 				//assert.isTrue(jqmTransitionVisibilityAppHome2[0].style.display !== "none",
 				// "jqmTransitionVisibilityAppHome2 view should be visible");
-				assert.isTrue(jqmTransitionVisibilityAppHome2[0].id === activeNode[0].id,
+				assert.strictEqual(jqmTransitionVisibilityAppHome2[0].id, activeNode[0].id,
 					"jqmTransitionVisibilityAppHome2 should be the active page");
 				//assert.isNotNull(jqmTransitionVisibilityAppHome2VisTest,
 				// "jqmTransitionVisibilityAppHome2 view should be visible");
@@ -128,21 +121,14 @@ define([
 			var mainNode = document.getElementById("main");
 			mainNode.parentNode.removeChild(mainNode);
 			testApp.unloadApp();
+			// this is to reset the url so that a browser refresh can rerun the tests
+			location.hash = "?config=tests/intern.browser";
+			history.pushState(null, null, location.href.replace(/#/, ''));
 		}
 	};
 
 	registerSuite(jqmTransitionVisibilitySuite);
-	/*
-	function checkNodeVisibility(vs, target) {
-		for (var i = 0; i < vs.children.length; i++) {
-			assert.isTrue(
-				((vs.children[i] === target && vs.children[i].style.display !== "none") ||
-					(vs.children[i] !== target && vs.children[i].style.display === "none")),
-				"checkNodeVisibility FAILED for target.id=" + (target ? target.id : "")
-			);
-		}
-	}
-*/
+
 	// strip out single line comments from the json config
 	function stripComments(jsonData) {
 		jsonData = jsonData.replace(/\/\*.*?\*\//g, "");

@@ -3,13 +3,12 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"dapp/Application",
-	"dojo/json",
 	"delite/register",
 	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/appStatus/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, json, register, Deferred,
+], function (registerSuite, assert, Application, register, Deferred,
 	appStatusConfig) {
 	// for appStatusSuite
 	var appStatusContainer1,
@@ -38,16 +37,17 @@ define([
 			this.timeout = 20000;
 
 			// create the app from the config and wait for the deferred
-			//var appStartedDef = new Application(json.parse(stripComments(appStatusConfig)), appStatusContainer1);
+			//var appStartedDef = new Application(JSON.parse(stripComments(appStatusConfig)), appStatusContainer1);
 			//appStartedDef.then(function (appStatusTest) {
-			return new Application(json.parse(stripComments(appStatusConfig)),
+			return new Application(JSON.parse(stripComments(appStatusConfig)),
 				appStatusContainer1).then(function (appStatusTest) {
 				// we are ready to test
 				testApp = appStatusTest;
 				var handle = testApp.on("dapp-status-change", function (params) {
 					var status = params.status;
 					//console.log("in dapp-status-change with status = " + status);
-					assert.deepEqual(status, previousStatus + 1, "app status should progress from Starting to Stopped");
+					assert.strictEqual(status, previousStatus + 1,
+						"app status should progress from Starting to Stopped");
 					previousStatus = status;
 					if (status === testApp.STOPPED) { // STOPPED
 						handle.unadvise();
@@ -55,7 +55,7 @@ define([
 				});
 
 				// check the app status it should be STARTED
-				assert.deepEqual(testApp.status, testApp.STARTED);
+				assert.strictEqual(testApp.status, testApp.STARTED, "testApp.status should equal testApp.STARTED");
 				// This section would normally go in teardown, but do it here to test status
 				appStatusContainer1.parentNode.removeChild(appStatusContainer1);
 
@@ -63,7 +63,7 @@ define([
 		},
 		teardown: function () {
 			testApp.unloadApp().then(function () { // when the app is unloaded verify status and call resolve
-				assert.deepEqual(testApp.status, testApp.STOPPED);
+				assert.strictEqual(testApp.status, testApp.STOPPED, "testApp.status should equal testApp.STOPPED");
 			});
 		}
 	};

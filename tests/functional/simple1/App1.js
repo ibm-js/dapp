@@ -1,9 +1,6 @@
 // jshint unused:false, undef:false, quotmark:false
-require(["dapp/Application", "dojo/json", "requirejs-text/text!./config.json", "dojo/sniff"],
-	function (Application, json, config, has) {
-		has.add("requirejs", window.requirejs);
-		/* jshint nonew: false */
-
+require(["dapp/Application", "requirejs-text/text!./config.json"],
+	function (Application, config) {
 		//	register.parse(document.getElementById("divToParse"));
 		var jsonData = config;
 		jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
