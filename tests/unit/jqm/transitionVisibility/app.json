@@ -18,7 +18,7 @@
 	],
 
 	"dependencies": [
-		"delite/css!jquery.mobile.css/jquery.mobile-1.4.4.min.css"
+		"requirejs-dplugins/css!jquery.mobile.css/jquery.mobile-1.4.4.min.css"
 	],
 
 	"containerSelector" : "#main",
