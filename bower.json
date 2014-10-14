@@ -21,5 +21,8 @@
 		".travis.yml",
 		"tests",
 		"CONTRIBUTING.md"
-	]
+	],
+	"resolutions": {
+		"requirejs-dplugins": "0.3.x"
+	}
 }
