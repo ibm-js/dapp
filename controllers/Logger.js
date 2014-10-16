@@ -232,7 +232,8 @@ define(
 
 			setupAdvisesForLoadController: function (loadController) {
 				var signal = advise.before(loadController,
-					"_handleBeforeDeactivateCalls", function (subs, next, current, data) { // jshint unused:false
+					"_handleBeforeDeactivateCalls",
+					function (subs, next, current, data) { // jshint unused:false
 						for (var i = subs.length - 1; i >= 0; i--) {
 							var v = subs[i];
 							if (v && v.beforeDeactivate && v._active) {

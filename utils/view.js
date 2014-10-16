@@ -27,7 +27,7 @@ define(["dcl/dcl"], function (dcl) {
 		//
 		if (!chars || (chars.length === 0)) {
 			throw "One or more characters must be provided to search for characters: " + " chars=[ " +
-				chars + " ], text=[ " + text + " ]";
+			chars + " ], text=[ " + text + " ]";
 		}
 		var result = [];
 		var index = 0;

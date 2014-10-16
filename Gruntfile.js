@@ -107,9 +107,9 @@ module.exports = function (grunt) {
 						"./package.json"
 					],
 					dest: "./out/doclets.json" //,
-					//	imports: [
-					//		"../delite/out"
-					//	]
+						//	imports: [
+						//		"../delite/out"
+						//	]
 				}]
 			}
 		}

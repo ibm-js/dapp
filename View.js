@@ -112,17 +112,17 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "delite/Widget", "de
 				var viewParams = {
 					baseClass: "d-" + this.id,
 					template: handlebars.compile(this.templateString)
-					/* leaving this in case it is helpful to debug things later
-					preCreate: function () {
-						console.log("View._startup in view preCreate for [" + self.id + "]");
-					},
-					postCreate: function () {
-						console.log("View._startup in view postCreate for [" + self.id + "]");
-					},
-					refreshRendering: dcl.after(function () {
-						console.log("View._startup in view refreshRendering for [" + self.id + "]");
-					})
-					*/
+						/* leaving this in case it is helpful to debug things later
+						preCreate: function () {
+							console.log("View._startup in view preCreate for [" + self.id + "]");
+						},
+						postCreate: function () {
+							console.log("View._startup in view postCreate for [" + self.id + "]");
+						},
+						refreshRendering: dcl.after(function () {
+							console.log("View._startup in view refreshRendering for [" + self.id + "]");
+						})
+						*/
 				};
 				var viewAttributes = {};
 				if (controller) {

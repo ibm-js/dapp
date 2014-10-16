@@ -153,17 +153,17 @@ define([
 	}
 
 	function checkDeactivateCallCount(view, count) {
-		if (view) {
-			assert.strictEqual(view._beforeDeactivateCallCount, count,
-				view.id + " _beforeDeactivateCallCount should be " + count);
-			assert.strictEqual(view._afterDeactivateCallCount, count,
-				view.id + " _afterDeactivateCallCount should be " + count);
+			if (view) {
+				assert.strictEqual(view._beforeDeactivateCallCount, count,
+					view.id + " _beforeDeactivateCallCount should be " + count);
+				assert.strictEqual(view._afterDeactivateCallCount, count,
+					view.id + " _afterDeactivateCallCount should be " + count);
 
-			//also test for view._active being set correctly to false
-			assert.isFalse(view._active, "view_active should be false for " + view.id);
+				//also test for view._active being set correctly to false
+				assert.isFalse(view._active, "view_active should be false for " + view.id);
+			}
 		}
-	}
-	// strip out single line comments from the json config
+		// strip out single line comments from the json config
 	function stripComments(jsonData) {
 		jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
 		jsonData = jsonData.replace(/\/\/.*/g, "");

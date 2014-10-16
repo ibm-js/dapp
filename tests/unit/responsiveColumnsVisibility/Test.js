@@ -32,7 +32,9 @@ define([
 			}
 
 			return window.getComputedStyle(this.node).getPropertyValue(key);
-		}.bind({node: element});
+		}.bind({
+			node: element
+		});
 		if (targetSize === "hidden") {
 			assert.strictEqual(elementStyle("display"), "none");
 		} else if (targetSize === "fill") {
@@ -53,22 +55,16 @@ define([
 	}
 
 	var leftLayout, centerLayout, rightLayout, rc;
-	var layout1 = "{'phone': 'hidden', 'tablet': '182px', 'desktop': '20%'}";
-	var layout2="{'phone': 'fill', 'tablet': 'fill', 'desktop': 'fill'}";
-	var layout3="{'phone': 'hidden', 'tablet': 'hidden', 'desktop': '20%'}";
 	var responsiveColumnsVisibilityHtmlContent1 =
 		"<d-responsive-columns id='rc' style='position: absolute; width: 100%; height: 100%'>" +
-			"<div id='leftLayout'><d-linear-layout id='rcleft' style='position: absolute; width: 100%; height: 100%;'></d-linear-layout></div>" +
-			"<div id='centerLayout'><d-linear-layout style='position: absolute; width: 100%; height: 100%'><d-view-stack id='vs' class='fill'></d-view-stack></d-linear-layout></div>" +
-			"<div id='rightLayout'><d-view-stack id='rcright' style='position: absolute; width: 100%; height: 100%;'></d-view-stack></div>" +
-		"</d-responsive-columns>"
-	/*
-			"<d-responsive-columns id='rc' style='position: absolute; width: 100%; height: 100%'>" +
-			"<div id='leftLayout'><d-linear-layout id='rcleft' style='position: absolute; width: 100%; height: 100%;'></d-linear-layout>" +
-			"<div id='centerLayout'><d-linear-layout style='position: absolute; width: 100%; height: 100%'><d-view-stack id='vs' class='fill'></d-view-stack></d-linear-layout></div>" +
-			"<div id='rightLayout'><d-linear-layout id='rcright' style='position: absolute; width: 100%; height: 100%;'></d-linear-layout></div>" +
-		"</d-responsive-columns>"
-	*/
+		"<div id='leftLayout'>" +
+		"<d-linear-layout id='rcleft' style='position: absolute; width: 100%; height: 100%;'></d-linear-layout></div>" +
+		"<div id='centerLayout'>" +
+		"<d-linear-layout style='position: absolute; width: 100%; height: 100%'>" +
+		"<d-view-stack id='vs' class='fill'></d-view-stack></d-linear-layout></div>" +
+		"<div id='rightLayout'>" +
+		"<d-view-stack id='rcright' style='position: absolute; width: 100%; height: 100%;'></d-view-stack></div>" +
+		"</d-responsive-columns>";
 
 	var responsiveColumnsVisibilitySuite = {
 		name: "responsiveColumnsVisibilitySuite dapp responsiveColumnsVisibility: test app transitions",
