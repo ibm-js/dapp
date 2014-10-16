@@ -1,0 +1,20 @@
+<template id="rightdiv" class="width100 height100" style="position: absolute; background-color: coral;">
+	<ul>
+		<li on-click="rcvApp.showOrHideViews('rcaaa',{transition:transSelect.value, reverse:rev2.checked})">AAA</li>
+		<li on-click="vs.show('rcbbb',{transition:transSelect.value, reverse:rev2.checked})">BBB</li>
+		<li on-click="vs.show('rcccc',{transition:transSelect.value, reverse:rev2.checked})">CCC</li>
+		<li on-click="vs.show('rcddd',{transition:transSelect.value, reverse:rev2.checked})">DDD</li>
+	</ul>
+	<input id="rev2" type="checkbox">Reverse transition
+	<br>Transition Type:
+	<select id="transSelect">
+		<option value="slide">Slide</option>
+		<option value="slidev">SlideV</option>
+		<option value="reveal">Reveal</option>
+		<option value="revealv">RevealV</option>
+		<option value="flip">Flip</option>
+		<option value="fade">Fade</option>
+		<option value="cover">Cover</option>
+		<option value="coverv">CoverV</option>
+	</select>
+</template>

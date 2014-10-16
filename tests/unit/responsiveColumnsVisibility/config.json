@@ -1,0 +1,86 @@
+{
+	"id": "rcvApp",
+
+	"loaderConfig": {
+		"paths": {
+			"responsiveColumnsVisibilityApp": "./dapp/tests/unit/responsiveColumnsVisibility"
+		}
+	},
+
+	"containerSelector" : "#vs",
+
+	"modules": [
+	],
+
+	"parseOnLoad": true,
+
+	"dependencies": [
+		"delite/register",
+		"deliteful/ViewStack",
+		"deliteful/LinearLayout",
+		"deliteful/Button",
+		"deliteful/SidePane",
+		"deliteful/ScrollableContainer",
+		"deliteful/ResponsiveColumns",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/cover.css",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/coverv.css",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/fade.css",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/flip.css",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/slidev.css",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/reveal.css",
+		"requirejs-dplugins/css!deliteful/ViewStack/transitions/revealv.css",
+		"delite/theme!delite/themes/defaultapp.css",	// page level CSS
+		"delite/theme!delite/themes/{{theme}}/global.css"	// page level CSS
+	],
+
+	"controllers": [
+		"dapp/controllers/delite/Init",
+		"dapp/controllers/Logger",
+		"dapp/controllers/delite/Load",
+		"dapp/controllers/delite/Transition",
+		"dapp/controllers/History"
+	],
+
+	"appLogging": {
+		"logAll": 0
+	},
+	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app
+	"defaultView": "rcleft+rcaaa+rcright",
+
+	"views": {
+		"rcaaa": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "responsiveColumnsVisibilityApp/aaa.js",
+			"template": "responsiveColumnsVisibilityApp/aaa.html"
+		},
+		"rcbbb": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "responsiveColumnsVisibilityApp/bbb.js",
+			"template": "responsiveColumnsVisibilityApp/bbb.html"
+		},
+		"rcccc": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "responsiveColumnsVisibilityApp/ccc.js",
+			"template": "responsiveColumnsVisibilityApp/ccc.html"
+		},
+		"rcddd": {
+			"constraint": "vs",
+			"parentSelector": "#vs",
+			"controller" : "responsiveColumnsVisibilityApp/ddd.js",
+			"template": "responsiveColumnsVisibilityApp/ddd.html"
+		},
+		"rcleft": {
+			"parentSelector": "#rcleft",
+			"controller" : "responsiveColumnsVisibilityApp/left.js",
+			"template": "responsiveColumnsVisibilityApp/left.html"
+		},
+		"rcright": {
+			"parentSelector": "#rcright",
+			"controller" : "responsiveColumnsVisibilityApp/right.js",
+			"template": "responsiveColumnsVisibilityApp/right.html"
+		}
+	}
+}

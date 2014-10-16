@@ -1,5 +1,6 @@
 // Listing of all the infrastructure unit tests
 define([
+	"./responsiveColumnsVisibility/Test",
 	"./transitionTypes/Test",
 	"./viewLayout/Test",
 	"./appStatus/Test",

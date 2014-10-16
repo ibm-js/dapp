@@ -22,11 +22,11 @@ define({
 			name : "dapp"},
 		{ browserName: "chrome", version: "32", platform: [ /*"OS X 10.6", "Linux", */ "Windows 7" ],
 			name : "dapp"},
-		{ browserName: "safari", version: "7", platform: [ "OS X 10.9" ], name : "dapp"}
+		{ browserName: "safari", version: "7", platform: [ "OS X 10.9" ], name : "dapp"},
 
 		// Mobile
-		//{ browserName: "iphone 7.1 simulator", platform: "OS X 10.9", version: "7.1", deviceName: "iPhone",
-		//	app: "safari", device: "iPhone Simulator", name: "dapp" }
+		{ platformName: "iOS", platformVersion: "7.1", browserName: "safari", deviceName: "iPhone Simulator",
+			"appium-version": "1.2.2", name: "dapp" }
 
 	],
 

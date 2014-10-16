@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>dapp Transition Sample Application</title>
+
+	<link rel="stylesheet" href="app.css">
+
+	<!-- for requireJS -->
+	<script src="../../../../requirejs/require.js"></script>
+	<script>
+		require.config({
+			paths: {
+				"dapp": "../../../../dapp",
+				"dcl": "../../../../dcl",
+				"dojo": "../../../../dojo",
+				"dpointer": "../../../../dpointer",
+				"decor": "../../../../decor",
+				"delite": "../../../../delite",
+				"deliteful": "../../../../deliteful",
+				"requirejs": "../../../../requirejs",
+				"requirejs-text": "../../../../requirejs-text",
+				"requirejs-dplugins": "../../../../requirejs-dplugins",
+				"requirejs-domready": "../../../../requirejs-domready"
+			},
+			waitSeconds: 15
+		});
+	</script>
+
+	<script>
+		//require(["./App.js"]);
+		require(["dapp/Application", "requirejs-text/text!./config.json"],
+			function (Application, config) {
+				// remove single line comments from the config json
+				var jsonData = config;
+				jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
+				jsonData = jsonData.replace(/\/\/.*/g, "");
+				var json = JSON.parse(jsonData);
+				json.loaderConfig.paths.responsiveColumnsVisibilityApp = "../responsiveColumnsVisibility"
+				//new Application(JSON.parse(jsonData));
+				var appDeferred = new Application(json);
+				appDeferred.then(function (app) {
+					console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+				});
+			});
+
+	</script>
+</head>
+<body>
+		<d-responsive-columns id="rc" style="position: absolute; width: 100%; height: 100%" breakpoints="{'phone': '500px', 'tablet': '900px', 'desktop': '99999px'}">
+			<div id="leftLayout" layout="{'phone': 'hidden', 'tablet': '182px', 'desktop': '20%'}">
+				<d-linear-layout id="rcleft" style="position: absolute; width: 100%; height: 100%;"></d-linear-layout>
+			</div>
+			<div id="centerLayout" layout="{'phone': 'fill', 'tablet': 'fill', 'desktop': 'fill'}">
+				<d-linear-layout style="position: absolute; width: 100%; height: 100%">
+					<d-view-stack id="vs" class="fill"></d-view-stack>
+				</d-linear-layout>
+			</div>
+			<div id="rightLayout" layout="{'phone': 'hidden', 'tablet': 'hidden', 'desktop': '20%'}">
+				<d-linear-layout id="rcright" style="position: absolute; width: 100%; height: 100%;"></d-linear-layout>
+			</div>
+		</d-responsive-columns>
+</body>
+</html>
