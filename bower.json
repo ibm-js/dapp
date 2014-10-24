@@ -1,11 +1,11 @@
 {
 	"name": "dapp",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"dependencies": {
 		"dcl": "1.1.x",
-		"decor": "0.3.0-alpha",
-		"delite": "0.4.0-alpha.2",
-		"deliteful": "0.4.0-alpha",
+		"decor": "0.3.x",
+		"delite": "0.4.x",
+		"deliteful": "0.4.x",
 		"dojo": ">=1.9.1",
 		"dpointer": "0.3.x",
 		"ecma402": "0.2.x",
@@ -21,8 +21,5 @@
 		".travis.yml",
 		"tests",
 		"CONTRIBUTING.md"
-	],
-	"resolutions": {
-		"requirejs-dplugins": "0.3.x"
-	}
+	]
 }
