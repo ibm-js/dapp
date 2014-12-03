@@ -18,5 +18,6 @@
 			"url": "https://github.com/ibm-js/dapp/blob/master/LICENSE"
 		}
 	],
-	"bugs": "https://github.com/ibm-js/dapp/issues"
+	"bugs": "https://github.com/ibm-js/dapp/issues",
+	"private": true
 }
