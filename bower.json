@@ -1,6 +1,6 @@
 {
 	"name": "dapp",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"dependencies": {
 		"dcl": "1.1.x",
 		"decor": "0.4.x",
