@@ -3,18 +3,14 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"decor/sniff",
+	"lie/dist/lie",
+	"dojo/when",
 	"dapp/Application",
 	"dapp/utils/view",
-	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/nlsLabels/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, has, Application, viewUtils, Deferred,
-	nlsLabelsconfig3) {
-	if (has("ie") === 10) {
-		console.log("Skipping nlsLabelsSuite tests on IE10");
-		return;
-	}
+], function (registerSuite, assert, has, Promise, when, Application, viewUtils, nlsLabelsconfig3) {
 	// -------------------------------------------------------------------------------------- //
 	// TODO: should add a nested nls test with strings at the parent view available to the child view.
 	// for nlsLabelsSuite transition test
@@ -36,45 +32,58 @@ define([
 			nlsLabelsContainer3.innerHTML = nlsLabelsHtmlContent3;
 			nlsLabelsNode3 = document.getElementById("nlsLabelsAppdviewStack");
 		},
+		beforeEach: function () {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, 50);
+			});
+		},
 		"test initial view and nls labels": function () {
 			this.timeout = 20000;
+			if (has("ie") === 10) {
+				this.skip("Skipping this test on IE10.");
+			}
 
-			var appStartedDef3 = new Application(JSON.parse(stripComments(nlsLabelsconfig3)), nlsLabelsContainer3);
-			return appStartedDef3.then(function (app) {
-				// we are ready to test
-				testApp = app;
+			return when(new Application(JSON.parse(stripComments(nlsLabelsconfig3)), nlsLabelsContainer3)
+				.then(function (app) {
+					// we are ready to test
+					testApp = app;
 
-				var nlsLabelsAppHome1 = document.getElementById("nlsLabelsAppHome1");
+					var nlsLabelsAppHome1 = document.getElementById("nlsLabelsAppHome1");
 
-				// Here nlsLabelsAppHome1View should be displayed
-				nlsLabelsAppHome1View = viewUtils.getViewFromViewId(testApp, "nlsLabelsAppHome1");
+					// Here nlsLabelsAppHome1View should be displayed
+					nlsLabelsAppHome1View = viewUtils.getViewFromViewId(testApp, "nlsLabelsAppHome1");
 
-				nlsLabelsAppHome1View.deliver(); // to get handlebars to update now
+					nlsLabelsAppHome1View.deliver(); // to get handlebars to update now
 
-				// check that init has been called on these views
-				assert.isTrue(nlsLabelsAppHome1View.initialized, "nlsLabelsAppHome1View.initialized should be true");
-				// check the DOM state to see if we are in the expected state
-				assert.isNotNull(nlsLabelsNode3, "root nlsLabelsNode3 must be here");
-				assert.isNotNull(nlsLabelsAppHome1, "nlsLabelsAppHome1 view must be here");
-				assert.strictEqual(nlsLabelsAppHome1View._beforeActivateCallCount, 1,
-					"nlsLabelsAppHome1View._beforeActivateCallCount should be 1");
-				assert.isTrue(testApp.hasTestPassed, "testApp.hasTestPassed should be true");
+					// check that init has been called on these views
+					assert.isTrue(nlsLabelsAppHome1View.initialized,
+						"nlsLabelsAppHome1View.initialized should be true");
+					// check the DOM state to see if we are in the expected state
+					assert.isNotNull(nlsLabelsNode3, "root nlsLabelsNode3 must be here");
+					assert.isNotNull(nlsLabelsAppHome1, "nlsLabelsAppHome1 view must be here");
+					assert.strictEqual(nlsLabelsAppHome1View._beforeActivateCallCount, 1,
+						"nlsLabelsAppHome1View._beforeActivateCallCount should be 1");
+					assert.isTrue(testApp.hasTestPassed, "testApp.hasTestPassed should be true");
 
-				checkNodeVisibility(nlsLabelsNode3, nlsLabelsAppHome1);
+					checkNodeVisibility(nlsLabelsNode3, nlsLabelsAppHome1);
 
-				//Test NLS Strings for app and view
-				var testAppNlsLabelDom = document.getElementById("testAppNlsLabel");
-				var testViewNlsLabelDom = document.getElementById("testViewNlsLabel");
-				assert.strictEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
-				assert.strictEqual(testViewNlsLabelDom.innerHTML, "Label One",
-					"testViewNlsLabelDom should be Label One");
-			});
+					//Test NLS Strings for app and view
+					var testAppNlsLabelDom = document.getElementById("testAppNlsLabel");
+					var testViewNlsLabelDom = document.getElementById("testViewNlsLabel");
+					assert.strictEqual(testAppNlsLabelDom.innerHTML,
+						"Label Zero", "testAppNlsLabel should be Label Zero");
+					assert.strictEqual(testViewNlsLabelDom.innerHTML, "Label One",
+						"testViewNlsLabelDom should be Label One");
+				}));
 		},
 
 		// Currently showing nlsLabelsAppHome1View test transition to nlsLabelsAppHome3NoControllerView
 		"nlsLabelsNode3.show(nlsLabelsAppHome3NoController)": function () {
 			this.timeout = 20000;
-			return nlsLabelsNode3.show("nlsLabelsAppHome3NoController").then(function () {
+			if (has("ie") === 10) {
+				this.skip("Skipping this test on IE10.");
+			}
+			return when(nlsLabelsNode3.show("nlsLabelsAppHome3NoController").then(function () {
 				var nlsLabelsAppHome3NoController = document.getElementById("nlsLabelsAppHome3NoController");
 				checkNodeVisibility(nlsLabelsNode3, nlsLabelsAppHome3NoController);
 
@@ -93,13 +102,15 @@ define([
 				assert.strictEqual(testAppNlsLabelDom.innerHTML, "Label Zero", "testAppNlsLabel should be Label Zero");
 				assert.strictEqual(testViewNlsLabelDom.innerHTML, "Label One",
 					"testViewNlsLabelDom should be Label One");
-			});
+			}));
 
 		},
 		teardown: function () {
 			// call unloadApp to cleanup and end the test
 			nlsLabelsContainer3.parentNode.removeChild(nlsLabelsContainer3);
-			testApp.unloadApp();
+			if (testApp) {
+				testApp.unloadApp();
+			}
 		}
 	};
 

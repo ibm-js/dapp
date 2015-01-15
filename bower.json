@@ -6,6 +6,8 @@
 		"decor": "0.4.x",
 		"delite": "0.5.x",
 		"deliteful": "0.5.x",
+		"jquery": ">=2.1",
+		"lie": ">=2.8",
 		"dojo": ">=1.9.1",
 		"dpointer": "0.4.x",
 		"ecma402": "0.2.x",

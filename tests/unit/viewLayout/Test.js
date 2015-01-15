@@ -3,21 +3,17 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"decor/sniff",
+	"lie/dist/lie",
+	"dojo/when",
 	"dapp/Application",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"delite/register",
-	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/viewLayout/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, has, Application, domGeom, domClass, register, Deferred, viewLayoutconfig) {
+], function (registerSuite, assert, has, Promise, when, Application, domGeom, domClass, register, viewLayoutconfig) {
 	// -------------------------------------------------------------------------------------- //
-
-	if (has("ie") === 10) {
-		console.log("Skipping multipleAndNestedViewsActivateCalls tests on IE10");
-		return;
-	}
 
 	// for viewLayoutSuite
 	var viewLayoutContainer2,
@@ -37,11 +33,19 @@ define([
 			register.parse(viewLayoutContainer2);
 			viewLayoutNode2 = document.getElementById("viewLayoutAppdlayout");
 		},
+		beforeEach: function () {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, 50);
+			});
+		},
 		"viewLayoutSuite dapp viewLayout test domNode sizes": function () {
 			this.timeout = 20000;
+			if (has("ie") === 10) {
+				this.skip("Skipping this test on IE10.");
+			}
 
-			// create the app from the config and wait for the deferred
-			return new Application(JSON.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2)
+			// create the app from the config and wait for the promise
+			return when(new Application(JSON.parse(stripComments(viewLayoutconfig)), viewLayoutContainer2)
 				.then(function (app) {
 					// we are ready to test
 					testApp = app;
@@ -66,13 +70,16 @@ define([
 					assert.strictEqual(box1.h, 200);
 					assert.strictEqual(box3.h, 200);
 					assert.strictEqual(box1.h, box2.h);
-				});
+				}));
 		},
 		// hide one view and verify sizes
 		"viewLayoutSuite dapp viewLayout hide viiew and test domNode sizes": function () {
 			this.timeout = 20000;
+			if (has("ie") === 10) {
+				this.skip("Skipping this test on IE10.");
+			}
 
-			return document.getElementById("viewLayoutAppdlayout").hide("viewLayoutAppHome2")
+			return when(document.getElementById("viewLayoutAppdlayout").hide("viewLayoutAppHome2")
 				.then(function () {
 					assert.isNotNull(document.getElementById("viewLayoutAppdlayout"),
 						"root viewLayoutAppdlayout must be here");
@@ -91,12 +98,14 @@ define([
 					assert.strictEqual(box1.h, 300);
 					assert.strictEqual(box2.h, 300);
 					assert.strictEqual(box1.h, box2.h);
-				});
+				}));
 		},
 		teardown: function () {
 			// call unloadApp to cleanup and end the test
 			viewLayoutContainer2.parentNode.removeChild(viewLayoutContainer2);
-			testApp.unloadApp();
+			if (testApp) {
+				testApp.unloadApp();
+			}
 		}
 	};
 	registerSuite(viewLayoutSuite);

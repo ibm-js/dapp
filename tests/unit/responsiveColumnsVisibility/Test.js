@@ -4,12 +4,13 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"delite/register",
-	"dojo/Deferred",
+	"lie/dist/lie",
+	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/responsiveColumnsVisibility/config.json",
 	"deliteful/LinearLayout",
 	"deliteful/ResponsiveColumns",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, register, Deferred, responsiveColumnsVisibilityconfig) {
+], function (registerSuite, assert, Application, register, Promise, when, responsiveColumnsVisibilityconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for responsiveColumnsVisibilitySuite
 	var responsiveColumnsVisibilityContainer1,
@@ -69,7 +70,6 @@ define([
 	var responsiveColumnsVisibilitySuite = {
 		name: "responsiveColumnsVisibilitySuite dapp responsiveColumnsVisibility: test app transitions",
 		setup: function () {
-
 			document.body.innerHTML = responsiveColumnsVisibilityHtmlContent1;
 			register.parse();
 			// set the initial breakpoints on the responsiveColumns widget, so all are visible
@@ -86,12 +86,16 @@ define([
 			rc.notifyCurrentValue("breakpoints");
 			responsiveColumnsVisibilityNode1 = document.getElementById("responsiveColumnsVisibilityAppdviewStack");
 		},
+		beforeEach: function () {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, 50);
+			});
+		},
 		"Desktop layout test initial views": function () {
 			this.timeout = 10000;
 
-			var appStartedDef = new Application(JSON.parse(stripComments(responsiveColumnsVisibilityconfig)),
-				responsiveColumnsVisibilityContainer1);
-			return appStartedDef.then(function (app) {
+			return when(new Application(JSON.parse(stripComments(responsiveColumnsVisibilityconfig)),
+				responsiveColumnsVisibilityContainer1).then(function (app) {
 				// we are ready to test
 				console.log("in responsiveColumnsVisibility tests app loaded. " + app.id);
 				rctestApp = app;
@@ -104,31 +108,29 @@ define([
 				testLayout(leftLayout, '20%');
 				testLayout(centerLayout, 'fill');
 				testLayout(rightLayout, '20%');
-			});
+			}));
 		},
 
 		"Desktop Layout click slide BBB ": function () {
 			this.timeout = 10000;
-			var displayDeferred = new Deferred();
-			setupOnOnce(rctestApp, displayDeferred);
-			var item = document.getElementById("showrcbbb");
-			item.click();
-			return displayDeferred.then(function (evt) {
+			return when(setupOnOncePromise(rctestApp, function () {
+				var item = document.getElementById("showrcbbb");
+				item.click();
+			}).then(function (evt) {
 				checkTransitionDetails(evt, "rcbbb", "slide", false, rcvsNode);
 				testLayout(leftLayout, '20%');
 				testLayout(centerLayout, 'fill');
 				testLayout(rightLayout, '20%');
-			});
+			}));
 		},
 		"Tablet layout test rcaaa": function () {
 			this.timeout = 10000;
-			var displayDeferred = new Deferred();
-			setupOnOnce(rctestApp, displayDeferred);
-			var item = document.getElementById("showrcaaa");
-			// force Tablet layout
-			rc.breakpoints = "{'phone': '100px', 'tablet': '99000px', 'desktop': '99999px'}";
-			item.click();
-			return displayDeferred.then(function (evt) {
+			return when(setupOnOncePromise(rctestApp, function () {
+				var item = document.getElementById("showrcaaa");
+				// force Tablet layout
+				rc.breakpoints = "{'phone': '100px', 'tablet': '99000px', 'desktop': '99999px'}";
+				item.click();
+			}).then(function (evt) {
 				// we are ready to test
 				rcvsNode = document.getElementById("vs");
 				var testId = "rcaaa";
@@ -139,31 +141,29 @@ define([
 				testLayout(leftLayout, '182px');
 				testLayout(centerLayout, 'fill');
 				testLayout(rightLayout, 'hidden');
-			});
+			}));
 		},
 
 		"Tablet Layout click slide BBB": function () {
 			this.timeout = 10000;
-			var displayDeferred = new Deferred();
-			setupOnOnce(rctestApp, displayDeferred);
-			var item = document.getElementById("showrcbbb");
-			item.click();
-			return displayDeferred.then(function (evt) {
+			return when(setupOnOncePromise(rctestApp, function () {
+				var item = document.getElementById("showrcbbb");
+				item.click();
+			}).then(function (evt) {
 				checkTransitionDetails(evt, "rcbbb", "slide", false, rcvsNode);
 				testLayout(leftLayout, '182px');
 				testLayout(centerLayout, 'fill');
 				testLayout(rightLayout, 'hidden');
-			});
+			}));
 		},
 		"Phone layout test rcaaa": function () {
 			this.timeout = 10000;
-			var displayDeferred = new Deferred();
-			setupOnOnce(rctestApp, displayDeferred);
-			var item = document.getElementById("showrcaaa");
-			// force Phone layout
-			rc.breakpoints = "{'phone': '98000px', 'tablet': '99000px', 'desktop': '99999px'}";
-			item.click();
-			return displayDeferred.then(function (evt) {
+			return when(setupOnOncePromise(rctestApp, function () {
+				var item = document.getElementById("showrcaaa");
+				// force Phone layout
+				rc.breakpoints = "{'phone': '98000px', 'tablet': '99000px', 'desktop': '99999px'}";
+				item.click();
+			}).then(function (evt) {
 				// we are ready to test
 				rcvsNode = document.getElementById("vs");
 				var testId = "rcaaa";
@@ -174,21 +174,20 @@ define([
 				testLayout(leftLayout, 'hidden');
 				testLayout(centerLayout, 'fill');
 				testLayout(rightLayout, 'hidden');
-			});
+			}));
 		},
 
 		"Phone Layout click slide CCC": function () {
 			this.timeout = 10000;
-			var displayDeferred = new Deferred();
-			setupOnOnce(rctestApp, displayDeferred);
-			var item = document.getElementById("centershowrcccc");
-			item.click();
-			return displayDeferred.then(function (evt) {
+			return when(setupOnOncePromise(rctestApp, function () {
+				var item = document.getElementById("centershowrcccc");
+				item.click();
+			}).then(function (evt) {
 				checkTransitionDetails(evt, "rcccc", "slide", false, rcvsNode);
 				testLayout(leftLayout, 'hidden');
 				testLayout(centerLayout, 'fill');
 				testLayout(rightLayout, 'hidden');
-			});
+			}));
 		},
 
 		teardown: function () {
@@ -209,11 +208,14 @@ define([
 		assert.isTrue(evt.reverse ? rev : true, "evt.reverse=" + evt.reverse + " it should be " + rev);
 	}
 
-	function setupOnOnce(rctestApp, displayDeferred) {
-		var signal = rctestApp.on("dapp-finished-transition", function (evt) {
-			displayDeferred.resolve(evt);
-			signal.unadvise();
-		});
+	function setupOnOncePromise(testApp, stmts) {
+		return new Promise(function (resolve) {
+			stmts();
+			var signal = testApp.on("dapp-finished-transition", function (evt) {
+				resolve(evt);
+				signal.unadvise();
+			});
+		}.bind(this));
 	}
 
 	function checkNodeVisibility(vs, target) {

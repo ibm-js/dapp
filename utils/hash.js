@@ -7,13 +7,13 @@ define(function () {
 	function foundView(prevChar, afterChar) {
 		var retVal = false;
 		if ((prevChar === "#" ||
-			prevChar === "+" ||
-			prevChar === "," ||
-			prevChar === "(") && (afterChar === "&" ||
-			afterChar === "+" ||
-			afterChar === "-" ||
-			afterChar === "," ||
-			afterChar === "")) {
+				prevChar === "+" ||
+				prevChar === "," ||
+				prevChar === "(") && (afterChar === "&" ||
+				afterChar === "+" ||
+				afterChar === "-" ||
+				afterChar === "," ||
+				afterChar === "")) {
 			retVal = true;
 		}
 		return retVal;

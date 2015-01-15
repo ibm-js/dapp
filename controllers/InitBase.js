@@ -1,6 +1,6 @@
 /** @module dapp/controllers/delite/Init */
-define(["require", "dcl/dcl", "dojo/Deferred", "../Controller", "dojo/_base/declare"],
-	function (require, dcl, Deferred, Controller, declare) {
+define(["require", "dcl/dcl", "lie/dist/lie", "../Controller", "dojo/_base/declare"],
+	function (require, dcl, Promise, Controller, declare) {
 		/**
 		 * An InitBase controller for a dapp application.
 		 *
@@ -65,7 +65,7 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../Controller", "dojo/_base/decl
 								//get the object specified by string value of data property
 								//cannot assign object literal or reference to data property
 								//because json.ref will generate __parent to point to its parent
-								//and will cause infinitive loop when creating StatefulModel.
+								//and will cause infinite loop when creating StatefulModel.
 								config.data = getObject(config.data);
 							}
 							if (appOrView.stores[item].trackable) {
@@ -101,24 +101,23 @@ define(["require", "dcl/dcl", "dojo/Deferred", "../Controller", "dojo/_base/decl
 
 			_displayInit: function () {
 				// fire the event on the container to load the main view
-				var displayDeferred = new Deferred();
+
 				// let's display default view
 				var initialView = this.app.alwaysUseDefaultView ? this.app.defaultView : this.app._startView;
 				var initialParams = this.app.alwaysUseDefaultView ? this.app.defaultParams : this.app._startParams;
-				this.app.emit("dapp-display", {
-					// TODO is that really defaultView a good name? Shouldn't it be defaultTarget or defaultView_s_?
-					dest: initialView,
-					viewParams: initialParams,
-					displayDeferred: displayDeferred,
-					bubbles: true,
-					cancelable: true
-				});
-				if (this.app) {
-					displayDeferred.then(function () {
-						this.app.setStatus(this.app.STARTED);
-						this.app.appStartedDef.resolve(this.app); // resolve the deferred from new Application
-					}.bind(this));
-				}
+				new Promise(function (resolve) {
+					this.app.emit("dapp-display", {
+						// TODO is that really defaultView a good name? Shouldn't it be defaultTarget or defaultView_s_?
+						dest: initialView,
+						viewParams: initialParams,
+						displayResolve: resolve,
+						bubbles: true,
+						cancelable: true
+					});
+				}.bind(this)).then(function () {
+					this.app.setStatus(this.app.STARTED);
+					this.app.appStartedResolve(this.app); // resolve the appStartedPromise
+				}.bind(this));
 			}
 		});
 	});

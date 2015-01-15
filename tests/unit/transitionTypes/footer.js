@@ -24,17 +24,17 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 		},
 
 		init: function () {
-			console.log("in footer.js init called");
-			this.app.on("vs-selection-changed", function (selection) {
-				console.log(" in vs-selection-changed selection=" + selection);
+			//console.log("in footer.js init called");
+			this.app.on("test-vs-selection-changed", function (selection) {
+				//console.log(" in test-vs-selection-changed selection=" + selection);
 				this.setSelection(selection);
 			}.bind(this));
 		},
 		beforeActivate: function (previousView, viewData) {
-			console.log("in home.js beforeActivate called");
+			//console.log("in home.js beforeActivate called");
 		},
 		beforeDeactivate: function (previousView, viewData) {
-			console.log("in home.js beforeDeactivate called previousView=", previousView);
+			//console.log("in home.js beforeDeactivate called previousView=", previousView);
 		},
 		afterActivate: function (previousView) {
 			if (this.ownerDocument.getElementById("vs")) {
@@ -42,10 +42,10 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 				var sel = vsNode.selectedChildId;
 				this.setSelection(sel);
 			}
-			console.log("in home.js afterActivate called");
+			//console.log("in home.js afterActivate called");
 		},
 		afterDeactivate: function (previousView) {
-			console.log("in home.js afterDeactivate called previousView=", previousView);
+			//console.log("in home.js afterDeactivate called previousView=", previousView);
 		}
 	};
 });

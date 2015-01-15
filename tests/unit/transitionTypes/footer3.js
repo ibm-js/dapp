@@ -24,7 +24,7 @@ define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) 
 
 		init: function () {
 			console.log("in footer3.js init called");
-			this.app.on("vs-selection-changed", function (selection) {
+			this.app.on("test-vs-selection-changed", function (selection) {
 				this.setSelection(selection);
 			}.bind(this));
 		},

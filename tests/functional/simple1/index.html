@@ -15,6 +15,7 @@
 
 		<!-- for requireJS -->
 		<!--  -->
+		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script src="../../../../requirejs/require.js"></script>
 			<script>
 				require.config({
@@ -33,7 +34,8 @@
 							{ name: "delite", location : "../../../../delite"},
 							{ name: "decor", location : "../../../../decor"},
 							{ name: "deliteful", location : "../../../../deliteful"},
-							{ name: "jquery", location : "../../../../jquery"},
+							{ name: "lie", location : "../../../../lie"},
+						//	{ name: "jquery", location : "../../../../jquery"},
 							{ name: "requirejs", location : "../../../../requirejs"},
 							{ name: "requirejs-text", location : "../../../../requirejs-text"},
 							{ name: "requirejs-dplugins", location : "../../../../requirejs-dplugins"},
@@ -48,7 +50,7 @@
 			require(["./App1", "requirejs-domready/domReady!"], function(){
 				// Set global variable to signal that the test page is ready
 				console.log("in index.html inside dom ready");
-			//	ready = true; // moved ready = true into App1.js after the appDeferred is resolved.
+			//	ready = true; // moved ready = true into App1.js after the appStartedPromise is resolved.
 			//	console.log("in index.html after ready = true");
 			})
         </script>

@@ -3,14 +3,15 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
+	"lie/dist/lie",
+	"dojo/when",
 	"dapp/Application",
 	"dapp/utils/view",
 	"delite/register",
-	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/sidePaneViewsActivateCalls/app1.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, viewUtils, register, Deferred,
+], function (registerSuite, assert, Promise, when, Application, viewUtils, register,
 	sidePaneViewsActivateCallsconfig1) {
 	// -------------------------------------------------------------------------------------- //
 	// for sidePaneViewsActivateCallsSuite1 transition test
@@ -45,12 +46,16 @@ define([
 
 
 		},
+		beforeEach: function () {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, 50);
+			});
+		},
 		"sidePaneViewsActivateCalls test initial view": function () {
 			this.timeout = 20000;
 
-			var appStartedDef1 = new Application(JSON.parse(stripComments(sidePaneViewsActivateCallsconfig1)),
-				sidePaneViewsActivateCallsContainer1);
-			return appStartedDef1.then(function (app) {
+			return when(new Application(JSON.parse(stripComments(sidePaneViewsActivateCallsconfig1)),
+				sidePaneViewsActivateCallsContainer1).then(function (app) {
 				// we are ready to test
 				testApp = app;
 
@@ -76,79 +81,70 @@ define([
 				checkActivateCallCount(sp1footer1View, 1);
 				var sp1footer1content = sp1footer1View.containerNode;
 				assert.isNotNull(sp1footer1content, "sp1footer1content must be here");
-			});
+			}));
 		},
 		// Currently showing sp1header1+sp1centerParent+sp1center1+sp1right1+sp1footer1 test
 		// showOrHideViews('-sp1right1'
 		"Hide sp1right1 with testApp.showOrHideViews('-sp1right1')": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
-			testApp.showOrHideViews('-sp1right1', {
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
-				var sp1rightPane = document.getElementById("sp1rightPane");
-				assert.strictEqual(sp1rightPane.style.display, "none", "sp1rightPane.style.display should be none");
-				checkActivateCallCount(sp1right1View, 1, true);
-				checkDeactivateCallCount(sp1right1View, 1, true);
-			});
+			return when(testApp.showOrHideViews('-sp1right1')
+				.then(function () {
+					var sp1rightPane = document.getElementById("sp1rightPane");
+					assert.strictEqual(sp1rightPane.style.display, "none", "sp1rightPane.style.display should be none");
+					checkActivateCallCount(sp1right1View, 1, true);
+					checkDeactivateCallCount(sp1right1View, 1, true);
+				}));
 		},
 		// Currently showing sp1header1+sp1centerParent+sp1center1+sp1footer1 test
 		// showOrHideViews('leftParent,left1'
 		"show sp1left1 with testApp.showOrHideViews('sp1leftParent,sp1left1')": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
-			testApp.showOrHideViews('sp1leftParent,sp1left1', {
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
-				var sp1left1content = document.getElementById("sp1leftParent_sp1left1");
-				var sp1left1View = viewUtils.getViewFromViewId(testApp, "sp1leftParent_sp1left1");
+			return when(testApp.showOrHideViews('sp1leftParent,sp1left1')
+				.then(function () {
+					var sp1left1content = document.getElementById("sp1leftParent_sp1left1");
+					var sp1left1View = viewUtils.getViewFromViewId(testApp, "sp1leftParent_sp1left1");
 
-				checkNodeVisibile(sp1left1content);
-				checkActivateCallCount(sp1left1View, 1, true);
-			});
+					checkNodeVisibile(sp1left1content);
+					checkActivateCallCount(sp1left1View, 1, true);
+				}));
 		},
 		// Currently showing sp1header1+sp1centerParent+sp1center1+sp1footer1+sp1leftParent,sp1left1 test
 		// showOrHideViews('-sp1leftParent') when I used showOrHideViews('-sp1leftParent-sp1leftParent,left1') it
 		// got a warning because sp1leftParent was not found as the parent of left1
 		"Hide sp1left1 with testApp.showOrHideViews('-sp1leftParent')": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
-			testApp.showOrHideViews('-sp1leftParent,sp1left1-sp1leftParent', {
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
-				var sp1rightPane = document.getElementById("sp1rightPane");
-				var sp1left1content = document.getElementById("sp1leftPane");
-				var sp1left1View = viewUtils.getViewFromViewId(testApp, "sp1leftParent_sp1left1");
-				assert.strictEqual(sp1rightPane.style.display, "none", "sp1rightPane.style.display should be none");
-				assert.strictEqual(sp1left1content.style.display, "none",
-					"sp1left1content.style.display should be none");
+			return when(testApp.showOrHideViews('-sp1leftParent,sp1left1-sp1leftParent')
+				.then(function () {
+					var sp1rightPane = document.getElementById("sp1rightPane");
+					var sp1left1content = document.getElementById("sp1leftPane");
+					var sp1left1View = viewUtils.getViewFromViewId(testApp, "sp1leftParent_sp1left1");
+					assert.strictEqual(sp1rightPane.style.display, "none", "sp1rightPane.style.display should be none");
+					assert.strictEqual(sp1left1content.style.display, "none",
+						"sp1left1content.style.display should be none");
 
-				checkActivateCallCount(sp1left1View, 1, true);
-				checkDeactivateCallCount(sp1left1View, 1, true); // note not deactivated because only parent is hidden
-			});
+					checkActivateCallCount(sp1left1View, 1, true);
+					checkDeactivateCallCount(sp1left1View, 1, true); // note not deactivated, only parent is hidden
+				}));
 		},
 		// Currently showing sp1header1+sp1centerParent+sp1center1+sp1footer1 test
 		// sp1rightPaneElem.show('sp1right2')
 		"show sp1right2 with sp1rightPaneElem.show('sp1right2')": function () {
 			this.timeout = 20000;
 			var sp1rightPaneElem = document.getElementById("sp1rightPane");
-			return sp1rightPaneElem.show('sp1right2').then(function () {
+			return when(sp1rightPaneElem.show('sp1right2').then(function () {
 				var sp1right2View = viewUtils.getViewFromViewId(testApp, "sp1right2");
 				checkActivateCallCount(sp1right2View, 1);
 				var sp1right2content = sp1right2View.containerNode;
 				assert.isNotNull(sp1right2content, "sp1right2content must be here");
 				checkNodeVisibile(sp1right2content);
-			});
+			}));
 		},
 		// Currently showing sp1header1+sp1centerParent+sp1center1+sp1footer1 test
 		// sp1rightPaneElem.hide('sp1right2')
 		"hide sp1right2 with sp1rightPaneElem.hide('sp1right2')": function () {
 			this.timeout = 20000;
 			var sp1rightPaneElem = document.getElementById("sp1rightPane");
-			return sp1rightPaneElem.hide('sp1right2').then(function () {
+			return when(sp1rightPaneElem.hide('sp1right2').then(function () {
 				var sp1right2View = viewUtils.getViewFromViewId(testApp, "sp1right2");
 				checkDeactivateCallCount(sp1right2View, 1);
 				var sp1right2content = sp1right2View.containerNode;
@@ -157,14 +153,16 @@ define([
 				assert.strictEqual(sp1right2View.style.display, "none", "sp1right2View.style.display should be none");
 				assert.strictEqual(sp1rightPaneElem.style.display, "none",
 					"sp1rightPaneElem.style.display should be none");
-			});
+			}));
 		},
 
 		teardown: function () {
 			// call unloadApp to cleanup and end the test
 			sidePaneViewsActivateCallsContainer1.parentNode.removeChild(
 				sidePaneViewsActivateCallsContainer1);
-			testApp.unloadApp();
+			if (testApp) {
+				testApp.unloadApp();
+			}
 		}
 	};
 

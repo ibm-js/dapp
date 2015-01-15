@@ -4,7 +4,7 @@
 	"description": "AMD-based Application Framework for building Web & Mobile applications ",
 	"dependencies": {},
 	"devDependencies": {
-		"intern": "2.1.1",
+		"intern": "2.2.x",
 		"grunt": "~0.4.2",
 		"grunt-contrib-jshint": "~0.6.3",
 		"grunt-contrib-less": "~0.8.3",

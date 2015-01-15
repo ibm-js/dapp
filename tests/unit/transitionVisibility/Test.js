@@ -4,11 +4,12 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"delite/register",
-	"dojo/Deferred",
+	"lie/dist/lie",
+	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/transitionVisibility/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, register, Deferred, transitionVisibilityconfig) {
+], function (registerSuite, assert, Application, register, Promise, when, transitionVisibilityconfig) {
 	// -------------------------------------------------------------------------------------- //
 	// for transitionVisibilitySuite
 	var transitionVisibilityContainer3,
@@ -29,50 +30,53 @@ define([
 			register.parse(transitionVisibilityContainer3);
 			transitionVisibilityNode3 = document.getElementById("transitionVisibilityAppdviewStack");
 		},
+		beforeEach: function () {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, 50);
+			});
+		},
 		"transitionVisibilitySuite dapp transitionVisibility test initial layout": function () {
 			this.timeout = 20000;
 
-			var appStartedDef = new Application(JSON.parse(stripComments(transitionVisibilityconfig)),
-				transitionVisibilityContainer3);
-			return appStartedDef.then(function (app) {
-				// we are ready to test
-				testApp = app;
+			return when(new Application(JSON.parse(stripComments(transitionVisibilityconfig)),
+					transitionVisibilityContainer3)
+				.then(function (app) {
+					// we are ready to test
+					testApp = app;
 
-				var transitionVisibilityAppHome1 = document.getElementById("transitionVisibilityAppHome1");
-				// check the DOM state to see if we are in the expected state
-				assert.isNotNull(transitionVisibilityNode3, "root transitionVisibilityNode3 must be here");
-				assert.isNotNull(transitionVisibilityAppHome1, "transitionVisibilityAppHome1 view must be here");
+					var transitionVisibilityAppHome1 = document.getElementById("transitionVisibilityAppHome1");
+					// check the DOM state to see if we are in the expected state
+					assert.isNotNull(transitionVisibilityNode3, "root transitionVisibilityNode3 must be here");
+					assert.isNotNull(transitionVisibilityAppHome1, "transitionVisibilityAppHome1 view must be here");
 
-				checkNodeVisibility(transitionVisibilityNode3, transitionVisibilityAppHome1);
-			});
+					checkNodeVisibility(transitionVisibilityNode3, transitionVisibilityAppHome1);
+				}));
 		},
 
 		// NOTE: these tests will show transition the views, but call to before/afterDeactivate are not working here
 		// because the next transition fires before the call to afterActivate.
 		"Show (by widget.show with id) test on delite-after-show": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
-
-			var sig = transitionVisibilityNode3.on("delite-after-show", function () {
-				displayDeferred.resolve();
-				sig.remove();
-			});
-			transitionVisibilityNode3.show("transitionVisibilityAppHome3NoController");
-
-			return displayDeferred.then(function () {
+			return when(new Promise(function (resolve) {
+				var sig = transitionVisibilityNode3.on("delite-after-show", function () {
+					resolve();
+					sig.remove();
+				});
+				transitionVisibilityNode3.show("transitionVisibilityAppHome3NoController");
+			}).then(function () {
 				var transitionVisibilityAppHome3NoController =
 					document.getElementById("transitionVisibilityAppHome3NoController");
 				checkNodeVisibility(transitionVisibilityNode3, transitionVisibilityAppHome3NoController);
-			});
+			}));
 		},
-		"Show (by widget.show with id) test with deferred": function () {
+		"Show (by widget.show with id) test with promise": function () {
 			this.timeout = 20000;
 
-			return transitionVisibilityNode3.show("transitionVisibilityAppHome1")
+			return when(transitionVisibilityNode3.show("transitionVisibilityAppHome1")
 				.then(function () {
 					var transitionVisibilityAppHome1 = document.getElementById("transitionVisibilityAppHome1");
 					checkNodeVisibility(transitionVisibilityNode3, transitionVisibilityAppHome1);
-				});
+				}));
 		},
 		"Show (by widget.show with id) test with transitionVisibilityNode3.on(delite-after-show)": function () {
 			var d = this.async(20000);
@@ -89,15 +93,11 @@ define([
 		},
 		"Test showOrHideViews (by view name) ": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
 
-			testApp.showOrHideViews('transitionVisibilityAppHome2', {
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
+			return when(testApp.showOrHideViews('transitionVisibilityAppHome2', {}).then(function () {
 				var transitionVisibilityAppHome2 = document.getElementById("transitionVisibilityAppHome2");
 				checkNodeVisibility(transitionVisibilityNode3, transitionVisibilityAppHome2);
-			});
+			}));
 		},
 		teardown: function () {
 			// call unloadApp to cleanup and end the test

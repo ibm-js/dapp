@@ -10,21 +10,23 @@
 	<link rel="stylesheet" href="app.css">
 
 	<!-- for requireJS -->
-	<script src="../../requirejs/require.js"></script>
-		<script>
-			require.config({
-			    paths: {
-			        "dapp": "../../dapp",
-					"dcl": "../../dcl",
-					"dojo": "../../dojo",
-					"dpointer": "../../dpointer",
-					"decor": "../../decor",
-					"delite": "../../delite",
-					"deliteful": "../../deliteful",
-					"requirejs": "../../requirejs",
-					"requirejs-text": "../../requirejs-text",
-					"requirejs-dplugins": "../../requirejs-dplugins",
-					"requirejs-domready": "../../requirejs-domready"
+	<script src="../../../../requirejs/require.js"></script>
+	<script>
+		require.config({
+			paths: {
+				"dapp": "../../../../dapp",
+				"dcl": "../../../../dcl",
+				"dojo": "../../../../dojo",
+				"dpointer": "../../../../dpointer",
+				"decor": "../../../../decor",
+				"delite": "../../../../delite",
+				"deliteful": "../../../../deliteful",
+				"lie": "../../../../lie",
+				"jquery": "../../../../jquery",
+				"requirejs": "../../../../requirejs",
+				"requirejs-text": "../../../../requirejs-text",
+				"requirejs-dplugins": "../../../../requirejs-dplugins",
+				"requirejs-domready": "../../../../requirejs-domready"
 			    },
 			    waitSeconds: 15
 			  });
@@ -38,9 +40,8 @@
 				jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
 				jsonData = jsonData.replace(/\/\/.*/g, "");
 				jsonData.defaultView = "";
-				var appDeferred = new Application(JSON.parse(jsonData));
-				appDeferred.then(function (app) {
-					console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+				new Application(JSON.parse(jsonData)).then(function (app) {
+					console.log("promise resolved for new App [" + app.id + "] it should be started and default views shown");
 				});
 			});
 	</script>

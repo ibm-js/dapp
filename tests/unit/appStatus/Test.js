@@ -2,14 +2,13 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
+	"dojo/when",
 	"dapp/Application",
 	"delite/register",
-	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/appStatus/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, register, Deferred,
-	appStatusConfig) {
+], function (registerSuite, assert, when, Application, register, appStatusConfig) {
 	// for appStatusSuite
 	var appStatusContainer1,
 		testApp,
@@ -36,10 +35,8 @@ define([
 		"appStatusSuite dapp appStatus test app status": function () {
 			this.timeout = 20000;
 
-			// create the app from the config and wait for the deferred
-			//var appStartedDef = new Application(JSON.parse(stripComments(appStatusConfig)), appStatusContainer1);
-			//appStartedDef.then(function (appStatusTest) {
-			return new Application(JSON.parse(stripComments(appStatusConfig)),
+			// create the app from the config and wait for the promise
+			return when(new Application(JSON.parse(stripComments(appStatusConfig)),
 				appStatusContainer1).then(function (appStatusTest) {
 				// we are ready to test
 				testApp = appStatusTest;
@@ -59,7 +56,7 @@ define([
 				// This section would normally go in teardown, but do it here to test status
 				appStatusContainer1.parentNode.removeChild(appStatusContainer1);
 
-			});
+			}));
 		},
 		teardown: function () {
 			testApp.unloadApp().then(function () { // when the app is unloaded verify status and call resolve

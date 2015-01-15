@@ -15,6 +15,10 @@ define({
 		// It seems that specifying version="" or leaving version unspecified
 		// does not default to the latest version of the browser.
 
+		// Mobile
+		{ platformName: "iOS", platformVersion: "7.1", browserName: "safari", deviceName: "iPhone Simulator",
+			"appium-version": "1.2.2", name: "dapp" },
+
 		// Desktop.
 		//{ browserName: "internet explorer", version: "11", platform: "Windows 8.1", name : "dapp" },
 		//{ browserName: "internet explorer", version: "10", platform: "Windows 8", name : "dapp" },
@@ -22,11 +26,7 @@ define({
 			name : "dapp"},
 		{ browserName: "chrome", version: "32", platform: [ /*"OS X 10.6", "Linux", */ "Windows 7" ],
 			name : "dapp"},
-		{ browserName: "safari", version: "7", platform: [ "OS X 10.9" ], name : "dapp"},
-
-		// Mobile
-		{ platformName: "iOS", platformVersion: "7.1", browserName: "safari", deviceName: "iPhone Simulator",
-			"appium-version": "1.2.2", name: "dapp" }
+		{ browserName: "safari", version: "7", platform: [ "OS X 10.9" ], name : "dapp"}
 
 	],
 
@@ -48,14 +48,17 @@ define({
 	loader: {
 		baseUrl: typeof window !== "undefined" ? "../../.." : "..",
 		paths: {
-			//"jquery": "jquery/jquery",
-			//"jquery.mobile": "jquery-mobile/js/jquery.mobile-1.4.2",
-			"jquery": "https://code.jquery.com/jquery-2.1.1.min",
+			"lie": "lie",
+
 			"jquery.mobile": "https://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4",
-			//"jquery.mobile": "http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3",
-			//"jquery.mobile": "http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2",
-			//"jquery.mobile.css": "http://code.jquery.com/mobile/1.4.3/"
-			"jquery.mobile.css": "http://code.jquery.com/mobile/1.4.4/"
+			"jquery.mobile.css": "http://code.jquery.com/mobile/1.4.4/",
+
+			// this works without the JQM tests
+		//	"jquery": "jquery"
+
+			// this works with the JQM tests
+			"jquery": "jquery/dist/jquery.min"
+		//	"jquery": "https://code.jquery.com/jquery-2.1.1.min"
 		},
 		shim: {
 			'jquery.mobile': { deps: ['jquery'] }
@@ -75,5 +78,5 @@ define({
 	functionalSuites: ["dapp/tests/functional/all"],
 
 	// A regular expression matching URLs to files that should not be included in code coverage analysis
-	excludeInstrumentation: /^(requirejs.*|dcl|dojo|dpointer|dstore|decor|jquery|jquery.mobile|delite|deliteful\/|dapp\/tests|.*themes|.*transitions|.*node_modules)/
+	excludeInstrumentation: /^(requirejs.*|dcl|dojo|dpointer|dstore|decor|lie|jquery|jquery.mobile|delite|deliteful\/|dapp\/tests|.*themes|.*transitions|.*node_modules)/
 });

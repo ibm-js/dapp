@@ -1,22 +1,19 @@
-define(["require", "dojo/Deferred"], function (require, Deferred) {
+define(["require", "lie/dist/lie"], function (require, Promise) {
 	/* jshint unused: vars */
-	return function ( /*Object*/ config, /*Object*/ parent) {
+	return function ( /*Object*/ config) {
 		// summary:
-		//		nsl is called to create to load the nls all for the app, or for a view.
+		//		nls is called to create to load the nls all for the app, or for a view.
 		// config: Object
 		//		The section of the config for this view or for the app.
-		// parent: Object
-		//		The parent of this view or the app itself, so that nls from the parent will be
-		//		available to the view.
-		var path = config.nls;
-		if (path) {
-			var nlsDef = new Deferred();
-			require(["requirejs-dplugins/i18n!" + path], function (nls) {
-				nlsDef.resolve(nls);
-			});
-			return nlsDef;
-		} else {
-			return false;
-		}
+		return new Promise(function (resolve) {
+			var path = config.nls;
+			if (path) {
+				require(["requirejs-dplugins/i18n!" + path], function (nls) {
+					resolve(nls);
+				});
+			} else {
+				resolve({});
+			}
+		}.bind(this));
 	};
 });

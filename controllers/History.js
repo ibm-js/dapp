@@ -1,7 +1,7 @@
-define(["require", "dcl/dcl", "dojo/Deferred", "../utils/view",
+define(["require", "dcl/dcl", "../utils/view",
 		"../utils/hash", "../Controller"
 	],
-	function (require, dcl, Deferred, viewUtils, hash, Controller) {
+	function (require, dcl, viewUtils, hash, Controller) {
 		var app;
 		var mapperHandle;
 		return dcl(Controller, {

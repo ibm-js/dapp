@@ -34,6 +34,8 @@
 							{ name: "decor", location : "../../../../decor"},
 							{ name: "delite", location : "../../../../delite"},
 							{ name: "deliteful", location : "../../../../deliteful"},
+							{ name: "lie", location : "../../../../lie"},
+							{ name: "jquery", location : "../../../../jquery"},
 							{ name: "requirejs", location : "../../../../requirejs"},
 							{ name: "requirejs-text", location : "../../../../requirejs-text"},
 							{ name: "requirejs-dplugins", location : "../../../../requirejs-dplugins"},
@@ -78,9 +80,8 @@
 					var json = JSON.parse(jsonData);
 					json.loaderConfig.paths.dstoreMemoryApp = "../dstoreMemory"
 					//new Application(JSON.parse(jsonData));
-					var appDeferred = new Application(json);
-					appDeferred.then(function (app) {
-						console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+					new Application(json).then(function (app) {
+						console.log("promise resolved for new App [" + app.id + "] it should be started and default views shown");
 					});
 				});
         </script>

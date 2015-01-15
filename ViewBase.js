@@ -1,5 +1,5 @@
-define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "dapp/utils/view"],
-	function (require, when, dcl, Deferred, viewUtils) {
+define(["require", "dcl/dcl", "lie/dist/lie", "dapp/utils/view"],
+	function (require, dcl, Promise, viewUtils) {
 		return dcl(null, {
 			// summary:
 			//		View base class with controller capabilities. Subclass must implement rendering capabilities.
@@ -41,23 +41,23 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "dapp/utils/view"],
 				if (this._started) {
 					return this;
 				}
-				this._startDef = new Deferred();
-				when(this.load(), function (controller) {
-					this._createDataStores();
-					this._startup(controller);
+				return new Promise(function (resolve) {
+					this._startResolve = resolve;
+					return this.load().then(function (controller) {
+						this._createDataStores();
+						this._startup(controller);
+					}.bind(this));
 				}.bind(this));
-				return this._startDef;
+
 			},
 
 			load: function () {
-				var vcDef = this._loadViewController();
-				when(vcDef, function (controller) {
+				return this._loadViewController().then(function (controller) {
 					if (controller) {
 						dcl.mix(this, controller);
 						return controller;
 					}
 				}.bind(this));
-				return vcDef;
 			},
 
 			_createDataStores: function () {
@@ -101,8 +101,8 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "dapp/utils/view"],
 				viewUtils.register(this.constraint);
 
 				this._started = true;
-				if (this._startDef) {
-					this._startDef.resolve(this);
+				if (this._startResolve) {
+					this._startResolve(this);
 				}
 			},
 
@@ -112,25 +112,19 @@ define(["require", "dojo/when", "dcl/dcl", "dojo/Deferred", "dapp/utils/view"],
 				// tags:
 				//		private
 				//
-				var viewControllerDef = new Deferred();
 				var path;
 
 				//TODO: There is a problem with the order of views being added if no controller is listed
 				//TODO: Seems like order problem can be solved by using ViewBase if it is not set, try this for now!
-				if (!this.controller) {
-					this.controller = "dapp/ViewBase";
-				}
-				if (!this.controller) {
-					viewControllerDef.resolve(true);
-					return viewControllerDef;
-				} else {
+				return new Promise(function (resolve) {
+					if (!this.controller) {
+						this.controller = "dapp/ViewBase";
+					}
 					path = this.controller.replace(/(\.js)$/, "");
-				}
-
-				require([path], function (controller) {
-					viewControllerDef.resolve(controller);
-				});
-				return viewControllerDef;
+					require([path], function (controller) {
+						resolve(controller);
+					});
+				}.bind(this));
 			},
 
 			init: function () {

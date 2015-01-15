@@ -25,7 +25,7 @@
 
 
 	"appLogging": {
-		"logAll": 1
+		"logAll": 0
 	},
 
 	"alwaysUseDefaultView" : true, // ignore any url hash when starting the app

@@ -124,8 +124,8 @@ define(
 					if (typeof event.dest !== "string") {
 						return;
 					}
-					if (event.loadDeferred) {
-						event.loadDeferred.then(function (value) {
+					if (event.loadPromise) {
+						event.loadPromise.then(function (value) {
 							console.log("  < back from delite-display-load resolveView with value.child.id=[" +
 								value.child.id + "] value.dapp.parentView.id=[" +
 								(value.dapp && value.dapp.parentView ? value.dapp.parentView.id : "") + "]");

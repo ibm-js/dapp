@@ -1,7 +1,7 @@
-define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../TransitionBase", "../../utils/view",
+define(["dcl/dcl", "lie/dist/lie", "../TransitionBase", "../../utils/view",
 		"jquery", "jquery.mobile"
 	],
-	function (dcl, when, Deferred, all, TransitionBase, viewUtils, $) {
+	function (dcl, Promise, TransitionBase, viewUtils, $) {
 
 		// summary:
 		//		A Transition controller to listen for "dapp-display" events and drive the transitions for those
@@ -35,45 +35,46 @@ define(["dcl/dcl", "dojo/when", "dojo/Deferred", "dojo/promise/all", "../Transit
 
 			// _hideView is called to hide a view
 			_hideView: function (viewTarget, event, isParent, viewPath) {
-				var deferred = new Deferred();
-				event.dapp.isParent = isParent;
-				event.dapp.hide = true;
-				event.dapp.viewPath = viewPath;
-				event.dapp.parentView = viewUtils.getParentViewFromViewId(this.app, viewPath.lastViewId);
-				event.dest = event.dapp.parentView.childViews[viewPath.lastViewId].viewName;
-				//var p = self._getParentNode(event) || document.body; // added document.body for jqm
-				//TODO: can we verify that the correct transition has occurred? maybe we assume it for JQM page
-				//$(":mobile-pagecontainer").pagecontainer("change", "", event);
-				$.mobile.pageContainer.pagecontainer("change", "", event);
-				$(document).one("pagecontainertransition", function (complete, ui) {
-					//$(document).one("pagecontainershow", function (complete, ui) {
-					deferred.resolve(ui.options);
-					return ui.options;
+				return new Promise(function (resolve) {
+					event.dapp.isParent = isParent;
+					event.dapp.hide = true;
+					event.dapp.viewPath = viewPath;
+					event.dapp.parentView = viewUtils.getParentViewFromViewId(this.app, viewPath.lastViewId);
+					event.dest = event.dapp.parentView.childViews[viewPath.lastViewId].viewName;
+					//var p = self._getParentNode(event) || document.body; // added document.body for jqm
+					//TODO: can we verify that the correct transition has occurred? maybe we assume it for JQM page
+					//$(":mobile-pagecontainer").pagecontainer("change", "", event);
+					$.mobile.pageContainer.pagecontainer("change", "", event);
+					$(document).one("pagecontainertransition", function (complete, ui) {
+						//$(document).one("pagecontainershow", function (complete, ui) {
+						resolve(ui.options);
+						return ui.options;
+					}.bind(this));
 				}.bind(this));
-				return deferred.promise;
 			},
 
 			// _parentIsValid is called to see if p is valid and handle it if it is not
-			_parentIsValid: function (p, dest, deferred, value) {
+			_parentIsValid: function (p, dest) {
 				if (!p) {
 					console.warn("Do not have a parent for [" + dest + "]");
 					//TODO: need to test this!
-					deferred.resolve(value);
 					return false;
 				}
 				return true;
 			},
 
 			// _showView is called to make the final call to show the view
-			_showView: function (p, subEvent, deferred) {
-				//$(":mobile-pagecontainer").pagecontainer("change", subEvent.dest, subEvent);
-				// body does not work, it is not the right div, it is not the pageContainer
-				//$( "body" ).pagecontainer( "change", subEvent.dest, subEvent);
-				$.mobile.pageContainer.pagecontainer("change", subEvent.dest, subEvent);
-				$(document).one("pagecontainertransition", function (complete, ui) {
-					//$(document).one("pagecontainershow", function (complete, ui) {
-					deferred.resolve(ui.options);
-					return ui.options;
+			_showView: function (p, subEvent) {
+				return new Promise(function (resolve) {
+					//$(":mobile-pagecontainer").pagecontainer("change", subEvent.dest, subEvent);
+					// body does not work, it is not the right div, it is not the pageContainer
+					//$( "body" ).pagecontainer( "change", subEvent.dest, subEvent);
+					$.mobile.pageContainer.pagecontainer("change", subEvent.dest, subEvent);
+					$(document).one("pagecontainertransition", function (complete, ui) {
+						//$(document).one("pagecontainershow", function (complete, ui) {
+						resolve(ui.options);
+						return ui.options;
+					});
 				});
 			}
 		});

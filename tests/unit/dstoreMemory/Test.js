@@ -4,20 +4,15 @@ define([
 	"intern/chai!assert",
 	"decor/sniff",
 	"dapp/Application",
-	"dojo/Deferred",
+	"lie/dist/lie",
+	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/dstoreMemory/app.json",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack",
 	"deliteful/list/List",
 	"dstore/Memory"
-], function (registerSuite, assert, has, Application, Deferred, dstoreMemoryconfig1) {
+], function (registerSuite, assert, has, Application, Promise, when, dstoreMemoryconfig1) {
 	// -------------------------------------------------------------------------------------- //
-
-	console.log("has(ie) = " + has("ie"));
-	if (has("ie") === 10) {
-		console.log("Skipping dstoreMemorySuite tests on IE10");
-		return;
-	}
 
 	// for dstoreMemorySuite1 transition test
 	var dstoreMemoryContainer1,
@@ -64,8 +59,16 @@ define([
 			document.body.appendChild(dstoreMemoryContainer1);
 			dstoreMemoryContainer1.innerHTML = dstoreMemoryHtmlContent1;
 		},
+		beforeEach: function () {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, 50);
+			});
+		},
 		"test initial view": function () {
 			this.timeout = 20000;
+			if (has("ie") === 10) {
+				this.skip("Skipping dstoreMemory tests on IE10");
+			}
 			return new Application(JSON.parse(stripComments(dstoreMemoryconfig1)), dstoreMemoryContainer1)
 				.then(function (appx) {
 					// we are ready to test
@@ -93,22 +96,22 @@ define([
 						"element[3].innerHTML should be Selection 4");
 					assert.strictEqual(dstoreMemorylist1Elements[4].innerHTML, "Selection 5",
 						"element[4].innerHTML should be Selection 5");
-
 				});
 		},
 
 		// Currently showing dstoreMemoryAppHome1 test transition to dstoreMemoryAppHome2
 		"testApp.showOrHideViews('dstoreMemoryAppHome2')": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
+
+			if (has("ie") === 10) {
+				this.skip("Skipping dstoreMemory tests on IE10");
+			}
 			var label = dstoreMemorylist1Elements[0].innerHTML || "";
-			testApp.showOrHideViews("dstoreMemoryAppHome2", {
+			return testApp.showOrHideViews("dstoreMemoryAppHome2", {
 				viewData: {
 					label: label
-				},
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
+				}
+			}).then(function () {
 				var dstoreMemoryList2 = document.getElementById("list2");
 				var dstoreMemoryAppHome2 = document.getElementById("dstoreMemoryAppHome2");
 				var header = dstoreMemoryAppHome2.getElementsByTagName("h2");
@@ -135,22 +138,21 @@ define([
 					"element[3].innerHTML should be Selection 4");
 				assert.strictEqual(dstoreMemorylist2Elements[4].innerHTML, "Selection 10",
 					"element[4].innerHTML should be Selection 5");
-
 			});
 		},
 
 		// Currently showing dstoreMemoryAppHome2 test transition to dstoreMemoryAppHome1
 		"testApp.showOrHideViews('dstoreMemoryAppHome1')": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
+			if (has("ie") === 10) {
+				this.skip("Skipping dstoreMemory tests on IE10");
+			}
 			var label = dstoreMemorylist2Elements[4].innerHTML || "";
-			testApp.showOrHideViews("dstoreMemoryAppHome1", {
+			return testApp.showOrHideViews("dstoreMemoryAppHome1", {
 				viewData: {
 					label: label
-				},
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
+				}
+			}).then(function () {
 				var dstoreMemoryList1 = document.getElementById("list2");
 				dstoreMemoryList1.deliver();
 				var dstoreMemoryAppHome1 = document.getElementById("dstoreMemoryAppHome1");
@@ -178,7 +180,6 @@ define([
 					"element[3].innerHTML should be Selection 4");
 				assert.strictEqual(dstoreMemorylist2Elements[4].innerHTML, "Selection 10",
 					"element[4].innerHTML should be Selection 5");
-
 			});
 		},
 

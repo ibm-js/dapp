@@ -2,7 +2,7 @@
 define(["dojo/dom", "dojo/on", "delite/register"], function (dom, on, register) {
 	return {
 		beforeActivate: function (previousView, viewData) {
-			this.app.emit("vs-selection-changed", "ddd");
+			this.app.emit("test-vs-selection-changed", "ddd");
 		}
 	};
 });

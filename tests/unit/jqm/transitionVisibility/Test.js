@@ -24,14 +24,14 @@ require(["jquery"],
 define([
 	"intern!object",
 	"intern/chai!assert",
+	"dojo/when",
 	"dapp/Application",
-	"dojo/Deferred",
 	"requirejs-text/text!dapp/tests/unit/jqm/transitionVisibility/app.json",
 	"jquery",
 	"jquery.mobile",
 	"deliteful/LinearLayout",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, Application, Deferred, jqmTransitionVisibilityconfig, $) {
+], function (registerSuite, assert, when, Application, jqmTransitionVisibilityconfig, $) {
 	// -------------------------------------------------------------------------------------- //
 	// for jqmTransitionVisibilitySuite
 	var jqmTransitionVisibilityContainer3,
@@ -57,9 +57,8 @@ define([
 		"jqmTransitionVisibilitySuite dapp jqmTransitionVisibility test initial layout": function () {
 			this.timeout = 20000;
 
-			var appStartedDef = new Application(JSON.parse(stripComments(jqmTransitionVisibilityconfig)),
-				jqmTransitionVisibilityContainer3);
-			return appStartedDef.then(function (app) {
+			return when(new Application(JSON.parse(stripComments(jqmTransitionVisibilityconfig)),
+				jqmTransitionVisibilityContainer3).then(function (app) {
 				// we are ready to test
 				testApp = app;
 
@@ -76,45 +75,41 @@ define([
 				assert.isTrue(jqmTransitionVisibilityAppHome1ActiveTest,
 					"jqmTransitionVisibilityAppHome1 view should be active");
 
-			});
+			}));
 		},
 		"Test displayView (by view name) ": function () {
 			this.timeout = 20000;
-			var displayDeferred = new Deferred();
-
-			testApp.showOrHideViews('jqmTransitionVisibilityAppHome2', {
-				displayDeferred: displayDeferred
-			});
-			return displayDeferred.then(function () {
-				var jqmTransitionVisibilityAppHome2 = $("#jqmTransitionVisibilityAppHome2");
-				var jqmTransitionVisibilityAppHome2ActiveTest =
-					$("#jqmTransitionVisibilityAppHome2").hasClass("ui-page-active");
-				var jqmTransitionVisibilityAppHome1 = $("#jqmTransitionVisibilityAppHome1");
-				var jqmTransitionVisibilityAppHome1ActiveTest =
-					$("#jqmTransitionVisibilityAppHome1").hasClass("ui-page-active");
-				// check the DOM state to see if we are in the expected state
-				var pNode = jqmTransitionVisibilityAppHome2[0].parentNode;
-				var activeNode = $(pNode).pagecontainer("getActivePage");
-				assert.isNotNull(jqmTransitionVisibilityAppHome2, "jqmTransitionVisibilityAppHome2 view here");
-				assert.isTrue(jqmTransitionVisibilityAppHome2ActiveTest,
-					"jqmTransitionVisibilityAppHome1 view should be active");
-				//assert.isTrue(jqmTransitionVisibilityAppHome2[0].style.display !== "none",
-				// "jqmTransitionVisibilityAppHome2 view should be visible");
-				assert.strictEqual(jqmTransitionVisibilityAppHome2[0].id, activeNode[0].id,
-					"jqmTransitionVisibilityAppHome2 should be the active page");
-				//assert.isNotNull(jqmTransitionVisibilityAppHome2VisTest,
-				// "jqmTransitionVisibilityAppHome2 view should be visible");
-				assert.isNotNull(jqmTransitionVisibilityAppHome1, "jqmTransitionVisibilityAppHome1 view here");
-				assert.isFalse(jqmTransitionVisibilityAppHome1ActiveTest,
-					"jqmTransitionVisibilityAppHome1 view should not be active");
-				//	var jqmTransitionVisibilityAppHome2X = document.getElementById("jqmTransitionVisibilityAppHome2");
-				//	var n = jqmTransitionVisibilityAppHome2X.style.display;
-				//	this test is failing, not sure why it is not showing as display none.
-				//	assert.isTrue(jqmTransitionVisibilityAppHome1[0].style.display === "none",
-				// "jqmTransitionVisibilityAppHome1 view should be hidden");
-				//assert.isNotNull(jqmTransitionVisibilityAppHome1VisTest,
-				// "jqmTransitionVisibilityAppHome1 view should be hidden");
-			});
+			return when(testApp.showOrHideViews('jqmTransitionVisibilityAppHome2')
+				.then(function () {
+					var jqmTransitionVisibilityAppHome2 = $("#jqmTransitionVisibilityAppHome2");
+					var jqmTransitionVisibilityAppHome2ActiveTest =
+						$("#jqmTransitionVisibilityAppHome2").hasClass("ui-page-active");
+					var jqmTransitionVisibilityAppHome1 = $("#jqmTransitionVisibilityAppHome1");
+					var jqmTransitionVisibilityAppHome1ActiveTest =
+						$("#jqmTransitionVisibilityAppHome1").hasClass("ui-page-active");
+					// check the DOM state to see if we are in the expected state
+					var pNode = jqmTransitionVisibilityAppHome2[0].parentNode;
+					var activeNode = $(pNode).pagecontainer("getActivePage");
+					assert.isNotNull(jqmTransitionVisibilityAppHome2, "jqmTransitionVisibilityAppHome2 view here");
+					assert.isTrue(jqmTransitionVisibilityAppHome2ActiveTest,
+						"jqmTransitionVisibilityAppHome1 view should be active");
+					//assert.isTrue(jqmTransitionVisibilityAppHome2[0].style.display !== "none",
+					// "jqmTransitionVisibilityAppHome2 view should be visible");
+					assert.strictEqual(jqmTransitionVisibilityAppHome2[0].id, activeNode[0].id,
+						"jqmTransitionVisibilityAppHome2 should be the active page");
+					//assert.isNotNull(jqmTransitionVisibilityAppHome2VisTest,
+					// "jqmTransitionVisibilityAppHome2 view should be visible");
+					assert.isNotNull(jqmTransitionVisibilityAppHome1, "jqmTransitionVisibilityAppHome1 view here");
+					assert.isFalse(jqmTransitionVisibilityAppHome1ActiveTest,
+						"jqmTransitionVisibilityAppHome1 view should not be active");
+					//var jqmTransitionVisibilityAppHome2X = document.getElementById("jqmTransitionVisibilityAppHome2");
+					//	var n = jqmTransitionVisibilityAppHome2X.style.display;
+					//	this test is failing, not sure why it is not showing as display none.
+					//	assert.isTrue(jqmTransitionVisibilityAppHome1[0].style.display === "none",
+					// "jqmTransitionVisibilityAppHome1 view should be hidden");
+					//assert.isNotNull(jqmTransitionVisibilityAppHome1VisTest,
+					// "jqmTransitionVisibilityAppHome1 view should be hidden");
+				}));
 		},
 		teardown: function () {
 			// call unloadApp to cleanup and end the test

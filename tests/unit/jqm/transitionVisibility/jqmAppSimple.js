@@ -21,14 +21,13 @@ require(["jquery"],
 		});
 	});
 require(["dapp/Application", "requirejs-text/text!./app.json", "jquery", "jquery.mobile"],
-	function (Application, config, has, $) {
+	function (Application, config, $) {
 		var jsonData = config;
 		jsonData = jsonData.replace(/\/\*.*?\*\//g, "");
 		jsonData = jsonData.replace(/\/\/.*/g, "");
 		//new Application(JSON.parse(jsonData));
-		var appDeferred = new Application(JSON.parse(jsonData));
-		appDeferred.then(function (app) {
-			console.log("deferred resolved for new App [" + app.id + "] it should be started and default views shown");
+		new Application(JSON.parse(jsonData)).then(function (app) {
+			console.log("promise resolved for new App [" + app.id + "] it should be started and default views shown");
 		});
 
 		// don't forget to trigger JQM manually
