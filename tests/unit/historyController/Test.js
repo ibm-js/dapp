@@ -7,7 +7,7 @@ define([
 	"dapp/utils/view",
 	"dapp/utils/hash",
 	"delite/register",
-	"lie/dist/lie",
+	"requirejs-dplugins/Promise!",
 	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/historyController/app1.json",
 	"deliteful/LinearLayout",

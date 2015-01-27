@@ -1,4 +1,4 @@
-define(["require", "dcl/dcl", "decor/Stateful", "decor/Evented", "lie/dist/lie",
+define(["require", "dcl/dcl", "decor/Stateful", "decor/Evented", "requirejs-dplugins/Promise!",
 		"./utils/nls", "./utils/hash", "./utils/view", "./utils/config", "requirejs-domready/domReady!"
 	],
 	function (require, dcl, Stateful, Evented, Promise, nls, hash, viewUtils, configUtils) {

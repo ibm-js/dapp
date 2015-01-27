@@ -1,5 +1,5 @@
 /** @module dapp/controllers/delite/Init */
-define(["require", "dcl/dcl", "lie/dist/lie", "../Controller", "dojo/_base/declare"],
+define(["require", "dcl/dcl", "requirejs-dplugins/Promise!", "../Controller", "dojo/_base/declare"],
 	function (require, dcl, Promise, Controller, declare) {
 		/**
 		 * An InitBase controller for a dapp application.

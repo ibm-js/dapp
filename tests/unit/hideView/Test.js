@@ -2,7 +2,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"lie/dist/lie",
+	"requirejs-dplugins/Promise!",
 	"dojo/when",
 	"dapp/Application",
 	"dapp/utils/view",

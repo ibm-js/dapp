@@ -1,4 +1,4 @@
-define(["require", "dcl/dcl", "lie/dist/lie", "dapp/utils/view"],
+define(["require", "dcl/dcl", "requirejs-dplugins/Promise!", "dapp/utils/view"],
 	function (require, dcl, Promise, viewUtils) {
 		return dcl(null, {
 			// summary:

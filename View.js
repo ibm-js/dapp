@@ -1,4 +1,4 @@
-define(["require", "dcl/dcl", "lie/dist/lie", "delite/Widget", "delite/register",
+define(["require", "dcl/dcl", "requirejs-dplugins/Promise!", "delite/Widget", "delite/register",
 		"delite/handlebars", "./ViewBase", "./utils/nls"
 	],
 	function (require, dcl, Promise, Widget, register, handlebars, ViewBase, nls) {
@@ -160,7 +160,7 @@ define(["require", "dcl/dcl", "lie/dist/lie", "delite/Widget", "delite/register"
 					var newDomNode = new TagWidget();
 
 					//had to do this for widgets in templates to work
-					newDomNode.startup();
+					newDomNode.attachedCallback(true); // replaces newDomNode.startup()
 
 					newDomNode.viewId = this.id;
 					//newDomNode.id = this.id;

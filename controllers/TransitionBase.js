@@ -1,4 +1,4 @@
-define(["dcl/dcl", "lie/dist/lie", "../Controller", "../utils/view"],
+define(["dcl/dcl", "requirejs-dplugins/Promise!", "../Controller", "../utils/view"],
 	function (dcl, Promise, Controller, viewUtils) {
 
 		// summary:

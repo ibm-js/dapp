@@ -5,7 +5,7 @@ define([
 	"decor/sniff",
 	"dapp/Application",
 	"dapp/utils/view",
-	"lie/dist/lie",
+	"requirejs-dplugins/Promise!",
 	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/nestedViewsActivateCalls/app1.json",
 	"deliteful/LinearLayout",

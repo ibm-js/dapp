@@ -1,4 +1,4 @@
-define(["dcl/dcl", "lie/dist/lie", "../TransitionBase", "../../utils/view"],
+define(["dcl/dcl", "requirejs-dplugins/Promise!", "../TransitionBase", "../../utils/view"],
 	function (dcl, Promise, TransitionBase, viewUtils) {
 
 		// summary:

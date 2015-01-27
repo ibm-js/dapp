@@ -3,7 +3,7 @@ define([
 	"intern!object",
 	"intern/chai!assert",
 	"decor/sniff",
-	"lie/dist/lie",
+	"requirejs-dplugins/Promise!",
 	"dojo/when",
 	"dapp/Application",
 	"dojo/dom-geometry",

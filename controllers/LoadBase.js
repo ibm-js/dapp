@@ -1,5 +1,5 @@
 define(
-	["require", "dcl/dcl", "lie/dist/lie", "../Controller", "../utils/view"],
+	["require", "dcl/dcl", "requirejs-dplugins/Promise!", "../Controller", "../utils/view"],
 	function (require, dcl, Promise, Controller, viewUtils) {
 		var app; // need app in closure for loadMapper
 		return dcl(Controller, {

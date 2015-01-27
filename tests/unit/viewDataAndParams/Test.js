@@ -4,7 +4,7 @@ define([
 	"intern/chai!assert",
 	"dapp/Application",
 	"dapp/utils/view",
-	"lie/dist/lie",
+	"requirejs-dplugins/Promise!",
 	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/viewDataAndParams/app.json",
 	"deliteful/LinearLayout",

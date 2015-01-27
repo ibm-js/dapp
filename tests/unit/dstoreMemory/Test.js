@@ -4,7 +4,7 @@ define([
 	"intern/chai!assert",
 	"decor/sniff",
 	"dapp/Application",
-	"lie/dist/lie",
+	"requirejs-dplugins/Promise!",
 	"dojo/when",
 	"requirejs-text/text!dapp/tests/unit/dstoreMemory/app.json",
 	"deliteful/LinearLayout",
