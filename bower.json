@@ -1,11 +1,11 @@
 {
 	"name": "dapp",
-	"version": "0.3.2",
+	"version": "0.4.0-alpha",
 	"dependencies": {
 		"dcl": "1.1.x",
-		"decor": "0.4.x",
-		"delite": "0.5.x",
-		"deliteful": "0.5.x",
+		"decor": "0.5.x",
+		"delite": "0.6.x",
+		"deliteful": "0.6.x",
 		"jquery": ">=2.1",
 		"lie": ">=2.8",
 		"dojo": ">=1.9.1",
@@ -13,7 +13,7 @@
 		"ecma402": "0.2.x",
 		"requirejs": "2.1.x",
 		"requirejs-domready": "2.0.x",
-		"requirejs-dplugins": "0.4.x",
+		"requirejs-dplugins": "0.5.x",
 		"requirejs-text": "2.0.x",
 		"dstore": "1.0.x"
 	},
