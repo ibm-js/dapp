@@ -9,7 +9,7 @@
 		"jquery": ">=2.1",
 		"lie": ">=2.8",
 		"dojo": ">=1.9.1",
-		"dpointer": "0.4.x",
+		"dpointer": "0.5.x",
 		"ecma402": "0.2.x",
 		"requirejs": "2.1.x",
 		"requirejs-domready": "2.0.x",
@@ -18,7 +18,8 @@
 		"dstore": "1.0.x"
 	},
 	"resolutions": {
-		"requirejs-dplugins": "0.5.x"
+		"requirejs-dplugins": "0.5.x",
+		"dpointer": "0.5.x"
 	},
 	"ignore": [
 		".jshintrc",
