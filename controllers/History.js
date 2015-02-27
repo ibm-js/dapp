@@ -89,7 +89,12 @@ define(["require", "dcl/dcl", "../utils/view",
 				}
 
 				evtdetail.fwdTransition = evtdetail.transition;
-				history.pushState(evtdetail, evtdetail.href, newHash);
+			//  Added this to avoid adding the duplicate entry for default view
+				if(this._currentPosition === 1) {
+					history.replaceState(evtdetail, evtdetail.href, newHash);
+				} else {
+					history.pushState(evtdetail, evtdetail.href, newHash);
+				}
 				this.currentState = Object.create(evtdetail);
 
 				// Finally: Publish pushState topic
@@ -175,7 +180,7 @@ define(["require", "dcl/dcl", "../utils/view",
 							for (var item2 in nextParts) {
 								var nextViewId = nextParts[item2].replace(/,/g, "_");
 								var nextView = viewUtils.getViewFromViewId(this.app, nextViewId);
-								if (remView.parentView.id === nextView.parentView.id &&
+								if (!nextView || remView.parentView.id === nextView.parentView.id &&
 									remView.constraint === nextView.constraint) {
 									removeView = false;
 									break;
