@@ -90,7 +90,7 @@ define(["require", "dcl/dcl", "../utils/view",
 
 				evtdetail.fwdTransition = evtdetail.transition;
 			//  Added this to avoid adding the duplicate entry for default view
-				if(this._currentPosition === 1) {
+				if (this._currentPosition === 1) {
 					history.replaceState(evtdetail, evtdetail.href, newHash);
 				} else {
 					history.pushState(evtdetail, evtdetail.href, newHash);
@@ -165,6 +165,7 @@ define(["require", "dcl/dcl", "../utils/view",
 			// when removing the parent and the child view for example +leftParent,left1 when added adds
 			// both leftParent and left1, but -leftParent,left1 only hides left1, not leftParent, if you want to
 			// hide both you need to do -leftParent,left1-leftParent so we do that on getViewsToRemoveFromDest
+		    /* jshint maxcomplexity: 11 */
 			getViewsToRemoveFromDest: function (nextDest, prevDest) {
 				var removedDest = "";
 				if (nextDest && prevDest) {
