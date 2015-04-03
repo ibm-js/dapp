@@ -45,13 +45,13 @@
 					"defaultView": "V1",
 					"views": {
 						"V1": {
-						//	"controller": "nestedViewsActivateCallsApp1/viewController1.js",
-							"type": "nestedViewsActivateCallsApp1/viewController1ViewExt",
+							"controller": "nestedViewsActivateCallsApp1/viewController1.js",
+						//	"type": "nestedViewsActivateCallsApp1/viewController1ViewExt",
 							"template": "nestedViewsActivateCallsApp1/viewTemplate.html"
 						},
 						"V2": {
-						//	"controller": "nestedViewsActivateCallsApp1/viewController1.js",
-							"type": "nestedViewsActivateCallsApp1/viewController1ViewExt",
+							"controller": "nestedViewsActivateCallsApp1/viewController1.js",
+						//	"type": "nestedViewsActivateCallsApp1/viewController1ViewExt",
 							"template": "nestedViewsActivateCallsApp1/viewTemplate.html"
 						}
 					}
@@ -60,8 +60,8 @@
 		},
 		"V7": {
 			"parentSelector": "#nestedViewsActivateCallsApp1dviewStack",
-		//	"controller": "nestedViewsActivateCallsApp1/viewController1.js",
-			"type": "nestedViewsActivateCallsApp1/viewController1ViewExt",
+			"controller": "nestedViewsActivateCallsApp1/viewController1.js",
+		//	"type": "nestedViewsActivateCallsApp1/viewController1ViewExt",
 			"template": "nestedViewsActivateCallsApp1/viewTemplate.html"
 		}
 	}
