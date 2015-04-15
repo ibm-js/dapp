@@ -5,7 +5,7 @@
 		"dcl": "1.1.x",
 		"decor": "0.6.x",
 		"delite": "0.7.x",
-		"deliteful": "0.6.x",
+		"deliteful": "0.7.x",
 		"jquery": ">=2.1",
 		"lie": ">=2.8",
 		"dojo": ">=1.9.1",
@@ -16,10 +16,6 @@
 		"requirejs-dplugins": "0.5.x",
 		"requirejs-text": "2.0.x",
 		"dstore": "1.0.x"
-	},
-	"resolutions": {
-		"decor": "0.6.x",
-		"delite": "0.7.x"
 	},
 	"ignore": [
 		".jshintrc",
